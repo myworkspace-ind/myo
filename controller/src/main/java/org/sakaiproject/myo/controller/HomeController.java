@@ -19,24 +19,37 @@
 
 package org.sakaiproject.myo.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.sakaiproject.myo.entity.OkrUser;
+import org.sakaiproject.myo.service.OrgService;
+import org.sakaiproject.myo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
+@Slf4j
 public class HomeController extends BaseController {
  
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	OrgService orgService;
 	   /**
      * This method is called when binding the HTTP parameter to bean (or model).
      * 
@@ -56,14 +69,24 @@ public class HomeController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("home");
+	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
+	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
+		log.debug("Start CRUD object " + objName);
+
+		ModelAndView mav = new ModelAndView("crud");
 
 		initSession(request, httpSession);
-		
+
 		mav.addObject("currentSiteId", getCurrentSiteId());
 		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+
+		List<OkrUser> allUsers = userService.findAll();
+		int len = (allUsers != null) ? allUsers.size(): 0;
+		log.info("Number of users: " + len);
+
+		mav.addObject("users", allUsers);
+		
+		mav.addObject("orgs", orgService.findAll());
 
 		return mav;
 	}

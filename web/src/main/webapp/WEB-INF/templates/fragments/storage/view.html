@@ -1,0 +1,43 @@
+<hr />
+<section id="form-filter">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<div class="repeater-default">
+							<form id="frmStorageSearch" class="form row" th:action="@{/search-obj}" method="POST">
+								<div class="form-group mb-1 col-sm-12 col-md-4">
+
+									<div class="input-group mb-1" data-repeater-item="">
+										<input name="emails" type="email" placeholder="Enter emails (separated by comma)" class="form-control" id="emails">
+										<span class="input-group-append" id="button-search">
+											<button class="btn btn-primary" type="submit"><i class="ft-refresh-ccw"></i></button>
+										</span>
+									</div>
+								</div>
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="form-data">
+	<form id="frmHot" th:action="@{/backup/save}" method="POST" enctype="multipart/form-data">
+		<div id="storageObjTable" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+		
+		<div id="storage-action-move" class="form-actions right">
+            <button type="submit" class="btn btn-primary">
+                <i class="ft-arrow-right"></i> Move to...
+            </button>
+	    </div>
+	</form>
+</section>>
+	
+<section id="form-action">
+	
+</section>

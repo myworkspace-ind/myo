@@ -19,10 +19,6 @@
 
 package org.sakaiproject.myo.logic;
 
-import java.util.List;
-
-import org.sakaiproject.authz.api.Role;
-
 /**
  * An interface to abstract all Sakai related API calls in a central method that can be injected into our app.
  * 
@@ -35,49 +31,49 @@ public interface SakaiProxy {
      * Get current siteid
      * @return
      */
-    String getCurrentSiteId();
+    public String getCurrentSiteId();
     
     /**
      * Get current user id
      * @return
      */
-    String getCurrentUserId();
+    public String getCurrentUserId();
     
     /**
      * Get current user display name
      * @return
      */
-    String getCurrentUserDisplayName();
+    public String getCurrentUserDisplayName();
     
     /**
      * Get username of authenticated user.
      * @return
      */
-    String getCurrentUserEid();
+    public String getCurrentUserEid();
     
     /**
      * Get email address of authenticated user.
      * @return
      */
-    String getCurrentUserEmail();
+    public String getCurrentUserEmail();
     
     /**
      * Get first name of authenticated user.
      * @return
      */
-    String getCurrentUserFirstName();
+    public String getCurrentUserFirstName();
     
     /**
      * Get last name of authenticated user.
      * @return
      */
-    String getCurrentUserLastName();
+    public String getCurrentUserLastName();
     
     /**
      * Is the current user a superUser? (anyone in admin realm)
      * @return
      */
-    boolean isSuperUser();
+    public boolean isSuperUser();
     
     /**
      * Post an event to Sakai
@@ -87,26 +83,18 @@ public interface SakaiProxy {
      * @param modify        true if something changed, false if just access
      * 
      */
-    void postEvent(String event,String reference,boolean modify);
+    public void postEvent(String event,String reference,boolean modify);
     
     /**
      * Wrapper for ServerConfigurationService.getString("skin.repo")
      * @return
      */
-    String getSkinRepoProperty();
+    public String getSkinRepoProperty();
     
     /**
      * Gets the tool skin CSS first by checking the tool, otherwise by using the default property.
      * @param   the location of the skin repo
      * @return
      */
-    String getToolSkinCSS(String skinRepo);
-    
-	/**
-	 * @return flag in case of the current user is switching to other roles.
-	 */
-	boolean isUserRoleSwapped();
-	
-	List<Role> getRoles();
-	String getUserRole();
+    public String getToolSkinCSS(String skinRepo);
 }

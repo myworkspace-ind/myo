@@ -1,0 +1,1 @@
+psql -h 10.0.0.234 --port=5433 -U ioki_user -d okrdata < okrdata_ioki_public_p3.psql

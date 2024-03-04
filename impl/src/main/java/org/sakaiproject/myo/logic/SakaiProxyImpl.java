@@ -19,20 +19,10 @@
 
 package org.sakaiproject.myo.logic;
 
-import java.util.List;
-
-import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzGroupService;
-import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.Member;
-import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.util.SiteParticipantHelper;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.UserDirectoryService;
@@ -161,69 +151,4 @@ public class SakaiProxyImpl implements SakaiProxy {
     
     @Getter @Setter
     private SiteService siteService;
-    
-
-    @Getter @Setter
-    public AuthzGroupService authzGroupService = null;
-    
-	@Override
-	public boolean isUserRoleSwapped() {
-		try {
-			return securityService.isUserRoleSwapped();
-		} catch (IdUnusedException e) {
-			log.error("Could not call method isUserRoleSwapped()", e);
-		}
-		
-		return false;
-	}
-
-	/**
-	 * {@link org.sakaiproject.site.util.SiteAddParticipantHandler#init}
-	 */
-	@Override
-	public String getUserRole() {
-
-//		String userId = getCurrentUserEid();
-		String userId = userDirectoryService.getCurrentUser().getId();
-		try {
-			String siteId = getCurrentSiteId();
-//			Site site = siteService.getSite(siteId);
-			AuthzGroup realm = authzGroupService.getAuthzGroup(siteService.siteReference(siteId));
-			
-			Member member = realm.getMember(userId);
-
-			return member.getRole() != null ? member.getRole().getId() : "";
-		} catch (GroupNotDefinedException e) {
-			log.error("Could not get user role.", e);
-		}
-
-		return null;
-	}
-
-	/**
-	 * {@link org.sakaiproject.site.util.SiteAddParticipantHandler#init}
-	 */
-	@Override
-	public List<Role> getRoles() {
-		List<Role> roles = null;
-		try {
-			String siteId = getCurrentSiteId();
-			Site site = siteService.getSite(siteId);
-			AuthzGroup realm = authzGroupService.getAuthzGroup(siteService.siteReference(siteId));
-
-			// SAK-23257
-			roles = SiteParticipantHelper.getAllowedRoles(site.getType(), realm.getRoles());
-
-		} catch (IdUnusedException | GroupNotDefinedException e) {
-			log.error("The siteId we were given was bogus", e);
-		}
-
-		int len = (roles != null) ? roles.size() : 0;
-		log.debug("Number of roles:" + len);
-		for (Role role : roles) {
-			log.debug("Role id:" + role.getId());
-		}
-
-		return roles;
-	}
 }

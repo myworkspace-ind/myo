@@ -20,7 +20,6 @@
 package org.sakaiproject.myo.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,13 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.sakaiproject.component.cover.ComponentManager;
+import org.sakaiproject.myo.logic.ProjectLogic;
+import org.sakaiproject.myo.logic.SakaiProxy;
 import org.springframework.beans.factory.annotation.Value;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.sakaiproject.myo.logic.ProjectLogic;
-import org.sakaiproject.myo.logic.SakaiProxy;
 
 /**
  * Handles requests for the application home page.
@@ -52,7 +51,7 @@ public class BaseController {
     @Getter    // Used for Sakai Tool
     ProjectLogic projectLogic;
 
-    @Value("${theme.root}")
+    @Value("${theme_root}")
     String themeRoot;
 
     /** Default. */
@@ -76,7 +75,7 @@ public class BaseController {
      */
     void initSession(HttpServletRequest request, HttpSession httpSession) {
         // Get username when login success
-        httpSession.setAttribute("themeRoot", themeRoot);
+        httpSession.setAttribute("theme_root", themeRoot);
         
         if (sakaiProxy == null) {
         	sakaiProxy = ComponentManager.get(SakaiProxy.class);
