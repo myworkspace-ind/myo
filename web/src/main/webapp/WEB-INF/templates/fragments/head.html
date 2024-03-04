@@ -1,57 +1,20 @@
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Manage objective better.">
-    <meta name="keywords" content="Objectives, Keyresult, OKR, KPI, Plan vs Actual">
-    <meta name="author" content="MKS.COM.VN">
-    <title th:text="#{app.title}">MYO - MY Objectives</title>
-    <link rel="apple-touch-icon" th:href="@{#{theme.root} + 'app-assets/images/ico/apple-icon-120.png'}">
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{#{theme.root} + 'app-assets/images/ico/favicon.ico'}">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Muli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/vendors.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/handsontable/handsontable.full.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/handsontable/jsgrid-theme.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/handsontable/jsgrid.min.css'}">
-    
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/datatable/datatables.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/extensions/autoFill.dataTables.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/extensions/colReorder.dataTables.min.css'}">
-    
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/datatable/jquery.dataTables.min.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/datatable/select.dataTables.min.css'}">
-    
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/pickers/daterange/daterangepicker.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/pickers/pickadate/pickadate.css'}">
-        
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css'}">
-    
-    <!-- END VENDOR CSS-->
-    <!-- BEGIN ROBUST CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/app.css'}">
-    <!-- END ROBUST CSS-->
-    <!-- BEGIN Page Level CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/core/menu/menu-types/horizontal-top-icon-menu.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/plugins/tables/handsontable.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/core/colors/palette-gradient.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/plugins/forms/wizard.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/css/plugins/pickers/daterange/daterange.css'}">
-    <!-- END Page Level CSS-->
-    <!-- BEGIN Custom CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'assets/css/style.css'}">
-    
-    <link rel="stylesheet" type="text/css" th:href="@{#{theme.root} + 'app-assets/vendors/css/forms/selects/select2.min.css'}">
-    
+    <title>MYO - My Objectives</title>
+    <link rel="stylesheet" href="/library/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
 
-    <!-- END Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="/library/webjars/datatables/1.10.25/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="/library/webjars/datatables/1.10.25/css/jquery.dataTables.min.css">
+    
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">-->
+    <link rel="stylesheet" type="text/css" href="/library/webjars/datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/library/skin/default-skin/tool.css">
+
+    <!-- jQuery library -->
+    <script src="/library/webjars/jquery/1.12.4/jquery.min.js"></script>
     
     <!-- For Sakai only -->
     <script type="text/javascript" src="/library/js/headscripts.js"></script>
 
-    <!-- jQuery library -->
-	<script src="/library/webjars/jquery/1.12.4/jquery.min.js"></script>
-	
     <!-- Determine the root context of the application.  -->
     <script th:inline="javascript"> var _ctx = /*[[@{/}]]*/ ''; 
     </script>

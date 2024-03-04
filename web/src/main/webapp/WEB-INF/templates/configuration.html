@@ -8,10 +8,11 @@
 </style>
 
 <body>
+    <th:block th:include="fragments/hnav"></th:block>
 
-    <th:block th:include="fragments/frg_home"></th:block>
+    <th:block th:include="fragments/frg_configuration"></th:block>
     
     <!-- Bottom Javascripts -->
-    <script type="text/javascript" th:src="@{/resources/home.js}" ></script>
+    <script type="text/javascript" th:src="@{/resources/configuration.js}" ></script>
 </body>
 </html>

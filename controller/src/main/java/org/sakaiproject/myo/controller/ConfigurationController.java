@@ -19,18 +19,11 @@
 
 package org.sakaiproject.myo.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
-import org.sakaiproject.myo.service.OrgService;
-import org.sakaiproject.myo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,34 +33,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @Slf4j
-public class HomeController extends BaseController {
+public class ConfigurationController extends BaseController {
  
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	OrgService orgService;
-
 	/**
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
+	@GetMapping(value = "configuration")
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("home");
-
-		initSession(request, httpSession);
-
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-
-		List<OkrUser> allUsers = userService.findAll();
-		int len = (allUsers != null) ? allUsers.size(): 0;
-		log.info("Number of users: " + len);
-
-		mav.addObject("users", allUsers);
-		
-		mav.addObject("orgs", orgService.findAll());
+		ModelAndView mav = new ModelAndView("configuration");
 
 		return mav;
 	}
