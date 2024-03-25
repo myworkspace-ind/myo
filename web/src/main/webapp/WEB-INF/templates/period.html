@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="fragments/head"></th:block>
+</head>
+<!--<body class="horizontal-layout horizontal-top-icon-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">-->
+<body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
+  <!-- fixed-top-->
+<!--    <th:block th:include="fragments/nav"></th:block>-->
+  <!-- ////////////////////////////////////////////////////////////////////////////-->
+  <!-- Horizontal navigation-->
+    <th:block th:include="fragments/hnav"></th:block>
+  <!-- Horizontal navigation-->
+  
+    <div class="container">
+        <div class="text-center">
+            <div class="lead">
+                <H1>Period</H1>
+            </div>
+            <p>Period name</p><input type="text"><br><br>
+			<p>Start_date</p><input type="date"><br><br>
+			<p>End_date</p><input type="date"><br><br>
+        </div>
+<!--        <div th:insert="~{fragments/footer :: footer}">&copy; 2017 The MKS Group</div>-->
+    </div>
+	<th:block th:include="fragments/footer"></th:block>
+</body>
+</html>
