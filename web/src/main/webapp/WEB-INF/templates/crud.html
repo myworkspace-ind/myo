@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="icon" type="image/x-icon" href="resources/assets/favicon.ico" />
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+	crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+	rel="stylesheet" type="text/css" />
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700"
+	rel="stylesheet" type="text/css" />
+<!-- Core theme CSS (includes Bootstrap)-->
+<link href="resources/css/styles.css" rel="stylesheet" />
+
+
+<title>CRUD</title>
+<!-- Handsontable CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/handsontable@9.0.0/dist/handsontable.full.min.css"
+	rel="stylesheet">
+<style>
+body {
+	display: flex;
+	justify-content: center;
+	height: 100vh;
+}
+
+.container {
+	text-align: center;
+	align-items: center;
+	border: 2px solid red;
+}
+
+.row, col {
+	border: 2px solid red;
+	justify-content: center;
+	vertical-align: middle;
+	align-items: center;
+}
+</style>
+</head>
+<body>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col ">OKR</div>
+			<div class="col">
+				<h2>My OKR</h2>
+			</div>
+			<div class="col">
+				<div class="row">Process</div>
+				<div class="row">Requirement</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">Description</div>
+			<div class="col">
+				<h6>Chương trình quản lý ORK cho doanh nghiệp</h6>
+			</div>
+			<div class="col">
+				<div class="row">
+					<div class="col">Create Date</div>
+					<div class="col">09/09/2022</div>
+					<div class="col">Creator</div>
+					<div class="col">Thach Le</div>
+				</div>
+				<div class="row">
+					<div class="col">Update Date</div>
+					<div class="col">    </div>
+					<div class="col">Updater</div>
+					<div class="col">    </div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				Dropdown button
+				</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="#">Action</a></li>
+				<li><a class="dropdown-item" href="#">Another action</a></li>
+				<li><a class="dropdown-item" href="#">Something else here</a></li>
+			</ul>
+		</div>
+
+		<div class="row">
+			<div id="hot-container">
+				<script
+					src="https://cdn.jsdelivr.net/npm/handsontable@9.0.0/dist/handsontable.full.min.js"></script>
+				<script>
+					document.addEventListener('DOMContentLoaded', function() {
+						// Define data for the table
+						var data = [ [ 'Hao', 25, 'Designer' ],
+								[ 'Tuan', 30, 'Designer' ],
+								[ 'Nhan', 35, 'Manager' ] ];
+
+						// Configuration options
+						var hotOptions = {
+							data : data,
+							rowHeaders : true,
+							colHeaders : [ 'Name', 'Age', 'Occupation' ],
+						// Add any other options you want to configure
+						};
+
+						// Create a new Handsontable instance
+						var hotInstance = new Handsontable(document
+								.getElementById('hot-container'), hotOptions);
+					});
+				</script>
+			</div>
+		</div>
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- Handsontable JavaScript -->
+
+</body>
+</html>
