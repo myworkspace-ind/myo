@@ -24,7 +24,7 @@
     <!-- Load configuration file. -->
     <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="ignoreUnresolvablePlaceholders" value="true" />
-        <property name="location" value="file:///etc/myo/myo.properties"/>
+        <property name="location" value="WEB-INF/myo.properties"/>
     </bean>
     
 <!-- 	<bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
@@ -110,5 +110,5 @@
 	        allowed-methods="GET, PUT, POST, DELETE"/>
 	</mvc:cors>
 
-	<jpa:repositories base-package="org.sakaiproject.myo.repository" />
+	<context:component-scan base-package="org.sakaiproject.myo.repository" />
 </beans>
