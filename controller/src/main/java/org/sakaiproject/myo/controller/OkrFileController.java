@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-//import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
 @Controller
 public class OkrFileController {
@@ -22,36 +22,36 @@ public class OkrFileController {
 		return m;
 	}
 
-//	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-//	public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
-//		List<List<String>> data = new ArrayList<>();
-//
-//		try (InputStream is = file.getInputStream()) {
-//			Workbook workbook = WorkbookFactory.create(is);
-//			Sheet sheet = workbook.getSheetAt(0); // first sheet
-//			for (Row row : sheet) {
-//				List<String> rowData = new ArrayList<>();
-//				for (Cell cell : row) {
-//					switch (cell.getCellType()) {
-//					case STRING:
-//						rowData.add(cell.getStringCellValue());
-//						break;
-//					case NUMERIC:
-//						rowData.add(String.valueOf(cell.getNumericCellValue()));
-//						break;
-//					// Handle other cell types as needed
-//					default:
-//						rowData.add("");
-//						break;
-//					}
-//				}
-//				data.add(rowData);
-//			}
-//		} catch (IOException e) {
-////			e.printStackTrace();
-//		}
-//
-//		model.addAttribute("data", data);
-//		return "okr_file";
-//	}
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
+		List<List<String>> data = new ArrayList<>();
+
+		try (InputStream is = file.getInputStream()) {
+			Workbook workbook = WorkbookFactory.create(is);
+			Sheet sheet = workbook.getSheetAt(0); // first sheet
+			for (Row row : sheet) {
+				List<String> rowData = new ArrayList<>();
+				for (Cell cell : row) {
+					switch (cell.getCellType()) {
+					case STRING:
+						rowData.add(cell.getStringCellValue());
+						break;
+					case NUMERIC:
+						rowData.add(String.valueOf(cell.getNumericCellValue()));
+						break;
+					// Handle other cell types as needed
+					default:
+						rowData.add("");
+						break;
+					}
+				}
+				data.add(rowData);
+			}
+		} catch (IOException e) {
+//			e.printStackTrace();
+		}
+
+		model.addAttribute("data", data);
+		return "okr_file";
+	}
 }
