@@ -3,55 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <th:block th:include="fragments/head"></th:block>
-<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-<link rel="stylesheet"
-	href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
-	type="text/css" />
+<!-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> -->
+<!-- <link rel="stylesheet" -->
+<!-- 	href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" -->
+<!-- 	type="text/css" /> -->
 <title>Upload file</title>
 </head>
 <body>
 	<th:block th:include="fragments/hnav"></th:block>
-	<div class="container mb-10">
-		<form action="/upload" method="post" enctype="multipart/form-data"
-			class="dropzone" id="myDropzone">
-			<div class="fallback">
-				<input name="file" type="file" multiple />
+	<div class="container">
+		<form id="excel-form" action="/myo-web/upload" method="POST"
+			enctype="multipart/form-data">
+			<div class="input-field">
+				<input name="file" type="file" class="input-file" id="file" multiple />
+				<span>Upload excel file to input OKR</span>
 			</div>
+			<input type="submit" value="Preview" />
 		</form>
-
-		<h1>Excel Data</h1>
-
-<!-- 		<table border="1"> -->
-<!-- 			<thead> -->
-<!-- 				<tr th:each="header : ${data[0]}"> -->
-<!-- 					<th th:text="${header}"></th> -->
-<!-- 				</tr> -->
-<!-- 			</thead> -->
-<!-- 			<tbody> -->
-<!-- 				<tr th:each="row : ${data}"> -->
-<!-- 					<td th:each="cell : ${row}" th:text="${cell}"></td> -->
-<!-- 				</tr> -->
-<!-- 			</tbody> -->
-<!-- 		</table> -->
 	</div>
-	<script>
-		Dropzone.options.myDropzone = {
-			acceptedFiles : ".xls,.xlsx",
-			uploadMultiple : true,
-			createImageThumbnails : true,
-			maxFiles : 4,
-			init : function() {
-				this.on("success", function(file, response) {
-					alert("File uploaded successfully!");
-					// can add additional logic here
-				});
 
-				this.on("error", function(file, errorMessage) {
-					alert("Error uploading file: " + errorMessage);
-				});
-				;
-			}
-		};
+	<table border="1">
+		<thead>
+			<tr>
+				<td th:each="cell : ${row}" th:text="${cell}"></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="row : ${data}">
+				<td th:each="cell : ${row}" th:text="${cell}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<script type="text/javascript" th:src="@{/resources/inputExcel.js}">
+		// 		Dropzone.options.myDropzone = {
+		// 			acceptedFiles : ".xls,.xlsx",
+		// 			uploadMultiple : true,
+		// 			createImageThumbnails : true,
+		// 			maxFiles : 4,
+		// 			init : function() {
+		// 				this.on("success", function(file, response) {
+		// 					alert("File uploaded successfully!");
+		// 					// can add additional logic here
+		// 				});
+
+		// 				this.on("error", function(file, errorMessage) {
+		// 					alert("Error uploading file: " + errorMessage);
+		// 				});
+		// 				;
+		// 			}
+		// 		};
 	</script>
 </body>
 </html>

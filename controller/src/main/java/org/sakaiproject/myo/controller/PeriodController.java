@@ -1,5 +1,5 @@
 /**
-  * Licensed to MKS Group under one or more contributor license
+ * Licensed to MKS Group under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
  * MKS Group licenses this file to you under the Apache License,
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @Slf4j
-public class HomeController extends BaseController {
+public class PeriodController extends BaseController {
  
 	@Autowired
 	UserService userService;
@@ -52,9 +52,9 @@ public class HomeController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("home");
+	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
+	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
+		ModelAndView mav = new ModelAndView("period");
 
 		initSession(request, httpSession);
 
