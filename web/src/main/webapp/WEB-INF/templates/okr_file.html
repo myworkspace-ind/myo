@@ -12,15 +12,30 @@
 <body>
 	<th:block th:include="fragments/hnav"></th:block>
 	<div class="container">
-		<form id="excel-form" action="/upload" method="POST"
+		<form id="excel-form" action="/myo-web/upload" method="POST"
 			enctype="multipart/form-data">
 			<div class="input-field">
 				<input name="file" type="file" class="input-file" id="file" multiple/>
 				<span>Upload excel file to input OKR</span>
 			</div>
+			<input type="submit" value="Upload"/>
 		</form>
 	</div>
 
+<table border="1">
+    <thead>
+        <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <!-- Add more columns as needed -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="row : ${data}">
+            <td th:each="cell : ${row}" th:text="${cell}"></td>
+        </tr>
+    </tbody>
+</table>
 
 
 
