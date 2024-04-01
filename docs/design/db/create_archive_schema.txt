@@ -1,6 +1,0 @@
-pg_dump --dbname=okrdata --schema=public --schema-only --file=D:/Temp/okrdata_public3.psql --username=ioki_user --host=localhost --port=5439
-
-sed -e 's/public/archive/g' D:/Temp/okrdata_public3.psql > D:/Temp/okrdata_archive.psql
-sed -e 's/archive.uuid_generate_v4()/uuid_generate_v4()/g' D:/Temp/okrdata_archive.psql > D:/Temp/okrdata_archive1.psql
-
-psql -h localhost --port=5439 -U ioki_user -d okrdata < D:/Temp/okrdata_archive1.psql
