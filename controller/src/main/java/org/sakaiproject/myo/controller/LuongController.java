@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @Slf4j
-public class HomeController extends BaseController {
+public class LuongController extends BaseController {
  
 	@Autowired
 	UserService userService;
@@ -52,9 +52,9 @@ public class HomeController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/luong"}, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("home");
+		ModelAndView mav = new ModelAndView("luong");
 
 		initSession(request, httpSession);
 
