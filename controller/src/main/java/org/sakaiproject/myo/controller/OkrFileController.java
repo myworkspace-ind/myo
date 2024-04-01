@@ -5,17 +5,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sakaiproject.myo.model.ExcelFileModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
+//import org.apache.poi.ss.usermodel.*;
 
 @Controller
 public class OkrFileController {
@@ -25,24 +22,12 @@ public class OkrFileController {
 		return m;
 	}
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ModelAndView uploadExcel(@ModelAttribute("model") ExcelFileModel model, BindingResult bindingResult) throws IOException{
-		ModelAndView m = new ModelAndView("okr_file");
-		
-		MultipartFile file = model.getFile();
-		
-		// implement method extract data OKR from excel file in ExcelFileModel and replace "file" with "file.getOkrData()" later
-		m.addObject("excel-data", file);
-		
-		return m;
-		
-	}
+//	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 //	public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
 //		List<List<String>> data = new ArrayList<>();
 //
 //		try (InputStream is = file.getInputStream()) {
 //			Workbook workbook = WorkbookFactory.create(is);
-//			 
 //			Sheet sheet = workbook.getSheetAt(0); // first sheet
 //			for (Row row : sheet) {
 //				List<String> rowData = new ArrayList<>();

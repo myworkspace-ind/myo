@@ -109,6 +109,11 @@
         </dependency>
 
 
+<!--		<dependency>-->
+<!--			<groupId>org.sakaiproject.myo</groupId>-->
+<!--			<artifactId>myo-web</artifactId>-->
+<!--			<version>23.0</version>-->
+<!--		</dependency>-->
 	</dependencies>
 	<build>
 		<!-- configure the build to use the standard maven structure -->
