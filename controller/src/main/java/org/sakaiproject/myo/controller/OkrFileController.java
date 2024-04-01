@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 
 import org.sakaiproject.myo.model.ExcelFileModel;
-import org.apache.poi.sl.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,40 +26,15 @@ public class OkrFileController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-//	public ModelAndView uploadExcel(@ModelAttribute("model") ExcelFileModel model, BindingResult bindingResult)
-//			throws IOException {
-//		ModelAndView m = new ModelAndView("okr_file");
-//
-//		MultipartFile file = model.getFile();
-//
-//		// implement method extract data OKR from excel file in ExcelFileModel and
-//		// replace "file" with "file.getOkrData()" later
-//		m.addObject("excel-data", file);
-//
-//		return m;
-//
-//	}
-
 	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file, @ModelAttribute("model") ExcelFileModel model) throws IOException {
 		ModelAndView m = new ModelAndView("okr_file");
 
 		model.setFile(file);
 		List<List<String>> data = new ArrayList<>();
-//		 test display data
-//        Random random = new Random();
-//
-//        for (int i = 0; i < 5; i++) { // 5 inner lists
-//            List<String> innerList = new ArrayList<>();
-//            for (int j = 0; j < 3; j++) { // 3 strings in each inner list
-//                innerList.add("String" + random.nextInt(100)); // adding a random string
-//            }
-//            data.add(innerList);
-//        }
 
-//
+		// get excel data and pass to "data" variable
 		try (InputStream is = file.getInputStream()) {
 			Workbook workbook = WorkbookFactory.create(is);
-			
 			Sheet sheet = workbook.getSheetAt(0); // first sheet
 			for (Object objRow : sheet) {
 				List<String> rowData = new ArrayList<>();
@@ -86,7 +58,7 @@ public class OkrFileController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//
+		// pass data to view to display
 		m.addObject("data", data);
 		return m;
 	}
