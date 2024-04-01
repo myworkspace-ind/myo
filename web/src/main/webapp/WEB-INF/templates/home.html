@@ -1,62 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Handsontable Input</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        #hot {
-            width: 600px;
-            height: 300px;
-            overflow: auto;
-        }
-        .btn {
-            margin-top: 12px;
-            cursor: pointer;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>MYO - My Objective OKR</title>
+    <th:block th:include="fragments/head"></th:block>
+
 </head>
+<style>
+    
+</style>
+
 <body>
-    <div id="example1"></div>
-    <button id="addRow" class="btn">Add Row</button>
-    <button id="removeRow" class="btn">Remove Row</button>
+    <th:block th:include="fragments/hnav"></th:block>
 
-    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-    <script>const container = document.querySelector('#example1');
-    const data = [
-    	  ['', 'Tesla', 'Nissan', 'Toyota', 'Honda', 'Mazda', 'Ford'],
-    	  ['2017', 10, 11, 12, 13, 15, 16],
-    	  ['2018', 10, 11, 12, 13, 15, 16],
-    	  ['2019', 10, 11, 12, 13, 15, 16],
-    	  ['2020', 10, 11, 12, 13, 15, 16],
-    	  ['2021', 10, 11, 12, 13, 15, 16]
-    	];
-
-    	const hot = new Handsontable(container, {
-    	  data,
-    	  startRows: 5,
-    	  startCols: 5,
-    	  height: 'auto',
-    	  width: 'auto',
-    	  colHeaders: true,
-    	  minSpareRows: 1,
-    	  autoWrapRow: true,
-    	  autoWrapCol: true,
-    	  licenseKey: 'non-commercial-and-evaluation'
-    	});
-         </script> 
-    	<script src="home.js"></script>
+    <th:block th:include="fragments/frg_searchimage"></th:block>
+    
+    <!-- Bottom Javascripts -->
+    <script type="text/javascript" th:src="@{/resources/searchimage.js}" ></script>
 </body>
 </html>
