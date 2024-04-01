@@ -15,25 +15,25 @@
 		<form id="excel-form" action="/myo-web/upload" method="POST"
 			enctype="multipart/form-data">
 			<div class="input-field">
-				<input name="file" type="file" class="input-file" id="file" multiple/>
+				<input name="file" type="file" class="input-file" id="file" multiple />
 				<span>Upload excel file to input OKR</span>
 			</div>
-			<input type="submit" value="Preview"/>
+			<input type="submit" value="Preview" />
 		</form>
 	</div>
 
-<table border="1">
-    <thead>
-        <tr>
-            
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="row : ${data}">
-            <td th:each="cell : ${row}" th:text="${cell}"></td>
-        </tr>
-    </tbody>
-</table>
+	<table border="1">
+		<thead>
+			<tr>
+				<td th:each="cell : ${row}" th:text="${cell}"></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="row : ${data}">
+				<td th:each="cell : ${row}" th:text="${cell}"></td>
+			</tr>
+		</tbody>
+	</table>
 	<script type="text/javascript" th:src="@{/resources/inputExcel.js}">
 		// 		Dropzone.options.myDropzone = {
 		// 			acceptedFiles : ".xls,.xlsx",
