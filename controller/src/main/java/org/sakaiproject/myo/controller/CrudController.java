@@ -30,6 +30,7 @@ import org.sakaiproject.myo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,25 +70,30 @@ public class CrudController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
-	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
-		log.debug("Start CRUD object " + objName);
-
+    @GetMapping(value = "crud")
+	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("crud");
-
-		initSession(request, httpSession);
-
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-
-		List<OkrUser> allUsers = userService.findAll();
-		int len = (allUsers != null) ? allUsers.size(): 0;
-		log.info("Number of users: " + len);
-
-		mav.addObject("users", allUsers);
-		
-		mav.addObject("orgs", orgService.findAll());
-
 		return mav;
 	}
+//	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
+//	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
+//		log.debug("Start CRUD object " + objName);
+//
+//		ModelAndView mav = new ModelAndView("crud");
+//
+//		initSession(request, httpSession);
+//
+//		mav.addObject("currentSiteId", getCurrentSiteId());
+//		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+//
+//		List<OkrUser> allUsers = userService.findAll();
+//		int len = (allUsers != null) ? allUsers.size(): 0;
+//		log.info("Number of users: " + len);
+//
+//		mav.addObject("users", allUsers);
+//		
+//		mav.addObject("orgs", orgService.findAll());
+//
+//		return mav;
+//	}
 }
