@@ -20,6 +20,7 @@ public class UserRepositoryTestFindByEmail {
 		UUID user_id = UUID.fromString("1111");
 		OkrUser user = new OkrUser();
 		user.setUserId(user_id);
+		user.setEmail("nhan@gmail.com");
 		try {
 			OkrUser obj = up.findByEmail("nhan@gmail.com");
 			Assert.assertNotNull(obj);

@@ -3,23 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <th:block th:include="fragments/head"></th:block>
-<!-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> -->
-<!-- <link rel="stylesheet" -->
-<!-- 	href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" -->
-<!-- 	type="text/css" /> -->
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet"
+	href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
+	type="text/css" />
 <title>Upload file</title>
+<style type="text/css">
+.input-file {
+	width: 100%;
+	heigt: 100%;
+}
+</style>
 </head>
 <body>
 	<th:block th:include="fragments/hnav"></th:block>
+
 	<div class="container">
-		<form id="excel-form" action="/myo-web/upload" method="POST"
-			enctype="multipart/form-data">
-			<div class="input-field">
-				<input name="file" type="file" class="input-file" id="file" multiple />
-				<span>Upload excel file to input OKR</span>
+		<!-- 		<form id="excel-form" action="/myo-web/upload" method="POST" -->
+		<!-- 			enctype="multipart/form-data" class="dropzone"> -->
+		<!-- 			<div class="input-field"> -->
+		<!-- 				<input name="file" type="file" class="input-file" id="file" multiple /> -->
+		<!-- 				<span>Upload excel file to input OKR</span> <input type="submit" -->
+		<!-- 					value="Preview" /> -->
+		<!-- 			</div> -->
+		<!-- 		</form> -->
+		<form id="excel-form" action="/myo-web/upload" enctype="multipart/form-data" method="POST"
+			class="dropzone">
+			<div class="fallback">
+				<input name="file" type="file" multiple />
 			</div>
-			<input type="submit" value="Preview" />
+			<div class="dz-message" data-dz-message>Upload excel file to input OKR</div>
 		</form>
+			<button type="submit" value="Preview"></button>
 	</div>
 
 	<table border="1">
@@ -33,24 +48,25 @@
 			</tr>
 		</tbody>
 	</table>
+	<!-- 	 -->
 	<script type="text/javascript" th:src="@{/resources/inputExcel.js}">
-		// 		Dropzone.options.myDropzone = {
-		// 			acceptedFiles : ".xls,.xlsx",
-		// 			uploadMultiple : true,
-		// 			createImageThumbnails : true,
-		// 			maxFiles : 4,
-		// 			init : function() {
-		// 				this.on("success", function(file, response) {
-		// 					alert("File uploaded successfully!");
-		// 					// can add additional logic here
-		// 				});
+		Dropzone.options.myDropzone = {
+			acceptedFiles : ".xls,.xlsx",
+			uploadMultiple : true,
+			createImageThumbnails : true,
+			maxFiles : 1,
+			init : function() {
+				this.on("success", function(file, response) {
+					alert("File uploaded successfully!");
+					// can add additional logic here
+				});
 
-		// 				this.on("error", function(file, errorMessage) {
-		// 					alert("Error uploading file: " + errorMessage);
-		// 				});
-		// 				;
-		// 			}
-		// 		};
+				this.on("error", function(file, errorMessage) {
+					alert("Error uploading file: " + errorMessage);
+				});
+				;
+			}
+		};
 	</script>
 </body>
 </html>
