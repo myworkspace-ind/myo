@@ -37,36 +37,36 @@ public class OkrFileController {
 		return m;
 		
 	}
-//	public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
-//		List<List<String>> data = new ArrayList<>();
-//
-//		try (InputStream is = file.getInputStream()) {
-//			Workbook workbook = WorkbookFactory.create(is);
-//			 
-//			Sheet sheet = workbook.getSheetAt(0); // first sheet
-//			for (Row row : sheet) {
-//				List<String> rowData = new ArrayList<>();
-//				for (Cell cell : row) {
-//					switch (cell.getCellType()) {
-//					case STRING:
-//						rowData.add(cell.getStringCellValue());
-//						break;
-//					case NUMERIC:
-//						rowData.add(String.valueOf(cell.getNumericCellValue()));
-//						break;
-//					// Handle other cell types as needed
-//					default:
-//						rowData.add("");
-//						break;
-//					}
-//				}
-//				data.add(rowData);
-//			}
-//		} catch (IOException e) {
-////			e.printStackTrace();
-//		}
-//
-//		model.addAttribute("data", data);
-//		return "okr_file";
-//	}
+	public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
+		List<List<String>> data = new ArrayList<>();
+
+		try (InputStream is = file.getInputStream()) {
+			Workbook workbook = WorkbookFactory.create(is);
+			 
+			Sheet sheet = workbook.getSheetAt(0); // first sheet
+			for (Row row : sheet) {
+				List<String> rowData = new ArrayList<>();
+				for (Cell cell : row) {
+					switch (cell.getCellType()) {
+					case STRING:
+						rowData.add(cell.getStringCellValue());
+						break;
+					case NUMERIC:
+						rowData.add(String.valueOf(cell.getNumericCellValue()));
+						break;
+					// Handle other cell types as needed
+					default:
+						rowData.add("");
+						break;
+					}
+				}
+				data.add(rowData);
+			}
+		} catch (IOException e) {
+//			e.printStackTrace();
+		}
+
+		model.addAttribute("data", data);
+		return "okr_file";
+	}
 }
