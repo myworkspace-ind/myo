@@ -16,8 +16,22 @@ const container = document.querySelector('#example');
 				 "Second period",
 				 "01/04/2024",
 				 "31/06/2024",
-				 "None"
-			],			 
+				 "Some might choose this as the first period"
+			  ],		
+			[
+			    false,
+			    "Third period",
+			    "01/07/2024",
+			    "30/09/2024",
+			    "None"
+			 ],	 
+			 [
+			    false,
+			    "Fourth period",
+			    "01/10/2024",
+			    "31/12/2024",
+			    "None"
+			 ],	 
 				  
 		];
 		

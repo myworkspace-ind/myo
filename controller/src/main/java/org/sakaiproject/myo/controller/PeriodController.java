@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.sakaiproject.myo.entity.OkrUser;
+import org.sakaiproject.myo.entity.OkrPeriod;
 import org.sakaiproject.myo.service.OrgService;
 import org.sakaiproject.myo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,9 @@ public class PeriodController extends BaseController {
 	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("period");
-
+		
+		
+		
 		initSession(request, httpSession);
 
 		mav.addObject("currentSiteId", getCurrentSiteId());
