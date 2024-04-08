@@ -1,0 +1,11 @@
+<div class="container mt-5">
+	<button id="myButton" class="btn btn-primary">Click me</button>
+
+	<div id="myBox" class="white-box"></div>
+</div>
+
+<script>
+	document.getElementById('myButton').addEventListener('click', function() {
+		document.getElementById('myBox').classList.toggle('d-none');
+	});
+</script>
