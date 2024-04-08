@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<OkrUser, UUID> {
-
+	
 	@Query("select c from OkrUser c where c.email = :name")
+	// findByEmail auto generated and perform the query in @Query
 	OkrUser findByEmail(@Param("name") String name);
 
 }

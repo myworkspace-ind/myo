@@ -37,7 +37,7 @@ public class OkrUser implements Serializable {
 
 	private Integer numobjs;
 
-	private String role;
+	private String role;	
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="start_date")
