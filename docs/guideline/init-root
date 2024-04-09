@@ -17,8 +17,6 @@ INSERT INTO okr_orgs
 (id                     ,imp_name,name  ,org_id,manager_id) VALUES
 ('root' /*not nullable*/,'root'  ,'root','root','root'    );
 
-SELECT "user_id","manager_id","org_id","email","manager_email","name","role","department","numobjs","start_date","end_date" 
-FROM okr_users
-WHERE email = 'tien.bui@itd.com.vn';
+
 
 
