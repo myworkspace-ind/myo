@@ -1,11 +1,31 @@
-<div class="container mt-5">
-	<button id="myButton" class="btn btn-primary">Click me</button>
+<div class="container-fluid" id="MKSOLlink">
+	<button id="myButton" class="btn border border-secondary text-white"
+		title="Direct link to this tool">
+		<i class="bi bi-share-fill"></i> Link
+	</button>
 
-	<div id="myBox" class="white-box"></div>
+	<div id="myBox" class="black-box border border-secondary">
+		<h6 class="d-inline">Direct link to this tool</h6>
+		<button type="button" class="btn-close btn-close-white d-inline"
+			id="MKSOLbtnclose" aria-label="Close"></button>
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" value=""
+				id="ShortURL"> <label class="form-check-label"
+				for="ShortURL"> Short URL </label>
+		</div>
+		<textarea class="form-control" id="blackboxText" rows="4"></textarea>
+
+	</div>
 </div>
 
 <script>
 	document.getElementById('myButton').addEventListener('click', function() {
-		document.getElementById('myBox').classList.toggle('d-none');
+		document.getElementById('myBox').classList.toggle('d-block');
 	});
+</script>
+<script>
+	document.getElementById('MKSOLbtnclose').addEventListener('click',
+			function() {
+				document.getElementById('myBox').classList.toggle('d-block');
+			});
 </script>
