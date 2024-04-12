@@ -1,0 +1,22 @@
+
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+WHERE TABLE_NAME = 'okr_users' AND TABLE_SCHEMA = 'myo';
+
+ALTER TABLE okr_users DROP CONSTRAINT FKg5jh1bqpj8m502pl7jouguht4;
+ALTER TABLE okr_users DROP CONSTRAINT FKo4s4q9wbifequlq4pt25jle7u;
+
+
+
+
+INSERT INTO okr_users 
+(user_id                ,department,email           ,end_date        ,manager_email   ,name  ,numobjs,role  ,start_date      ,org_id,manager_id) VALUES
+('root' /*not nullable*/,'root'    ,'root@gmail.com',{d '2024-01-01'},'root@gmail.com','root',0      ,'root',{d '2024-04-03'},'root','root'    );
+
+INSERT INTO okr_orgs 
+(id                     ,imp_name,name  ,org_id,manager_id) VALUES
+('root' /*not nullable*/,'root'  ,'root','root','root'    );
+
+
+
+
