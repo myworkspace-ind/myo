@@ -18,7 +18,7 @@
 	</br>
 	<h5>Common interest</h5>
 	<div class="form-check">
-		<input class="form-check-input" type="radio" name="flexRadiointerest"
+		<input class="form-check-input" type="radio" name="flexRadioname"
 			id="flexRadiointerest"> <label class="form-check-label"
 			for="flexRadiointerest"> Enter an interest, eg 'cycling' to
 			find people with similar interests </label>
@@ -40,7 +40,14 @@
 			for="defaultCheck1"> Limit search to selected worksite </label>
 	</div>
 	</br>
-<!-- 	<p>Limit search to selected worksite</p>
- -->	
-<button type="button" class="btn MKSOuploadform text-white">Search</button>
+	<p>
+		Limit search to selected worksite <select
+			class="form-select MKSOLprivacyselect"
+			aria-label=".form-select-sm example">
+			<option selected>Intern Java</option>
+			<option value="1">HCMUS</option>
+		</select>
+	</p>
+
+	<button type="button" class="btn MKSOuploadform text-white">Search</button>
 </div>

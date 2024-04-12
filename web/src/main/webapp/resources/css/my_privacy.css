@@ -10,3 +10,16 @@ body {
 .MKSOuploadform {
 	background-color: #31353b;
 }
+
+.MKSOLprivacyselect{
+	margin-left: 2%;
+	width: 15%;
+	height: 60%;
+	background-color: #31353b;
+	border-radius: 0%;
+	font-size: 95%;
+	color: white;
+	display: inline;
+
+	
+}
