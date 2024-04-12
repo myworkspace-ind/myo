@@ -85,7 +85,8 @@ body {
 }
 
 #blackboxText {
-	margin-top: 5%; background-color : #1f2225;
+	margin-top: 5%;
+	background-color: #1f2225;
 	color: white;
 	border-radius: 0;
 	background-color: #1f2225;
@@ -114,9 +115,6 @@ body {
 	line-height: 32px;
 	margin: 0;
 	padding: 0;
-	
-	
-	
 }
 
 .MKSOLheadertabs {
@@ -124,30 +122,44 @@ body {
 	margin-top: 1%;
 }
 
-#MKSOLavatarprofile{
+#MKSOLavatarprofile {
 	margin: 2%;
-	margin-bottom:1%;
+	margin-bottom: 1%;
 	margin-left: 7%;
 	width: 200px;
 	height: 210px;
-	
 }
-#MKSOLchangpictureprofile{
+
+#MKSOLchangpictureprofile {
 	margin-left: 13%;
 	margin-top: 0% !important;
 	padding-top: 0%;
-	
-	
 }
+
 .MKSOuploadform {
 	background-color: #31353b;
 }
 
-.MKSOLbtnedit{
+.MKSOLbtnedit {
 	margin-left: 40%;
 	width: 10%;
 	height: 3%;
 	padding: 0;
 	font-size: 90%;
-	
 }
+
+.MKSOLbtneditform {
+	background-color: #31353b;
+	height: 3%;
+	width: 20%;
+	margin-top: 5%;
+}
+
+.invisible {
+	display: none;
+}
+
+.MKSOLedittext {
+	background-color: #1f2225;
+	width: 100%;
+ }
