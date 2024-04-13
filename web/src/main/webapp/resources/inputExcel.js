@@ -2,9 +2,9 @@
  * 
  */
 
- $(function (){
-	 $('#file').on('change', function(){
-		 // auto submit
-		 $('#excel-form').submit();
-	 })
- })
+// $(function (){
+//	 $('#file').on('change', function(){
+//		 // auto submit
+//		 $('#excel-form').submit();
+//	 })
+// })

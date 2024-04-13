@@ -27,7 +27,6 @@ public class OkrFileController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file, @ModelAttribute("model") ExcelFileModel model) throws IOException {
-		
 		ModelAndView m = new ModelAndView("okr_file");
 		model.setFile(file);
 		List<List<String>> data = new ArrayList<>();
