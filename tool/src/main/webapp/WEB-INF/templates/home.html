@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="fragments/head"></th:block>
+</head>
+<!--<body class="horizontal-layout horizontal-top-icon-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">-->
+<body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
+  <!-- fixed-top-->
+<!--    <th:block th:include="fragments/nav"></th:block>-->
+  <!-- ////////////////////////////////////////////////////////////////////////////-->
+  <!-- Horizontal navigation-->
+    <th:block th:include="fragments/hnav"></th:block>
+  <!-- Horizontal navigation-->
+  
+    <div class="container">
+        <div class="text-center">
+            <div class="lead">
+                <H1>Refer document at http://www.thymeleaf.org/doc/articles/layouts.html to make your own layout.</H1>
+            </div>
+            <div class="lead">Welcome to the generated source code Web Application for Sakai.</div>
+			<p>Login userId: <span th:text="${session.userDisplayName}"></span></p>
+			<p>Login Display Username: <span th:text="${session.userEid}"></span></p>
+			<p>Number of users: <span th:text="${#lists.size(users)}"/></p>
+			<p>Number of organizations: <span th:text="${#lists.size(orgs)}"/></p>
+			
+            <p>
+                <a id="signup" class="btn btn-success btn-lg">Sign up</a>
+            </p>
+        </div>
+<!--        <div th:insert="~{fragments/footer :: footer}">&copy; 2017 The MKS Group</div>-->
+    </div>
+	<th:block th:include="fragments/footer"></th:block>
+</body>
+</html>
