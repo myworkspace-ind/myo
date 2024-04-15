@@ -2,6 +2,10 @@ package org.sakaiproject.myo.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +18,7 @@ import java.util.UUID;
 @Entity
 @Table(name="okr_periods")
 @NamedQuery(name="OkrPeriod.findAll", query="SELECT o FROM OkrPeriod o")
+@Getter @Setter
 public class OkrPeriod implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,6 +31,8 @@ public class OkrPeriod implements Serializable {
 	private Date endDate;
 
 	private String name;
+	private String note;
+	private int year;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="start_date")
@@ -36,46 +43,6 @@ public class OkrPeriod implements Serializable {
 	private List<OkrObj> okrObjs;
 
 	public OkrPeriod() {
-	}
-
-	public UUID getId() {
-		return this.id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
-	public Date getEndDate() {
-		return this.endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Date getStartDate() {
-		return this.startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public List<OkrObj> getOkrObjs() {
-		return this.okrObjs;
-	}
-
-	public void setOkrObjs(List<OkrObj> okrObjs) {
-		this.okrObjs = okrObjs;
 	}
 
 	public OkrObj addOkrObj(OkrObj okrObj) {

@@ -24,14 +24,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
-import org.sakaiproject.myo.service.OrgService;
-import org.sakaiproject.myo.service.UserService;
+import org.sakaiproject.myo.entity.OkrPeriod;
+import org.sakaiproject.myo.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,12 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class PeriodController extends BaseController {
- 
 	@Autowired
-	UserService userService;
-	
-	@Autowired
-	OrgService orgService;
+	@Qualifier("PeriodService")
+	PeriodService periodService;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -55,22 +53,18 @@ public class PeriodController extends BaseController {
 	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("period");
-
 		initSession(request, httpSession);
 
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-
-		List<OkrUser> allUsers = userService.findAll();
-		int len = (allUsers != null) ? allUsers.size(): 0;
-		log.info("Number of users: " + len);
-
-		mav.addObject("users", allUsers);
+		List<OkrPeriod> allPeriods = periodService.findAll(); 
 		
-		mav.addObject("orgs", orgService.findAll());
+		int lenPeri = (allPeriods != null) ? allPeriods.size(): 0;
+		
+
+		log.info("Number of users: " + lenPeri);
+
+		mav.addObject("periods", allPeriods);
 
 		return mav;
 	}
-    
 
 }
