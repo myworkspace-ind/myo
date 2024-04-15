@@ -1,0 +1,17 @@
+@charset "ISO-8859-1";
+.MKSOuploadform {
+	background-color: #31353b;
+}
+.MKSOLbackground{
+	background-color: #1f2225;
+	border-color: white;
+	border-width: 1px;
+	
+}
+body{
+	font: "Open Sans", sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	
+}
