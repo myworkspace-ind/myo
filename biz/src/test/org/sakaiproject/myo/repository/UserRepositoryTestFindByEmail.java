@@ -17,11 +17,13 @@ public class UserRepositoryTestFindByEmail {
 
 	@Test
 	public void testFindByEmail() {
+		
 		OkrUser user = new OkrUser();
 		user.setEmail("nhan@gmail.com");
 		
 		try {
 			OkrUser obj = up.findByEmail("nhan@gmail.com");
+			
 			Assert.assertNotNull(obj);
 			Assert.assertEquals(obj,user);
 			
