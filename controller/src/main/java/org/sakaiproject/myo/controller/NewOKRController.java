@@ -24,16 +24,21 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.sakaiproject.myo.model.OkrListModel;
 import org.sakaiproject.myo.model.TableStructure;
 import org.sakaiproject.myo.service.OrgService;
 import org.sakaiproject.myo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,4 +94,14 @@ public class NewOKRController extends BaseController {
 				
         return empTable;
     }
+	
+    @PostMapping(value = "/newokr/save")
+    @ResponseBody
+	public String processSave(@ModelAttribute("model") OkrListModel model, BindingResult bindingResult, MultipartHttpServletRequest request) {
+
+		// Debug
+		log.debug("Submitted data:" + model.getData());
+
+		return "OK";
+	}
 }
