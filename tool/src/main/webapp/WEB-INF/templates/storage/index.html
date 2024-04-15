@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="fragments/head"></th:block>
+</head>
+
+<body>
+  <!-- Horizontal navigation-->
+    <th:block th:include="fragments/hnav"></th:block>
+    
+    <!-- Main screen -->
+    <th:block th:include="fragments/storage/view"></th:block>
+	
+	<th:block th:include="fragments/footer"></th:block>
+	<!-- Screen Javascript --> 
+	<script type="text/javascript" th:src="@{/resources/js/storage/init.js}" ></script>
+	<script type="text/javascript" th:src="@{/resources/js/storage/search.js}" ></script>
+</body>
+</html>
