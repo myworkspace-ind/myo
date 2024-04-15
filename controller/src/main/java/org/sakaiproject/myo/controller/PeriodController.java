@@ -43,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PeriodController extends BaseController {
 	@Autowired
-	@Qualifier("PeriodService")
 	PeriodService periodService;
 
 	/**
