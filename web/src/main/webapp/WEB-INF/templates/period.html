@@ -4,25 +4,6 @@
 <th:block th:include="fragments/head"></th:block>
 </head>
 <style>
-table {
-	font-family: arial, sans-serif;
-	border-collapse: collapse;
-	width: 50%;
-}
-
-td, th {
-	border: 1px solid #dddddd;
-	text-align: left;
-	padding: 8px;
-}
-
-tr:nth-child(even) {
-	background-color: #dddddd;
-}
-
-form {
-	width: 50%;
-}
 </style>
 <!--<body class="horizontal-layout horizontal-top-icon-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">-->
 <body
@@ -41,78 +22,74 @@ form {
 				<H1>Period</H1>
 			</div>
 			<div id="contain" style="display: flex; align-items: center">
-				<div id="left" style="width: 20%">
-					<form id="form">
-						<p>Period name</p>
-						<input type="text" id='period_name'><br> <br>
-						<p>Start date</p>
-						<input type="date" id="start_date"><br> <br>
-						<p>End date</p>
-						<input type="date" id="end_date"><br> <br>
-						<button id="submitBtn">Submit</button>
-						<br>
-					</form>
-					<br> <br> <label for="period">Period</label> <select
-						id="period" name="period">
-						<option value="none"
-							style="text-align: center; white-space: normal;">Not
-							select</option>
-					</select>
-				</div>
-				<div id="right">
-					<table id="table">
-						<tr>
-							<th>Period name</th>
-							<th>Start date</th>
-							<th>End date</th>
-							<th>Note</th>
-						</tr>
-					</table>
+				<div id="right" style="margin:auto; margin-left:auto; margin-right:auto;">
+					<div id="example" class="hot"></div>
 				</div>
 			</div>
 		</div>
 
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/handsontable@14.2/dist/handsontable.full.min.js"></script>
+		<link rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
 		<script>
-			var form = document.getElementById("form");
-			form.addEventListener('submit', function(event) {
-				event.preventDefault()
-				console.log('1');
-				var periodName = document.getElementById('period_name').value;
-				var startDate = document.getElementById('start_date').value;
-				var endDate = document.getElementById('end_date').value;
-				var period = document.getElementById('period');
-				var table = document.getElementById('table');
+		const container = document.querySelector('#example');
 
-				var opt = document.createElement('option');
-				opt.value = periodName;
-				opt.innerHTML = periodName + ' (' + startDate + ' - ' + endDate
-						+ ')';
-				period.appendChild(opt);
-				console.log(periodName);
-				console.log(startDate);
-				console.log(endDate);
+		data = [
+			  [
+			    false,
+			    "First period",
+			    "01/01/2024",
+			    "31/03/2024",
+			    "None"
+			  ],
+			  [
+				 false,
+				 "Second period",
+				 "01/04/2024",
+				 "31/06/2024",
+				 "None"
+			],			 
+				  
+		];
+		
+		
+		const hot = new Handsontable(container, {
+			data,
+			  height: 450,
+			  width: 1000,
+			  colWidths: [170, 156, 222, 130, 130, 120, 120],
+			  colHeaders: [
+			    "Period name",
+			    "Start date",
+			    "End date",
+			    "Note",
+			  ],
+			  columns: [
+			    { data: 1, type: "text" },
+			    {
+					data: 2,
+				    type: "date",
+				    allowInvalid: false,
+				},
+				{
+					data: 3,
+					type: "date",
+					allowInvalid: false,
+				},
+			    { data: 4, type: "text" },
 
-				var tr = document.createElement('tr');
-				var th1 = document.createElement('th');
-				var th2 = document.createElement('th');
-				var th3 = document.createElement('th');
-				var th4 = document.createElement('th');
+			  ],
+		  rowHeaders: true,
+		  height: 'auto',
+		  autoWrapRow: true,
+		  autoWrapCol: true,
+		  licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+		});
 
-				th1.value = periodName;
-				th2.value = startDate;
-				th3.value = endDate;
-
-				th1.innerHTML = periodName;
-				th2.innerHTML = startDate;
-				th3.innerHTML = endDate;
-				table.appendChild(tr);
-				table.appendChild(th1);
-				table.appendChild(th2);
-				table.appendChild(th3);
-				table.appendChild(th4);
-			});
+		
 		</script>
-		<!--        <div th:insert="~{fragments/footer :: footer}">&copy; 2017 The MKS Group</div>-->
 	</div>
 	<th:block th:include="fragments/footer"></th:block>
 </body>
