@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="myo-web-23.0">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="myo-api-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-api/myo-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="myo-common-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-common/myo-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="myo-jpa-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-jpa/myo-jpa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="myo-controller-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-controller/myo-controller">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="myo-impl-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-impl/myo-impl">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="myo-biz-23.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/myo-biz/myo-biz">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="myo-web"/>
+        <property name="java-output-path" value="/myo-web/target/classes"/>
+    </wb-module>
+</project-modules>
