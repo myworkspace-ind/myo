@@ -31,6 +31,7 @@ public class OkrPeriod implements Serializable {
 	private Date endDate;
 
 	private String name;
+	private String note;
 	private int year;
 
 	@Temporal(TemporalType.DATE)

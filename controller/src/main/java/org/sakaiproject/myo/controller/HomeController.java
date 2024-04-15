@@ -55,16 +55,15 @@ public class HomeController extends BaseController {
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("home");
-
 		initSession(request, httpSession);
 
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+//		mav.addObject("currentSiteId", getCurrentSiteId());
+//		mav.addObject("userDisplayName", getCurrentUserDisplayName());
 
 		List<OkrUser> allUsers = userService.findAll();
 		int len = (allUsers != null) ? allUsers.size(): 0;
 		log.info("Number of users: " + len);
-
+		System.out.println("Hello World!");
 		mav.addObject("users", allUsers);
 		
 		mav.addObject("orgs", orgService.findAll());

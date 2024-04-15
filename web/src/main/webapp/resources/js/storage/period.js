@@ -6,6 +6,7 @@ const container = document.querySelector('#example');
 		data = [
 			  [
 			    false,
+			    "2024",
 			    "First period",
 			    "01/01/2024",
 			    "31/03/2024",
@@ -13,6 +14,7 @@ const container = document.querySelector('#example');
 			  ],
 			  [
 				 false,
+				 "2024",
 				 "Second period",
 				 "01/04/2024",
 				 "31/06/2024",
@@ -20,6 +22,7 @@ const container = document.querySelector('#example');
 			  ],		
 			[
 			    false,
+			    "2024",
 			    "Third period",
 			    "01/07/2024",
 			    "30/09/2024",
@@ -27,6 +30,7 @@ const container = document.querySelector('#example');
 			 ],	 
 			 [
 			    false,
+			    "2024",
 			    "Fourth period",
 			    "01/10/2024",
 			    "31/12/2024",
@@ -42,6 +46,7 @@ const container = document.querySelector('#example');
 			  width: 1000,
 			  colWidths: [170, 156, 222, 130, 130, 120, 120],
 			  colHeaders: [
+				"Year",
 			    "Period name",
 			    "Start date",
 			    "End date",
@@ -62,6 +67,7 @@ const container = document.querySelector('#example');
 			    { data: 4, type: "text" },
 
 			  ],
+			mergeCells: [{ row: 1, col: 1, rowspan: 0, colspan: 3 }],
 		  rowHeaders: true,
 		  height: 'auto',
 		  autoWrapRow: true,

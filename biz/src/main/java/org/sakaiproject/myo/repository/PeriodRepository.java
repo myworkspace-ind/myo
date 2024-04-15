@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-public interface PeriRepository extends JpaRepository<OkrPeriod, UUID> {
+@Repository
+public interface PeriodRepository extends JpaRepository<OkrPeriod, UUID> {
 
-	@Query("select c from OkrPeriod c where c.id = :idperi")
-	OkrPeriod findById(@Param("idperi") String idperi);
+	@Query("select c from OkrPeriod c where c.name = :name")
+	OkrPeriod findByName(@Param("name") String name);
 
 }
