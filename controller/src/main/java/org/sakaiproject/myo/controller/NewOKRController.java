@@ -24,17 +24,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
+import org.sakaiproject.myo.model.TableStructure;
 import org.sakaiproject.myo.service.OrgService;
 import org.sakaiproject.myo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NewOKRController extends BaseController {
  
+	@Value("${okr.colHeaders}")
+	private String[] okrColHeaders;
+	
+	@Value("${okr.colWidths}")
+	private int[] okrColWidths;
+
 	@Autowired
 	UserService userService;
 	
@@ -75,25 +80,13 @@ public class NewOKRController extends BaseController {
 		ModelAndView mav = new ModelAndView("newokr");
 		return mav;
 	}
-//	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
-//	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
-//		log.debug("Start CRUD object " + objName);
-//
-//		ModelAndView mav = new ModelAndView("crud");
-//
-//		initSession(request, httpSession);
-//
-//		mav.addObject("currentSiteId", getCurrentSiteId());
-//		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-//
-//		List<OkrUser> allUsers = userService.findAll();
-//		int len = (allUsers != null) ? allUsers.size(): 0;
-//		log.info("Number of users: " + len);
-//
-//		mav.addObject("users", allUsers);
-//		
-//		mav.addObject("orgs", orgService.findAll());
-//
-//		return mav;
-//	}
+	@GetMapping(value = {"/newokr/load/okr"}, produces="application/json")
+	@ResponseBody
+    public TableStructure getEmployeeTableData() {
+
+		List<Object[]> lstOkrs = null;
+		TableStructure empTable = new TableStructure(okrColWidths, okrColHeaders, lstOkrs);
+				
+        return empTable;
+    }
 }
