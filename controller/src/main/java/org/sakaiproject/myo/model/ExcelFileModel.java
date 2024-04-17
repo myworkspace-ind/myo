@@ -25,7 +25,7 @@ public class ExcelFileModel {
 			Workbook workbook = WorkbookFactory.create(is);
 			Sheet sheet = workbook.getSheetAt(0); // first sheet
 			for (int[] index : indexes) {
-                int rowIndex = index[0];
+				int rowIndex = index[0];
                 int colIndex = index[1];
                 
                 Row row = sheet.getRow(rowIndex);
