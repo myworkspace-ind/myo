@@ -35,7 +35,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * Handles requests for the application home page.
  */
 @Controller
-public class MyProfileController extends BaseController {
+public class MyCVController extends BaseController {
  
 	   /**
      * This method is called when binding the HTTP parameter to bean (or model).
@@ -56,18 +56,15 @@ public class MyProfileController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
      * @return 
 	 */
-	@RequestMapping(value = {"MyProfile"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"MyCV"}, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("my_profile");
+		ModelAndView mav = new ModelAndView("my_cv");
 
-		/*
-		 * initSession(request, httpSession);
-		 * 
-		 * mav.addObject("currentSiteId", getCurrentSiteId());
-		 * mav.addObject("userDisplayName", getCurrentUserDisplayName());
-		 */
-
+		initSession(request, httpSession);
 		
+		mav.addObject("currentSiteId", getCurrentSiteId());
+		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+
 		return mav;
 	}
 }

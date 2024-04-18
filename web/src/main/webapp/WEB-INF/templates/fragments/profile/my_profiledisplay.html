@@ -61,12 +61,54 @@
 			</div>
 
 			</br> </br> </br>
+			
 			<h6>Name Pronunciation and Pronouns</h6>
 			<hr class="hr text-primary m-0" />
-			<p class="d-inline">You haven't filled out any information yet</p>
-			<button type="button" class="btn btn-secondary d-inline MKSOLbtnedit">
-				<i class="bi bi-pencil"></i>Edit
-			</button>
+			<div class="visible" id="MKSOLdisplaypronunciationform">
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton"
+					onclick="MKSOLeditpronunciationbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditpronunciationform" class="invisible">
+				<div class="container">
+					<div class="row">
+						<div class="col-3">
+							<p>Allows you to provide written phonetic pronunciation
+								and/or audio recordings of your name. This pronunciation will be
+								visible to instructors / students enrolled in your course sites.
+
+							</p>
+							<p class="fw-bold">Nickname</p>
+							<p class="fw-bold">Birthday</p>
+							<p class="fw-bold">Personal summary</p>
+						</div>
+						<div class="col-8">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLPronouns" aria-describedby="MKSOLPronouns"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLPhoneticPronunciation	"
+								aria-describedby="MKSOLPhoneticPronunciation"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLNameRecording" aria-describedby="MKSOLNameRecording">
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditpronunciationsave"
+						onclick="MKSOLeditpronunciationsavevisible()">Save
+						changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditpronunciationcancel"
+						onclick="MKSOLeditpronunciationcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
+
 			</br> </br> </br>
 			<h6>Contact Information</h6>
 			<hr class="hr text-primary m-0" />
@@ -96,8 +138,6 @@
 				<i class="bi bi-pencil"></i>Edit
 			</button>
 			</br> </br> </br>
-
-
 
 
 		</div>
