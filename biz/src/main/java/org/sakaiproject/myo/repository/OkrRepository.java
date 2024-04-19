@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import org.sakaiproject.myo.entity.OkrObj;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Repository
 public interface OkrRepository extends JpaRepository<OkrObj, UUID> {
@@ -59,9 +59,6 @@ public interface OkrRepository extends JpaRepository<OkrObj, UUID> {
     		+ "ORDER BY p.name, g.name, u.name, o.name, kr_weight, k.name",  nativeQuery = true)
     List<Object[]> findObjByEmail(@Param("emails") String[] emails);
     
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO test (name, status, complete, notes) VALUES (:name, :status, :complete, :notes)",nativeQuery = true )
-    void insertnewOkr(@Param("name") String name,@Param("status") String status,@Param("complete") String complete,@Param("notes") String notes );
+
     
 }

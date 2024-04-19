@@ -20,11 +20,7 @@ public class OkrServiceImpl implements OkrService {
 		return okrRepo;
 	}
 	
-	@Override
-	public void addOKR(String name, String status, String complete, String notes) {
-		okrRepo.insertnewOkr(name, status, complete, notes);	
-	
-	}
+
 	
 
 	
