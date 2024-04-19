@@ -94,3 +94,4 @@ public class myprofile_user {
 	private String PHONETIC_PRONUNCIATION;
 	private String PRONOUNS;
 }
+
