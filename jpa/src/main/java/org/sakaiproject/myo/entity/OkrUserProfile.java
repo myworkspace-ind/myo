@@ -92,7 +92,7 @@ public class OkrUserProfile implements Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID ID;
+	private BigInteger ID;
 	private int VERSION;
 	private String PERSON_TYPE;
 	private String UUID;
@@ -184,11 +184,11 @@ public class OkrUserProfile implements Serializable {
 	public OkrUserProfile() {
 	}
 
-	public UUID getId() {
+	public BigInteger getId() {
 		return this.ID;
 	}
 
-	public void setId(UUID ID) {
+	public void setId(BigInteger ID) {
 		this.ID = ID;
 	}
 

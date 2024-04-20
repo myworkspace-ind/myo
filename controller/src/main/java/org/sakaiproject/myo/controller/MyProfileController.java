@@ -19,19 +19,33 @@
 
 package org.sakaiproject.myo.controller;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.sakaiproject.myo.entity.OkrUser;
+import org.sakaiproject.myo.entity.OkrUserProfile;
+import org.sakaiproject.myo.repository.UserRepositoryProfile;
+import org.sakaiproject.myo.service.OrgService;
+import org.sakaiproject.myo.service.UserService;
+import org.sakaiproject.myo.service.UserServiceProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Handles requests for the application home page.
  */
+@Slf4j
 @Controller
 public class MyProfileController extends BaseController {
 
@@ -50,6 +64,10 @@ public class MyProfileController extends BaseController {
 
 	}
 
+	@Autowired
+	UserServiceProfile userService;
+	@Autowired
+	UserRepositoryProfile userRepositoryProfile;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -59,9 +77,20 @@ public class MyProfileController extends BaseController {
 	@RequestMapping(value = { "MyProfile" }, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("my_profile");
-		
-		  return mav;
-		  
+		/*
+		 * List<OkrUserProfile> allUsers = userService.findAll(); int len = (allUsers !=
+		 * null) ? allUsers.size(): 0; log.info("Number of users: " + len);
+		 * mav.addObject("users", allUsers);
+		 */
+
+		String userEmail = "nmtuan20@apcs.fitus.edu.vn";
+		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
+
+		if (user != null) {
+			mav.addObject("user", user);
+
+		} 
+		return mav;
 	}
 
 }

@@ -1,4 +1,4 @@
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-2" th:if="${user}">
 	<div class="row d-flex justify-content-start">
 		<div class="col-3">
 			<img alt="avatar" src="resources/assets/img/profile/avatar.jpg"
@@ -9,7 +9,7 @@
 			</button>
 		</div>
 		<div class="col-7">
-			<h3 class="">Email</h3>
+			<h3 class="" th:text="'' + ${user.getLast_modified_by()}"></h3>
 			<div class="form-group MKSOuploadform p-3 rounded">
 				<label for="exampleInputEmail1">Status</label> <input type="email"
 					class="form-control mt-2 mb-2" id="exampleInputEmail1"
@@ -61,7 +61,7 @@
 			</div>
 
 			</br> </br> </br>
-			
+
 			<h6>Name Pronunciation and Pronouns</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaypronunciationform">
@@ -142,4 +142,7 @@
 
 		</div>
 	</div>
+</div>
+<div th:unless="${user}">
+	<p>User not found!</p>
 </div>

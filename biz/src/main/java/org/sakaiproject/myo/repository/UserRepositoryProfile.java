@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepositoryProfile extends JpaRepository<OkrUserProfile, UUID> {
 
-	@Query("select c from OkrUserProfile c where c.MAIL = :name")
-	OkrUser findByEmail(@Param("name") String name);
+	@Query("select c from OkrUserProfile c where c.LAST_MODIFIED_BY = :name")
+	OkrUserProfile findByEmail(@Param("name") String name);
 
 }
