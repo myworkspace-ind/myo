@@ -13,8 +13,8 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name = "SAKAI_PERSON_T")
-@NamedQuery(name = "SAKAI_PERSON_T.findAll", query = "SELECT o FROM SAKAI_PERSON_T o")
+@Table(name = "sakai_person_t")
+@NamedQuery(name = "OkrUserProfile.findAll", query = "SELECT o FROM OkrUserProfile o")
 public class OkrUserProfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -887,5 +887,7 @@ public class OkrUserProfile implements Serializable {
 	public void setPronouns(String PRONOUNS) {
 		this.PRONOUNS = PRONOUNS;
 	}
+	
+	
 
 }
