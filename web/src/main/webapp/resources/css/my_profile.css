@@ -162,4 +162,16 @@ body {
 .MKSOLedittext {
 	background-color: #1f2225;
 	width: 100%;
- }
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    background-color: #1f2225;
+    color: white;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
