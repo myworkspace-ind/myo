@@ -76,23 +76,25 @@
 			<div id="MKSOLeditpronunciationform" class="invisible">
 				<div class="container">
 					<div class="row">
+						<p>Allows you to provide written phonetic pronunciation and/or
+							audio recordings of your name. This pronunciation will be visible
+							to instructors / students enrolled in your course sites.</p>
 						<div class="col-3">
-							<p>Allows you to provide written phonetic pronunciation
-								and/or audio recordings of your name. This pronunciation will be
-								visible to instructors / students enrolled in your course sites.
 
-							</p>
-							<p class="fw-bold">Nickname</p>
-							<p class="fw-bold">Birthday</p>
-							<p class="fw-bold">Personal summary</p>
+							<p class="fw-bold">Pronouns</p>
+							<p class="fw-bold">Phonetic Pronunciation</p>
+							<p class="">Examples:</p>
+							<p class="fw-bold">Name Recording</p>
 						</div>
-						<div class="col-8">
+						<div class="col-7">
 							<input type="text" class="form-control MKSOLedittext"
 								id="MKSOLPronouns" aria-describedby="MKSOLPronouns"> <input
 								type="text" class="form-control  MKSOLedittext"
 								id="MKSOLPhoneticPronunciation	"
-								aria-describedby="MKSOLPhoneticPronunciation"> <input
-								type="text" class="form-control  MKSOLedittext"
+								aria-describedby="MKSOLPhoneticPronunciation">
+							<p class="">kris-TEEN BEAR-it (Christine Berret) uh-JEET
+								CHOW-lah (Ajeet Chawla)</p>
+							<input type="text" class="form-control  MKSOLedittext"
 								id="MKSOLNameRecording" aria-describedby="MKSOLNameRecording">
 						</div>
 					</div>
@@ -112,31 +114,274 @@
 			</br> </br> </br>
 			<h6>Contact Information</h6>
 			<hr class="hr text-primary m-0" />
-			<p class="d-inline">You haven't filled out any information yet</p>
-			<button type="button" class="btn btn-secondary d-inline MKSOLbtnedit">
-				<i class="bi bi-pencil"></i>Edit
-			</button>
+			<div class="visible" id="MKSOLdisplaycontactform">
+
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton" onclick="MKSOLeditcontactbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditcontactform" class="invisible">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-3">
+
+							<p class="fw-bold">Email</p>
+							<p class="fw-bold">Home page</p>
+							<p class="fw-bold">Work phone</p>
+							<p class="fw-bold">Home phone</p>
+							<p class="fw-bold">Mobile phone</p>
+							<p class="fw-bold">Facsimile</p>
+
+
+						</div>
+						<div class="col-7">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLEmail" aria-describedby="MKSOLEmail"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLHomepage" aria-describedby="MKSOLHomepage"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLWorkphone" aria-describedby="MKSOLWorkphone"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLHomephone	" aria-describedby="MKSOLHomephone">
+							<input type="text" class="form-control  MKSOLedittext"
+								id="MKSOLMobilephone" aria-describedby="MKSOLMobilephone">
+							<input type="text" class="form-control  MKSOLedittext"
+								id="MKSOLFacsimile" aria-describedby="MKSOLFacsimile">
+
+
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditcontactsave" onclick="MKSOLeditcontactsavevisible()">Save
+						changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditcontactcancel"
+						onclick="MKSOLeditcontactcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
 			</br> </br> </br>
 			<h6>Staff Information</h6>
 			<hr class="hr text-primary m-0" />
-			<p class="d-inline">You haven't filled out any information yet</p>
-			<button type="button" class="btn btn-secondary d-inline MKSOLbtnedit">
-				<i class="bi bi-pencil"></i>Edit
-			</button>
+			<div class="visible" id="MKSOLdisplaystaffform">
+
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton" onclick="MKSOLeditstaffbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditstaffform" class="invisible">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-3">
+
+							<p class="fw-bold">Position</p>
+							<p class="fw-bold">Department</p>
+							<p class="fw-bold">School</p>
+							<p class="fw-bold">Room</p>
+							<p class="fw-bold">Staff profile</p>
+							<p class="fw-bold">University profile URL</p>
+							<p class="fw-bold">Academic/research URL</p>
+							<p class="fw-bold">Publications and conferences</p>
+
+
+
+
+						</div>
+						<div class="col-7">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLPosition" aria-describedby="MKSOLPosition"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLDepartment" aria-describedby="MKSOLDepartment">
+							<input type="text" class="form-control  MKSOLedittext"
+								id="MKSOLSchool" aria-describedby="MKSOLSchool"> <input
+								type="text" class="form-control  MKSOLedittext" id="MKSOLRoom"
+								aria-describedby="MKSOLRoom"> <input type="text"
+								class="form-control  MKSOLedittext" id="MKSOLStaffprofile"
+								aria-describedby="MKSOLStaffprofile">
+							<p></p>
+							<input type="text" class="form-control  MKSOLedittext"
+								id="MKSOLUniversityprofileURL"
+								aria-describedby="MKSOLUniversityprofileURL"> </br> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLAcademicresearchURL"
+								aria-describedby="MKSOLAcademicresearchURL"> </br> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLPublicationsandconferences"
+								aria-describedby="MKSOLPublicationsandconferences">
+
+
+
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstaffsave" onclick="MKSOLeditstaffsavevisible()">Save
+						changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstaffcancel" onclick="MKSOLeditstaffcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
 			</br> </br> </br>
+			<h6>Student Information</h6>
+			<hr class="hr text-primary m-0" />
+			<div class="visible" id="MKSOLdisplaystudentform">
+
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton" onclick="MKSOLeditstudentbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditstudentform" class="invisible">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-3">
+
+							<p class="fw-bold">Degree/Course</p>
+							<p class="fw-bold">Subjects</p>
+
+
+
+						</div>
+						<div class="col-7">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLDegree" aria-describedby="MKSOLDegree"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLSubjects" aria-describedby="MKSOLSubjects">
+
+
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstudentsave" onclick="MKSOLeditstudentsavevisible()">Save
+						changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstudentcancel"
+						onclick="MKSOLeditstudentcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
+			</br> </br> </br>
+
 			<h6>Social Networking</h6>
 			<hr class="hr text-primary m-0" />
-			<p class="d-inline">You haven't filled out any information yet</p>
-			<button type="button" class="btn btn-secondary d-inline MKSOLbtnedit">
-				<i class="bi bi-pencil"></i>Edit
-			</button>
+			<div class="visible" id="MKSOLdisplaysocialform">
+
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton" onclick="MKSOLeditsocialbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditsocialform" class="invisible">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-3">
+
+							<p class="fw-bold">Facebook URL</p>
+							<p class="fw-bold">LinkedIn URL</p>
+							<p class="fw-bold">MySpace URL</p>
+							<p class="fw-bold">Instagram URL</p>
+							<p class="fw-bold">Skype username</p>
+							<p class="fw-bold">X URL</p>
+
+
+						</div>
+						<div class="col-7">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLFacebook" aria-describedby="MKSOLFacebook"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLLinkedIn" aria-describedby="MKSOLLinkedIn"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLMySpace" aria-describedby="MKSOLMySpace"> <input
+								type="text" class="form-control  MKSOLedittext"
+								id="MKSOLInstagram	" aria-describedby="MKSOLInstagram">
+							<input type="text" class="form-control  MKSOLedittext"
+								id="MKSOLSkype" aria-describedby="MKSOLSkype"> <input
+								type="text" class="form-control  MKSOLedittext" id="MKSOLX"
+								aria-describedby="MKSOLX">
+
+
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstaffsave" onclick="MKSOLeditsocialsavevisible()">Save
+						changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditstaffcancel" onclick="MKSOLeditsocialcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
 			</br> </br> </br>
 			<h6>Personal Information</h6>
 			<hr class="hr text-primary m-0" />
-			<p class="d-inline">You haven't filled out any information yet</p>
-			<button type="button" class="btn btn-secondary d-inline MKSOLbtnedit">
-				<i class="bi bi-pencil"></i>Edit
-			</button>
+			<div class="visible" id="MKSOLdisplaypersonalform">
+
+				<p class="d-inline">You haven't filled out any information yet</p>
+				<button type="button"
+					class="btn btn-secondary d-inline MKSOLbtnedit"
+					id="MKSOLeditbutton" onclick="MKSOLeditpersonalbuttoninvisible()">
+					<i class="bi bi-pencil"></i>Edit
+				</button>
+			</div>
+			<div id="MKSOLeditpersonalform" class="invisible">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-3">
+
+							<p class="fw-bold">Favorite books</p>
+							<p class="fw-bold">Favorite TV shows</p>
+							<p class="fw-bold">Favorite movies</p>
+							<p class="fw-bold">Favorite quotes</p>
+
+
+						</div>
+						<div class="col-7">
+							<input type="text" class="form-control MKSOLedittext"
+								id="MKSOLbooks" aria-describedby="MKSOLbooks"> <input
+								type="text" class="form-control  MKSOLedittext" id="MKSOLshows"
+								aria-describedby="MKSOLshows"> <input type="text"
+								class="form-control  MKSOLedittext" id="MKSOLmovies"
+								aria-describedby="MKSOLmovies"> <input type="text"
+								class="form-control  MKSOLedittext" id="MKSOLquotes"
+								aria-describedby="MKSOLquotes">
+
+
+
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditpersonalsave"
+						onclick="MKSOLeditpersonalsavevisible()">Save changes</button>
+					<button type="button"
+						class="btn btn-secondary d-inline MKSOLbtneditform"
+						id="MKSOLeditpersonalcancel"
+						onclick="MKSOLeditpersonalcancelvisible()">Cancel</button>
+
+				</div>
+			</div>
 			</br> </br> </br>
 
 
