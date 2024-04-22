@@ -8,4 +8,6 @@ import org.sakaiproject.myo.repository.PeriodRepository;
 public interface PeriodService {
 	public List<OkrPeriod> findAll();
 	PeriodRepository getPeriodRepository();
+	public void processPeriods();
+	
 }

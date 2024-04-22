@@ -62,7 +62,7 @@ public class HomeController extends BaseController {
 
 		List<OkrUser> allUsers = userService.findAll();
 		int len = (allUsers != null) ? allUsers.size(): 0;
-		log.info("Number of users: " + len);
+		System.out.println("Number of users: " + len);
 		System.out.println("Hello World!");
 		mav.addObject("users", allUsers);
 		

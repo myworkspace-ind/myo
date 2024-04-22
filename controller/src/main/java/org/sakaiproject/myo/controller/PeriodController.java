@@ -51,15 +51,17 @@ public class PeriodController extends BaseController {
 	 */
 	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
+		System.out.println("Hello ");
 		ModelAndView mav = new ModelAndView("period");
 		initSession(request, httpSession);
-
+		System.out.println("Hello 2");
 		List<OkrPeriod> allPeriods = periodService.findAll(); 
-		
-		int lenPeri = (allPeriods != null) ? allPeriods.size(): 0;
-		
-
-		log.info("Number of users: " + lenPeri);
+		System.out.println("Hello 3");
+		System.out.println("Customers found with findAll():");
+		System.out.println("-------------------------------");
+		int len = (allPeriods != null) ? allPeriods.size(): 0;
+		System.out.println("Number of periods: " + len);
+		periodService.processPeriods();
 
 		mav.addObject("periods", allPeriods);
 
