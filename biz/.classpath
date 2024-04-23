@@ -28,6 +28,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="module" value="true"/>
+			<attribute name="add-exports" value="java.xml/com.sun.org.apache.xml.internal.serializer=ALL-UNNAMED:java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
