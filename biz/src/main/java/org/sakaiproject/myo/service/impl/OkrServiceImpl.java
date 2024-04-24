@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OkrServiceImpl implements OkrService {
 	
-	private final OkrRepository okrRepo;
+	private OkrRepository okrRepo;
 	
 	@Autowired
 	public OkrServiceImpl(OkrRepository okrRepo) {
@@ -20,7 +20,10 @@ public class OkrServiceImpl implements OkrService {
 		return okrRepo;
 	}
 	
-
+	@Override
+	public void addOkr() {
+		this.okrRepo.insertOkr();
+	}
 	
 
 	
