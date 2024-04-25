@@ -165,8 +165,8 @@ body {
 }
 
 .MKSOLedittext:focus {
-	background-color: #1f2225;
-	color: white;
+	background-color: #1f2225 MKSOLedittext;
+	color: white MKSOLedittext;
 }
 
 .dropdown-menu {

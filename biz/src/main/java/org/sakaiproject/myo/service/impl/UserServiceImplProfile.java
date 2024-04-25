@@ -2,6 +2,10 @@ package org.sakaiproject.myo.service.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.sakaiproject.myo.entity.OkrUser;
 import org.sakaiproject.myo.entity.OkrUserProfile;
 import org.sakaiproject.myo.repository.UserRepository;
@@ -25,6 +29,13 @@ public class UserServiceImplProfile implements UserServiceProfile {
 	@Override
 	public UserRepositoryProfile getRepo() {
 		return userRepo;
+	}
+
+
+
+	@Transactional
+	public void updateUserProfile(String email, String description, String nickname) {
+		userRepo.updateUserProfile(email, description, nickname);
 	}
 
 }

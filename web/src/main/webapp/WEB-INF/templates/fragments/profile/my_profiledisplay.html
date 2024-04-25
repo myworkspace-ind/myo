@@ -45,34 +45,37 @@
 					<i class="bi bi-pencil"></i>Edit
 				</button>
 			</div>
-			<div id="MKSOLeditform" class="invisible">
-				<div class="container">
-					<div class="row">
-						<div class="col-3">
-							<p class="fw-bold">Nickname</p>
-							<p class="fw-bold">Birthday</p>
-							<p class="fw-bold">Personal summary</p>
-						</div>
-						<div class="col-8">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLNickname" aria-describedby="MKSOLNickname"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLBirthday" aria-describedby="MKSOLBirthday"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLPersonalsummary"
-								aria-describedby="MKSOLPersonalsummary">
-						</div>
-					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditsave" onclick="MKSOLeditsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditcancel" onclick="MKSOLeditcancelvisible()">Cancel</button>
+			<form id="updateForm">
 
+				<div id="MKSOLeditform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Nickname</p>
+								<p class="fw-bold">Birthday</p>
+								<p class="fw-bold">Personal summary</p>
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLNickname" aria-describedby="MKSOLNickname"
+									name="nickname"> <input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLBirthday"
+									aria-describedby="MKSOLBirthday" name="email"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLPersonalsummary"
+									aria-describedby="MKSOLPersonalsummary" name="description">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditcancelvisible()">Cancel</button>
+
+					</div>
 				</div>
-			</div>
+			</form>
 
 			</br> </br> </br>
 
@@ -419,3 +422,32 @@
 <div th:unless="${user}">
 	<p>User not found!</p>
 </div>
+
+
+<script>
+	document.getElementById('MKSOLeditsave').addEventListener(
+			'click',
+			function() {
+				var form = document.getElementById('updateForm');
+				var formData = new FormData(form);
+
+				var description = formData.get('description');
+				var nickname = formData.get('nickname');
+
+				var url = '/myo-web/MyProfileUpdate?'
+						+ 'description='
+						+ encodeURIComponent(description) + '&nickname='
+						+ encodeURIComponent(nickname);
+
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', url, true);
+				xhr.onload = function() {
+					if (xhr.status === 200) {
+						alert('Profile updated successfully!');
+					} else {
+						alert('Failed to update profile. Please try again.');
+					}
+				};
+				xhr.send();
+			});
+</script>
