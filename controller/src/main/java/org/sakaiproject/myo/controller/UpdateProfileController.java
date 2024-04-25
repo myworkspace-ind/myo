@@ -21,6 +21,7 @@
 package org.sakaiproject.myo.controller;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,14 +78,16 @@ public class UpdateProfileController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = { "MyProfileUpdate" }, method = RequestMethod.GET)
-	public ModelAndView updateProfile(@RequestParam String nickname, @RequestParam String description) {
+	public ModelAndView updateProfile(@RequestParam String description, @RequestParam String nickname) {
 		String email = "nmtuan20@apcs.fitus.edu.vn";
-	
 
-		log.info("Received parameters - Email: {}, Description: {}, Nickname: {}", email, description, nickname);
+		/*
+		 * log.info("Received parameters - Email: {}, Description: {}, Nickname: {}",
+		 * email, description, nickname);
+		 */
+		userService.updateUserProfile(email, description, nickname);
 
 		ModelAndView mav = new ModelAndView("redirect:/MyProfile");
-		userService.updateUserProfile(email, description, nickname);
 
 		return mav;
 	}

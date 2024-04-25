@@ -1,5 +1,6 @@
 package org.sakaiproject.myo.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -30,8 +31,6 @@ public class UserServiceImplProfile implements UserServiceProfile {
 	public UserRepositoryProfile getRepo() {
 		return userRepo;
 	}
-
-
 
 	@Transactional
 	public void updateUserProfile(String email, String description, String nickname) {

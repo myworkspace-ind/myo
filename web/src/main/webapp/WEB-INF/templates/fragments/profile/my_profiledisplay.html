@@ -24,26 +24,37 @@
 			<h6>Basic Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplayinfoform">
+				<div class="container">
+					<div class="row">
+						<div class="col-9">
 
-				<p class="d-inline"
-					th:if="${user.getNickname() == null && user.getDateofbirth() == null && user.getDescription() == null}">You
-					haven't filled out any information yet</p>
-				<p class="fw-bold" th:if="${user.getNickname() != null}">
-					Nickname: <span class="fw-normal" th:text="${user.getNickname()}"></span>
-				</p>
-				<p class="fw-bold" th:if="${user.getDateofbirth() != null}">
-					Birthday: <span class="fw-normal"
-						th:text="${user.getDateofbirth()}"></span>
-				</p>
-				<p class="fw-bold d-inline" th:if="${user.getDescription() != null}">
-					Personal summary: <span class="fw-normal"
-						th:text="${user.getDescription()}"></span>
-				</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
+							<p class="d-inline"
+								th:if="${user.getNickname() == null && user.getDateofbirth() == null && user.getDescription() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getNickname() != null}">
+								Nickname: <span class="fw-normal"
+									th:text="${user.getNickname()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getDateofbirth() != null}">
+								Birthday: <span class="fw-normal"
+									th:text="${user.getDateofbirth()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getDescription() != null}">
+								Personal summary: <span class="fw-normal"
+									th:text="${user.getDescription()}"></span>
+							</p>
+						</div>
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton" onclick="MKSOLeditbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
+						</div>
+					</div>
+
+				</div>
 			</div>
 			<form id="updateForm">
 
@@ -52,16 +63,20 @@
 						<div class="row">
 							<div class="col-3">
 								<p class="fw-bold">Nickname</p>
-								<p class="fw-bold">Birthday</p>
+								<!-- 								<p class="fw-bold">Birthday</p>
+ -->
 								<p class="fw-bold">Personal summary</p>
 							</div>
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
 									id="MKSOLNickname" aria-describedby="MKSOLNickname"
-									name="nickname"> <input type="text"
+									name="nickname">
+
+								<!-- 			<input type="text"
 									class="form-control  MKSOLedittext" id="MKSOLBirthday"
-									aria-describedby="MKSOLBirthday" name="email"> <input
-									type="text" class="form-control  MKSOLedittext"
+									aria-describedby="MKSOLBirthday" name="dateOfBirth"> -->
+
+								<input type="text" class="form-control  MKSOLedittext"
 									id="MKSOLPersonalsummary"
 									aria-describedby="MKSOLPersonalsummary" name="description">
 							</div>
@@ -82,340 +97,530 @@
 			<h6>Name Pronunciation and Pronouns</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaypronunciationform">
-				<p class="d-inline"
-					th:if="${user.getPronouns() == null && user.getPhonetic_pronunciation() == null && user.getCommon_name() == null}">You
-					haven't filled out any information yet</p>
-				<p class="fw-bold" th:if="${user.getPronouns() != null}">
-					Pronouns: <span class="fw-normal" th:text="${user.getPronouns()}"></span>
-				</p>
-				<p class="fw-bold"
-					th:if="${user.getPhonetic_pronunciation() != null}">
-					Phonetic Pronunciation: <span class="fw-normal"
-						th:text="${user.getPhonetic_pronunciation()}"></span>
-				</p>
-				<p class="fw-bold d-inline" th:if="${user.getCommon_name() != null}">
-					Name Recording: <span class="fw-normal"
-						th:text="${user.getCommon_name()}"></span>
-				</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton"
-					onclick="MKSOLeditpronunciationbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditpronunciationform" class="invisible">
 				<div class="container">
 					<div class="row">
-						<p>Allows you to provide written phonetic pronunciation and/or
-							audio recordings of your name. This pronunciation will be visible
-							to instructors / students enrolled in your course sites.</p>
-						<div class="col-3">
+						<div class="col-9">
 
-							<p class="fw-bold">Pronouns</p>
-							<p class="fw-bold">Phonetic Pronunciation</p>
-							<p class="">Examples:</p>
-							<p class="fw-bold">Name Recording</p>
+							<p class="d-inline"
+								th:if="${user.getPronouns() == null && user.getPhonetic_pronunciation() == null && user.getCommon_name() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getPronouns() != null}">
+								Pronouns: <span class="fw-normal"
+									th:text="${user.getPronouns()}"></span>
+							</p>
+							<p class="fw-bold"
+								th:if="${user.getPhonetic_pronunciation() != null}">
+								Phonetic Pronunciation: <span class="fw-normal"
+									th:text="${user.getPhonetic_pronunciation()}"></span>
+							</p>
+					
+							<p class="fw-bold d-inline"
+								th:if="${user.getCommon_name() != null}">
+								Name Recording: <span class="fw-normal"
+									th:text="${user.getCommon_name()}"></span>
+							</p>
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLPronouns" aria-describedby="MKSOLPronouns"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLPhoneticPronunciation	"
-								aria-describedby="MKSOLPhoneticPronunciation">
-							<p class="">kris-TEEN BEAR-it (Christine Berret) uh-JEET
-								CHOW-lah (Ajeet Chawla)</p>
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLNameRecording" aria-describedby="MKSOLNameRecording">
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton"
+								onclick="MKSOLeditpronunciationbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditpronunciationsave"
-						onclick="MKSOLeditpronunciationsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditpronunciationcancel"
-						onclick="MKSOLeditpronunciationcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
+			<form id="updateForm">
+
+				<div id="MKSOLeditpronunciationform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Pronouns:</p>
+								<p class="fw-bold">Birthday:</p>
+								<p>Examples:</p>
+								<p class="fw-bold">Name Recording:</p>
+
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLPronouns" aria-describedby="MKSOLPronouns"
+									name="Pronouns"> <input type="text"
+									class="form-control  MKSOLedittext"
+									id="MKSOLPhoneticPronunciation	"
+									aria-describedby="MKSOLPhoneticPronunciation"
+									name="PhoneticPronunciation">
+								<p>kris-TEEN BEAR-it (Christine Berret) uh-JEET CHOW-lah
+									(Ajeet Chawla)</p>
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLCommonName" aria-describedby="MKSOLCommonName"
+									name="CommonName">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel"
+							onclick="MKSOLeditpronunciationcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
 
 			</br> </br> </br>
 			<h6>Contact Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaycontactform">
-
-				<p class="d-inline">You haven't filled out any information yet</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditcontactbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditcontactform" class="invisible">
 				<div class="container">
 					<div class="row">
+						<div class="col-9">
 
-						<div class="col-3">
-
-							<p class="fw-bold">Email</p>
-							<p class="fw-bold">Home page</p>
-							<p class="fw-bold">Work phone</p>
-							<p class="fw-bold">Home phone</p>
-							<p class="fw-bold">Mobile phone</p>
-							<p class="fw-bold">Facsimile</p>
-
-
+							<p class="d-inline"
+								th:if="${user.getMail() == null && user.getHome_postal_address() == null && user.getTelephone_number() == null && user.getHome_phone() == null && user.getFax_number() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getMail() != null}">
+								Email: <span class="fw-normal" th:text="${user.getMail()}"></span>
+							</p>
+							<p class="fw-bold"
+								th:if="${user.getHome_postal_address() != null}">
+								Home page: <span class="fw-normal"
+									th:text="${user.getHome_postal_address()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getTelephone_number() != null}">
+								Work phone: <span class="fw-normal"
+									th:text="${user.getTelephone_number()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getHome_phone() != null}">
+								Mobile phone: <span class="fw-normal"
+									th:text="${user.getHome_phone()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getFax_number() != null}">
+								Facsimile: <span class="fw-normal"
+									th:text="${user.getFax_number()}"></span>
+							</p>
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLEmail" aria-describedby="MKSOLEmail"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLHomepage" aria-describedby="MKSOLHomepage"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLWorkphone" aria-describedby="MKSOLWorkphone"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLHomephone	" aria-describedby="MKSOLHomephone">
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLMobilephone" aria-describedby="MKSOLMobilephone">
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLFacsimile" aria-describedby="MKSOLFacsimile">
-
-
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton" onclick="MKSOLeditcontactbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditcontactsave" onclick="MKSOLeditcontactsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditcontactcancel"
-						onclick="MKSOLeditcontactcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
+			<form id="updateForm">
+
+				<div id="MKSOLeditcontactform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Email</p>
+								<p class="fw-bold">Home page</p>
+								<p class="fw-bold">Work phone</p>
+								<p class="fw-bold">Home phone</p>
+								<p class="fw-bold">Mobile phone</p>
+								<p class="fw-bold">Facsimile</p>
+
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLEmail" aria-describedby="MKSOLEmail" name="Email">
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLHomepage" aria-describedby="MKSOLHomepage"
+									name="Homepage"> <input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLWorkphone"
+									aria-describedby="MKSOLWorkphone" name="Workphone"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLHomephone" aria-describedby="MKSOLHomephone"
+									name="Homephone"> <input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLMobilephone"
+									aria-describedby="MKSOLMobilephone" name="Mobilephone">
+
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLFacsimile" aria-describedby="MKSOLFacsimile"
+									name="Facsimile">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditcontactcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
+
+
 			</br> </br> </br>
 			<h6>Staff Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaystaffform">
-
-				<p class="d-inline">You haven't filled out any information yet</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditstaffbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditstaffform" class="invisible">
 				<div class="container">
 					<div class="row">
+						<div class="col-9">
 
-						<div class="col-3">
+							<p class="d-inline"
+								th:if="${user.getStaff_profile() == null && user.getDepartment_number() == null && user.getOrg_unit_dn() == null && user.getRoom_number() == null && user.getEmployee_type() == null && user.getUniversity_profile_url() == null && user.getAcademic_profile_url() == null && user.getPublications() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getEmployee_type() != null}">
+								Position: <span class="fw-normal"
+									th:text="${user.getEmployee_type()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getDepartment_number() != null}">
+								Department: <span class="fw-normal"
+									th:text="${user.getDepartment_number()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getOrg_unit_dn() != null}">
+								School: <span class="fw-normal"
+									th:text="${user.getOrg_unit_dn()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getRoom_number() != null}">
+								Room: <span class="fw-normal" th:text="${user.getRoom_number()}"></span>
+							</p>
 
-							<p class="fw-bold">Position</p>
-							<p class="fw-bold">Department</p>
-							<p class="fw-bold">School</p>
-							<p class="fw-bold">Room</p>
-							<p class="fw-bold">Staff profile</p>
-							<p class="fw-bold">University profile URL</p>
-							<p class="fw-bold">Academic/research URL</p>
-							<p class="fw-bold">Publications and conferences</p>
-
-
-
-
+							<p class="fw-bold d-inline"
+								th:if="${user.getStaff_profile() != null}">
+								Staff profile: <span class="fw-normal"
+									th:text="${user.getStaff_profile()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getUniversity_profile_url() != null}">
+								University profile URL: <span class="fw-normal"
+									th:text="${user.getUniversity_profile_url()"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getAcademic_profile_url() != null}">
+								Academic/research URL: <span class="fw-normal"
+									th:text="${user.getAcademic_profile_url()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getPublications() != null}">
+								Publications and conferences: <span class="fw-normal"
+									th:text="${user.getPublications()}"></span>
+							</p>
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLPosition" aria-describedby="MKSOLPosition"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLDepartment" aria-describedby="MKSOLDepartment">
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLSchool" aria-describedby="MKSOLSchool"> <input
-								type="text" class="form-control  MKSOLedittext" id="MKSOLRoom"
-								aria-describedby="MKSOLRoom"> <input type="text"
-								class="form-control  MKSOLedittext" id="MKSOLStaffprofile"
-								aria-describedby="MKSOLStaffprofile">
-							<p></p>
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLUniversityprofileURL"
-								aria-describedby="MKSOLUniversityprofileURL"> </br> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLAcademicresearchURL"
-								aria-describedby="MKSOLAcademicresearchURL"> </br> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLPublicationsandconferences"
-								aria-describedby="MKSOLPublicationsandconferences">
-
-
-
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton" onclick="MKSOLeditstaffbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstaffsave" onclick="MKSOLeditstaffsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstaffcancel" onclick="MKSOLeditstaffcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
+			<form id="updateForm">
+
+				<div id="MKSOLeditstaffform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Position:</p>
+								<p class="fw-bold">Department:</p>
+								<p class="fw-bold">School:</p>
+								<p class="fw-bold">Room:</p>
+								<p class="fw-bold">Staff profile:</p>
+								<p class="fw-bold">University profile URL:</p>
+								<p class="fw-bold">Academic/research URL:</p>
+								<p class="fw-bold">Publications and conferences:</p>
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLPosition" aria-describedby="MKSOLPosition"
+									name="Position"> <input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLDepartment"
+									aria-describedby="MKSOLDepartment" name="Department"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLSchool" aria-describedby="MKSOLSchool" name="School">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLRoom" aria-describedby="MKSOLRoom" name="Room">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLStaffprofile" aria-describedby="MKSOLStaffprofile"
+									name="Staffprofile"> <input type="text"
+									class="form-control  MKSOLedittext"
+									id="MKSOLUniversityprofileURL"
+									aria-describedby="MKSOLUniversityprofileURL"
+									name="UniversityprofileURL"> <input type="text"
+									class="form-control  MKSOLedittext"
+									id="MKSOLAcademicresearchURL"
+									aria-describedby="MKSOLAcademicresearchURL"
+									name="AcademicresearchURL"> <input type="text"
+									class="form-control  MKSOLedittext"
+									id="MKSOLPublicationsandconferences"
+									aria-describedby="MKSOLPublicationsandconferences"
+									name="Publicationsandconferences">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditstaffcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
+
 			</br> </br> </br>
+
 			<h6>Student Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaystudentform">
-
-				<p class="d-inline">You haven't filled out any information yet</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditstudentbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditstudentform" class="invisible">
 				<div class="container">
 					<div class="row">
+						<div class="col-9">
 
-						<div class="col-3">
-
-							<p class="fw-bold">Degree/Course</p>
-							<p class="fw-bold">Subjects</p>
-
-
+							<p class="d-inline"
+								th:if="${user.getEducation_course() == null && user.getEducation_subjects() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getEducation_course() != null}">
+								Degree/Course: <span class="fw-normal"
+									th:text="${user.getEducation_course()}"></span>
+							</p>
+							<p class="fw-bold"
+								th:if="${user.getEducation_subjects() != null}">
+								Subjects: <span class="fw-normal"
+									th:text="${user.getEducation_subjects()}"></span>
+							</p>
 
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLDegree" aria-describedby="MKSOLDegree"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLSubjects" aria-describedby="MKSOLSubjects">
-
-
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton" onclick="MKSOLeditstudentbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstudentsave" onclick="MKSOLeditstudentsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstudentcancel"
-						onclick="MKSOLeditstudentcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
+			<form id="updateForm">
+
+				<div id="MKSOLeditstudentform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Degree/Course</p>
+								<!-- 								<p class="fw-bold">Birthday</p>
+ -->
+								<p class="fw-bold">Subjects</p>
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLCourse" aria-describedby="MKSOLCourse" name="Course">
+
+								<!-- 			<input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLBirthday"
+									aria-describedby="MKSOLBirthday" name="dateOfBirth"> -->
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLSubjects" aria-describedby="MKSOLSubjects"
+									name="Subjects">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditstudentcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
+
 			</br> </br> </br>
 
-			<h6>Social Networking</h6>
+			<!-- 			<h6>Social Networking</h6>
 			<hr class="hr text-primary m-0" />
-			<div class="visible" id="MKSOLdisplaysocialform">
-
-				<p class="d-inline">You haven't filled out any information yet</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditsocialbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditsocialform" class="invisible">
+			<div class="visible" id="MKSOLdisplayinfoform">
 				<div class="container">
 					<div class="row">
+						<div class="col-9">
 
-						<div class="col-3">
-
-							<p class="fw-bold">Facebook URL</p>
-							<p class="fw-bold">LinkedIn URL</p>
-							<p class="fw-bold">MySpace URL</p>
-							<p class="fw-bold">Instagram URL</p>
-							<p class="fw-bold">Skype username</p>
-							<p class="fw-bold">X URL</p>
-
-
+							<p class="d-inline"
+								th:if="${user.getNickname() == null && user.getDateofbirth() == null && user.getDescription() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getNickname() != null}">
+								Facebook URL: <span class="fw-normal"
+									th:text="${user.getNickname()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getDateofbirth() != null}">
+								LinkedIn URL: <span class="fw-normal"
+									th:text="${user.getDateofbirth()}"></span>
+							</p>
+							<p class="fw-bold d-inline"
+								th:if="${user.getDescription() != null}">
+								MySpace URL: <span class="fw-normal"
+									th:text="${user.getDescription()}"></span>
+							</p>
+								<p class="fw-bold d-inline"
+								th:if="${user.getDescription() != null}">
+								Instagram URL: <span class="fw-normal"
+									th:text="${user.getDescription()}"></span>
+							</p>
+								<p class="fw-bold d-inline"
+								th:if="${user.getDescription() != null}">
+								Skype username: <span class="fw-normal"
+									th:text="${user.getDescription()}"></span>
+							</p>
+								<p class="fw-bold d-inline"
+								th:if="${user.getDescription() != null}">
+								Twitter URL: <span class="fw-normal"
+									th:text="${user.getDescription()}"></span>
+							</p>
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLFacebook" aria-describedby="MKSOLFacebook"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLLinkedIn" aria-describedby="MKSOLLinkedIn"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLMySpace" aria-describedby="MKSOLMySpace"> <input
-								type="text" class="form-control  MKSOLedittext"
-								id="MKSOLInstagram	" aria-describedby="MKSOLInstagram">
-							<input type="text" class="form-control  MKSOLedittext"
-								id="MKSOLSkype" aria-describedby="MKSOLSkype"> <input
-								type="text" class="form-control  MKSOLedittext" id="MKSOLX"
-								aria-describedby="MKSOLX">
-
-
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton" onclick="MKSOLeditbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstaffsave" onclick="MKSOLeditsocialsavevisible()">Save
-						changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditstaffcancel" onclick="MKSOLeditsocialcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
-			</br> </br> </br>
+			<form id="updateForm">
+
+				<div id="MKSOLeditform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Nickname</p>
+																<p class="fw-bold">Birthday</p>
+
+								<p class="fw-bold">Personal summary</p>
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLNickname" aria-describedby="MKSOLNickname"
+									name="nickname">
+
+											<input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLBirthday"
+									aria-describedby="MKSOLBirthday" name="dateOfBirth">
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLPersonalsummary"
+									aria-describedby="MKSOLPersonalsummary" name="description">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
+
+			</br> </br> </br> -->
+
 			<h6>Personal Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaypersonalform">
-
-				<p class="d-inline">You haven't filled out any information yet</p>
-				<button type="button"
-					class="btn btn-secondary d-inline MKSOLbtnedit"
-					id="MKSOLeditbutton" onclick="MKSOLeditpersonalbuttoninvisible()">
-					<i class="bi bi-pencil"></i>Edit
-				</button>
-			</div>
-			<div id="MKSOLeditpersonalform" class="invisible">
 				<div class="container">
 					<div class="row">
+						<div class="col-9">
 
-						<div class="col-3">
-
-							<p class="fw-bold">Favorite books</p>
-							<p class="fw-bold">Favorite TV shows</p>
-							<p class="fw-bold">Favorite movies</p>
-							<p class="fw-bold">Favorite quotes</p>
+							<p class="d-inline"
+								th:if="${user.getFavourite_books() == null && user.getFavourite_tv_shows() == null && user.getFavourite_movies() == null && user.getFavourite_quotes() == null}">You
+								haven't filled out any information yet</p>
+							<p class="fw-bold" th:if="${user.getFavourite_books() != null}">
+								Favorite books: <span class="fw-normal"
+									th:text="${user.getFavourite_books()}"></span>
+							</p>
+							<p class="fw-bold"
+								th:if="${user.getFavourite_tv_shows() != null}">
+								Favorite TV shows: <span class="fw-normal"
+									th:text="${user.getFavourite_tv_shows()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getFavourite_movies() != null}">
+								Favorite movies: <span class="fw-normal"
+									th:text="${user.getFavourite_movies()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getFavourite_quotes() != null}">
+								Favorite quotes: <span class="fw-normal"
+									th:text="${user.getFavourite_quotes()}"></span>
+							</p>
 
 
 						</div>
-						<div class="col-7">
-							<input type="text" class="form-control MKSOLedittext"
-								id="MKSOLbooks" aria-describedby="MKSOLbooks"> <input
-								type="text" class="form-control  MKSOLedittext" id="MKSOLshows"
-								aria-describedby="MKSOLshows"> <input type="text"
-								class="form-control  MKSOLedittext" id="MKSOLmovies"
-								aria-describedby="MKSOLmovies"> <input type="text"
-								class="form-control  MKSOLedittext" id="MKSOLquotes"
-								aria-describedby="MKSOLquotes">
-
-
-
+						<div class="col-3">
+							<button type="button"
+								class="btn btn-secondary d-inline MKSOLbtnedit"
+								id="MKSOLeditbutton"
+								onclick="MKSOLeditpersonalbuttoninvisible()">
+								<i class="bi bi-pencil"></i>Edit
+							</button>
 						</div>
 					</div>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditpersonalsave"
-						onclick="MKSOLeditpersonalsavevisible()">Save changes</button>
-					<button type="button"
-						class="btn btn-secondary d-inline MKSOLbtneditform"
-						id="MKSOLeditpersonalcancel"
-						onclick="MKSOLeditpersonalcancelvisible()">Cancel</button>
 
 				</div>
 			</div>
+			<form id="updateForm">
+
+				<div id="MKSOLeditpersonalform" class="invisible">
+					<div class="container">
+						<div class="row">
+							<div class="col-3">
+								<p class="fw-bold">Favorite books</p>
+								<!-- 								<p class="fw-bold">Birthday</p>
+ -->
+								<p class="fw-bold">Favorite TV shows</p>
+								<p class="fw-bold">Favorite movies</p>
+								<p class="fw-bold">Favorite quotes</p>
+
+
+							</div>
+							<div class="col-8">
+								<input type="text" class="form-control MKSOLedittext"
+									id="MKSOLbooks" aria-describedby="MKSOLbooks" name="books">
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLshows" aria-describedby="MKSOLshows" name="shows">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLmovies" aria-describedby="MKSOLmovies" name="movies">
+
+
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLquotes" aria-describedby="MKSOLquotes" name="quotes">
+							</div>
+						</div>
+						<button type="submit"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditsave">Save changes</button>
+						<button type="button"
+							class="btn btn-secondary d-inline MKSOLbtneditform"
+							id="MKSOLeditcancel" onclick="MKSOLeditpersonalcancelvisible()">Cancel</button>
+
+					</div>
+				</div>
+			</form>
+
 			</br> </br> </br>
-
-
 		</div>
 	</div>
 </div>
@@ -432,10 +637,11 @@
 				var formData = new FormData(form);
 
 				var description = formData.get('description');
+
+				var dateOfBirth = formData.get('dateOfBirth');
 				var nickname = formData.get('nickname');
 
-				var url = '/myo-web/MyProfileUpdate?'
-						+ 'description='
+				var url = '/myo-web/MyProfileUpdate?' + 'description='
 						+ encodeURIComponent(description) + '&nickname='
 						+ encodeURIComponent(nickname);
 
