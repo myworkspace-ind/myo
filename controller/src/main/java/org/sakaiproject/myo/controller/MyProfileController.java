@@ -83,7 +83,7 @@ public class MyProfileController extends BaseController {
 		 * mav.addObject("users", allUsers);
 		 */
 
-		String userEmail = "nmtuan20@apcs.fitus.edu.vn";
+		String userEmail = "micrayon2812@gmail.com";
 		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
 
 		if (user != null) {

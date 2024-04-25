@@ -191,17 +191,17 @@
 								Home page: <span class="fw-normal"
 									th:text="${user.getHome_postal_address()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getTelephone_number() != null}">
 								Work phone: <span class="fw-normal"
 									th:text="${user.getTelephone_number()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getHome_phone() != null}">
 								Mobile phone: <span class="fw-normal"
 									th:text="${user.getHome_phone()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getFax_number() != null}">
 								Facsimile: <span class="fw-normal"
 									th:text="${user.getFax_number()}"></span>
@@ -289,27 +289,27 @@
 								School: <span class="fw-normal"
 									th:text="${user.getOrg_unit_dn()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getRoom_number() != null}">
 								Room: <span class="fw-normal" th:text="${user.getRoom_number()}"></span>
 							</p>
 
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getStaff_profile() != null}">
 								Staff profile: <span class="fw-normal"
 									th:text="${user.getStaff_profile()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getUniversity_profile_url() != null}">
 								University profile URL: <span class="fw-normal"
-									th:text="${user.getUniversity_profile_url()"></span>
+									th:text="${user.getUniversity_profile_url()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getAcademic_profile_url() != null}">
 								Academic/research URL: <span class="fw-normal"
 									th:text="${user.getAcademic_profile_url()}"></span>
 							</p>
-							<p class="fw-bold d-inline"
+							<p class="fw-bold"
 								th:if="${user.getPublications() != null}">
 								Publications and conferences: <span class="fw-normal"
 									th:text="${user.getPublications()}"></span>

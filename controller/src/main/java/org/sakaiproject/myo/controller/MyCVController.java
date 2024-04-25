@@ -77,7 +77,7 @@ public class MyCVController extends BaseController {
 
 		initSession(request, httpSession);
 
-		String userEmail = "nmtuan20@apcs.fitus.edu.vn";
+		String userEmail = "micrayon2812@gmail.com";
 		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ProfilePdfWriter.writeProfileToPdf(user, byteArrayOutputStream);
@@ -86,7 +86,7 @@ public class MyCVController extends BaseController {
 
 		response.setContentType("application/pdf");
 		response.setContentLength(pdfBytes.length);
-		response.setHeader("Content-Disposition", "inline; filename=\"profile.pdf\"");
+		response.setHeader("Content-Disposition", "inline; filename=\"My_cv.pdf\"");
 		response.getOutputStream().write(pdfBytes);
 
 		return mav;

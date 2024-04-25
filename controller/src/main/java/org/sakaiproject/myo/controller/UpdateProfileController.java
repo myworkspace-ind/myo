@@ -79,7 +79,7 @@ public class UpdateProfileController extends BaseController {
 	 */
 	@RequestMapping(value = { "MyProfileUpdate" }, method = RequestMethod.GET)
 	public ModelAndView updateProfile(@RequestParam String description, @RequestParam String nickname) {
-		String email = "nmtuan20@apcs.fitus.edu.vn";
+		String email = "micrayon2812@gmail.com";
 
 		/*
 		 * log.info("Received parameters - Email: {}, Description: {}, Nickname: {}",
