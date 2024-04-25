@@ -164,6 +164,11 @@ body {
 	width: 100%;
 }
 
+.MKSOLedittext:focus {
+	background-color: #1f2225;
+	color: white;
+}
+
 .dropdown-menu {
 	display: none;
 	position: absolute;

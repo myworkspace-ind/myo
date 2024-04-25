@@ -24,7 +24,21 @@
 			<h6>Basic Information</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplayinfoform">
-				<p class="d-inline">You haven't filled out any information yet</p>
+
+				<p class="d-inline"
+					th:if="${user.getNickname() == null && user.getDateofbirth() == null && user.getDescription() == null}">You
+					haven't filled out any information yet</p>
+				<p class="fw-bold" th:if="${user.getNickname() != null}">
+					Nickname: <span class="fw-normal" th:text="${user.getNickname()}"></span>
+				</p>
+				<p class="fw-bold" th:if="${user.getDateofbirth() != null}">
+					Birthday: <span class="fw-normal"
+						th:text="${user.getDateofbirth()}"></span>
+				</p>
+				<p class="fw-bold d-inline" th:if="${user.getDescription() != null}">
+					Personal summary: <span class="fw-normal"
+						th:text="${user.getDescription()}"></span>
+				</p>
 				<button type="button"
 					class="btn btn-secondary d-inline MKSOLbtnedit"
 					id="MKSOLeditbutton" onclick="MKSOLeditbuttoninvisible()">
@@ -65,7 +79,21 @@
 			<h6>Name Pronunciation and Pronouns</h6>
 			<hr class="hr text-primary m-0" />
 			<div class="visible" id="MKSOLdisplaypronunciationform">
-				<p class="d-inline">You haven't filled out any information yet</p>
+				<p class="d-inline"
+					th:if="${user.getPronouns() == null && user.getPhonetic_pronunciation() == null && user.getCommon_name() == null}">You
+					haven't filled out any information yet</p>
+				<p class="fw-bold" th:if="${user.getPronouns() != null}">
+					Pronouns: <span class="fw-normal" th:text="${user.getPronouns()}"></span>
+				</p>
+				<p class="fw-bold"
+					th:if="${user.getPhonetic_pronunciation() != null}">
+					Phonetic Pronunciation: <span class="fw-normal"
+						th:text="${user.getPhonetic_pronunciation()}"></span>
+				</p>
+				<p class="fw-bold d-inline" th:if="${user.getCommon_name() != null}">
+					Name Recording: <span class="fw-normal"
+						th:text="${user.getCommon_name()}"></span>
+				</p>
 				<button type="button"
 					class="btn btn-secondary d-inline MKSOLbtnedit"
 					id="MKSOLeditbutton"
