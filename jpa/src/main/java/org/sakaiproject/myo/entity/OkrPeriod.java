@@ -16,10 +16,8 @@ import java.util.UUID;
  * 
  */
 @Entity
-//@Table(name="okr_periods")
-//@NamedQuery(name="OkrPeriod.findAll", query="SELECT o FROM OkrPeriod o")
-@org.hibernate.annotations.NamedQuery(name = "OkrPeriod.findAll", 
-query = "from OkrPeriod")
+@Table(name="okr_periods")
+@NamedQuery(name="OkrPeriod.findAll", query="SELECT o FROM OkrPeriod o")
 @Getter @Setter
 public class OkrPeriod implements Serializable {
 	private static final long serialVersionUID = 1L;

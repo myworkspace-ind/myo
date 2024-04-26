@@ -19,6 +19,7 @@
 
 package org.sakaiproject.myo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.UUID;
+import org.springframework.ui.Model;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,19 +53,54 @@ public class PeriodController extends BaseController {
 	 */
 	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
-		System.out.println("Hello ");
 		ModelAndView mav = new ModelAndView("period");
 		initSession(request, httpSession);
-		System.out.println("Hello 2");
+		List<List<Object>> data = new ArrayList<>();
+
 		List<OkrPeriod> allPeriods = periodService.findAll(); 
-		System.out.println("Hello 3");
-		System.out.println("Customers found with findAll():");
+
+		List<Object> periodYear = new ArrayList<>();
+		List<Object> periodName = new ArrayList<>();
+		List<Object> periodStartDate = new ArrayList<>();
+		List<Object> periodEndDate = new ArrayList<>();
+		List<Object> periodNote = new ArrayList<>();
+
+		for (OkrPeriod period : allPeriods) {
+			List<Object> periodData = new ArrayList<>();
+			periodData.add(String.valueOf(period.getYear()));
+			periodYear.add(String.valueOf(period.getYear()));
+			periodData.add(String.valueOf(period.getName()));
+			periodName.add(String.valueOf(period.getName()));
+			periodData.add(String.valueOf(period.getStartDate()));
+			periodStartDate.add(String.valueOf(period.getStartDate())); 
+			periodData.add(String.valueOf(period.getEndDate()));
+			periodEndDate.add(String.valueOf(period.getEndDate()));
+			periodData.add(String.valueOf(period.getNote()));
+			periodNote.add(String.valueOf(period.getNote()));
+            // Add other properties as needed
+            data.add(periodData);
+        }
+
+		
+		System.out.println("Periods found with findAll():");
 		System.out.println("-------------------------------");
+		
 		int len = (allPeriods != null) ? allPeriods.size(): 0;
 		System.out.println("Number of periods: " + len);
+		
+		int lenTest = (data != null) ? data.size(): 0;
+		System.out.println("Number of periods data: " + lenTest);
+		System.out.println("Data: " + data);
+		
 		periodService.processPeriods();
 
 		mav.addObject("periods", allPeriods);
+		mav.addObject("period", data);
+		mav.addObject("periodYear", periodYear);
+		mav.addObject("periodName", periodName);
+		mav.addObject("periodStartDate", periodStartDate);
+		mav.addObject("periodEndDate", periodEndDate);
+		mav.addObject("periodNote", periodNote);
 
 		return mav;
 	}

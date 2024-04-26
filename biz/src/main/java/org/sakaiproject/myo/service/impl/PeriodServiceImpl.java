@@ -34,6 +34,7 @@ public class PeriodServiceImpl implements PeriodService {
         for (OkrPeriod period : periods) {
             // Access individual attributes of each OkrPeriod object
             UUID id = period.getId();
+            int year = period.getYear();
             Date startDate = period.getStartDate();
             Date endDate = period.getEndDate();
             String name = period.getName();
@@ -42,7 +43,7 @@ public class PeriodServiceImpl implements PeriodService {
 
             // Perform any necessary operations with the retrieved data
             // For example, you can print it
-            System.out.println("Period: " + id + ", " + startDate + ", " + endDate + ", " + name + ", " + note);
+            System.out.println("Period: " + id + ", " + year + ", " + startDate + ", " + endDate + ", " + name + ", " + note);
         }
 	}
 

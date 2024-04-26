@@ -1,117 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-<th:block th:include="fragments/head"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periods</title>
+    <!-- Include Handsontable CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
 </head>
-<style>
-</style>
-<!--<body class="horizontal-layout horizontal-top-icon-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">-->
-<body
-	class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns   menu-expanded"
-	data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
-	<!-- fixed-top-->
-	<!--    <th:block th:include="fragments/nav"></th:block>-->
-	<!-- ////////////////////////////////////////////////////////////////////////////-->
-	<!-- Horizontal navigation-->
-	<th:block th:include="fragments/hnav"></th:block>
-	<!-- Horizontal navigation-->
+<body>
+    <!-- Container for the table -->
+    <div id="periods-table"></div>
+	<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+	<div id="periods-data" th:attr="data-periods=${period}"></div>
+    <!-- Embed the period data -->
+    <script>
+    	const period = document.getElementById('periods-data').getAttribute('data-periods');
+    </script>
 
-	<div class="container">
-		<div class="text-center">
-			<div class="lead">
-				<H1>Period</H1>
-			</div>
-			<div id="contain" style="display: flex; align-items: center">
-				<div id="right" style="margin:auto; margin-left:auto; margin-right:auto;">
-					<div id="example" class="hot"></div>
-				</div>
-			</div>
-		</div>
-
-
-		<script
-			src="https://cdn.jsdelivr.net/npm/handsontable@14.2/dist/handsontable.full.min.js"></script>
-		<link rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
-		<script>
-		const container = document.querySelector('#example');
-
-		data = [
-			  [
-			    false,
-			    "2024",
-			    "First period",
-			    "01/01/2024",
-			    "31/03/2024",
-			    "None"
-			  ],
-			  [
-				 false,
-				 "2024",
-				 "Second period",
-				 "01/04/2024",
-				 "30/06/2024",
-				 "Some might choose this as the first period"
-			  ],		
-			[
-			    false,
-			    "2024",
-			    "Third period",
-			    "01/07/2024",
-			    "30/09/2024",
-			    "None"
-			 ],	 
-			 [
-			    false,
-			    "2024",
-			    "Fourth period",
-			    "01/10/2024",
-			    "30/12/2024",
-			    "None"
-			 ],	 
-				  
-		];
-		
-		
-		const hot = new Handsontable(container, {
-			data,
-			  height: 450,
-			  width: 1100,
-			  colWidths: [170, 156, 130, 130, 242, 110, 110],
-			  colHeaders: [
-				"Year",
-			    "Period name",
-			    "Start date",
-			    "End date",
-			    "Note",
-			  ],
-			  columns: [
-			    { data: 1, type: "text" },
-			    { data: 2, type: "text" },
-			    {
-					data: 3,
-				    type: "date",
-				    allowInvalid: false,
-				},
-				{
-					data: 4,
-					type: "date",
-					allowInvalid: false,
-				},
-			    { data: 5, type: "text" },
-
-			  ],
-			mergeCells: [{ row: 0, col: 0, rowspan: 4, colspan: 1 }],
-		  rowHeaders: true,
-		  height: 'auto',
-		  autoWrapRow: true,
-		  autoWrapCol: true,
-		  licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
-		});
-
-		
-		</script>
-	</div>
-	<th:block th:include="fragments/footer"></th:block>
+    <!-- Include the JavaScript file -->
+    <script src="resources/js/period.js"></script>
 </body>
 </html>
