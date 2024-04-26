@@ -21,6 +21,7 @@
 package org.sakaiproject.myo.controller;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,18 +79,70 @@ public class UpdateProfileController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = { "MyProfileUpdate" }, method = RequestMethod.GET)
-	public ModelAndView updateProfile(@RequestParam String description, @RequestParam String nickname) {
-		String email = "micrayon2812@gmail.com";
+	public ModelAndView updateProfile(@RequestParam(required = false) String description,
+	        @RequestParam(required = false) String Name, 
+	        @RequestParam(required = false) String Address,
+	        @RequestParam(required = false) String Pronouns, 
+	        @RequestParam(required = false) String PhoneticPronunciation,
+	        @RequestParam(required = false) String CommonName, 
+	        @RequestParam(required = false) String Email,
+	        @RequestParam(required = false) String Homepage, 
+	        @RequestParam(required = false) String Workphone,
+	        @RequestParam(required = false) String Homephone, 
+	        @RequestParam(required = false) String Mobilephone,
+	        @RequestParam(required = false) String Facsimile, 
+	        @RequestParam(required = false) String Position,
+	        @RequestParam(required = false) String Department, 
+	        @RequestParam(required = false) String School,
+	        @RequestParam(required = false) String Room, 
+	        @RequestParam(required = false) String Staffprofile,
+	        @RequestParam(required = false) String UniversityprofileURL,
+	        @RequestParam(required = false) String AcademicresearchURL,
+	        @RequestParam(required = false) String Publicationsandconferences,
+	        @RequestParam(required = false) String Course,
+	        @RequestParam(required = false) String Subjects,
+	        @RequestParam(required = false) String books,
+	        @RequestParam(required = false) String shows,
+	        @RequestParam(required = false) String movies,
+	        @RequestParam(required = false) String quotes) {
+	    String email = "micrayon2812@gmail.com";
 
-		/*
-		 * log.info("Received parameters - Email: {}, Description: {}, Nickname: {}",
-		 * email, description, nickname);
-		 */
-		userService.updateUserProfile(email, description, nickname);
+	    description = (description != null && !description.isEmpty()) ? description : null;
+	    Name = (Name != null && !Name.isEmpty()) ? Name : null;
+	    Address = (Address != null && !Address.isEmpty()) ? Address : null;
+	    Pronouns = (Pronouns != null && !Pronouns.isEmpty()) ? Pronouns : null;
+	    PhoneticPronunciation = (PhoneticPronunciation != null && !PhoneticPronunciation.isEmpty()) ? PhoneticPronunciation : null;
+	    CommonName = (CommonName != null && !CommonName.isEmpty()) ? CommonName : null;
+	    Email = (Email != null && !Email.isEmpty()) ? Email : null;
+	    Homepage = (Homepage != null && !Homepage.isEmpty()) ? Homepage : null;
+	    Workphone = (Workphone != null && !Workphone.isEmpty()) ? Workphone : null;
+	    Homephone = (Homephone != null && !Homephone.isEmpty()) ? Homephone : null;
+	    Mobilephone = (Mobilephone != null && !Mobilephone.isEmpty()) ? Mobilephone : null;
+	    Facsimile = (Facsimile != null && !Facsimile.isEmpty()) ? Facsimile : null;
+	    Position = (Position != null && !Position.isEmpty()) ? Position : null;
+	    Department = (Department != null && !Department.isEmpty()) ? Department : null;
+	    School = (School != null && !School.isEmpty()) ? School : null;
+	    Room = (Room != null && !Room.isEmpty()) ? Room : null;
+	    Staffprofile = (Staffprofile != null && !Staffprofile.isEmpty()) ? Staffprofile : null;
+	    UniversityprofileURL = (UniversityprofileURL != null && !UniversityprofileURL.isEmpty()) ? UniversityprofileURL : null;
+	    AcademicresearchURL = (AcademicresearchURL != null && !AcademicresearchURL.isEmpty()) ? AcademicresearchURL : null;
+	    Publicationsandconferences = (Publicationsandconferences != null && !Publicationsandconferences.isEmpty()) ? Publicationsandconferences : null;
+	    Course = (Course != null && !Course.isEmpty()) ? Course : null;
+	    Subjects = (Subjects != null && !Subjects.isEmpty()) ? Subjects : null;
+	    books = (books != null && !books.isEmpty()) ? books : null;
+	    shows = (shows != null && !shows.isEmpty()) ? shows : null;
+	    movies = (movies != null && !movies.isEmpty()) ? movies : null;
+	    quotes = (quotes != null && !quotes.isEmpty()) ? quotes : null;
 
-		ModelAndView mav = new ModelAndView("redirect:/MyProfile");
+	    userService.updateUserProfile(email, description, Name, Address, Pronouns, PhoneticPronunciation, CommonName,
+	            Email, Homepage, Workphone, Homephone, Mobilephone, Facsimile, Position, Department, School, Room,
+	            Staffprofile, UniversityprofileURL, AcademicresearchURL, Publicationsandconferences, Course,
+	            Subjects, books, shows, movies, quotes);
 
-		return mav;
+	    ModelAndView mav = new ModelAndView("redirect:/MyProfile");
+
+	    return mav;
 	}
+
 
 }

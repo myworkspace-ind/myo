@@ -29,15 +29,15 @@
 						<div class="col-9">
 
 							<p class="d-inline"
-								th:if="${user.getNickname() == null && user.getDateofbirth() == null && user.getDescription() == null}">You
+								th:if="${user.getDisplay_name() == null && user.getPostal_address() == null && user.getDescription() == null}">You
 								haven't filled out any information yet</p>
-							<p class="fw-bold" th:if="${user.getNickname() != null}">
-								Nickname: <span class="fw-normal"
-									th:text="${user.getNickname()}"></span>
+							<p class="fw-bold" th:if="${user.getDisplay_name() != null}">
+								Name: <span class="fw-normal"
+									th:text="${user.getDisplay_name()}"></span>
 							</p>
-							<p class="fw-bold" th:if="${user.getDateofbirth() != null}">
-								Birthday: <span class="fw-normal"
-									th:text="${user.getDateofbirth()}"></span>
+							<p class="fw-bold" th:if="${user.getPostal_address() != null}">
+								Address: <span class="fw-normal"
+									th:text="${user.getPostal_address()}"></span>
 							</p>
 							<p class="fw-bold d-inline"
 								th:if="${user.getDescription() != null}">
@@ -56,29 +56,27 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm1">
 
 				<div id="MKSOLeditform" class="invisible">
 					<div class="container">
 						<div class="row">
 							<div class="col-3">
-								<p class="fw-bold">Nickname</p>
-								<!-- 								<p class="fw-bold">Birthday</p>
- -->
+								<p class="fw-bold">Name</p>
+								<p class="fw-bold">Address</p>
 								<p class="fw-bold">Personal summary</p>
 							</div>
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
-									id="MKSOLNickname" aria-describedby="MKSOLNickname"
-									name="nickname">
-
-								<!-- 			<input type="text"
-									class="form-control  MKSOLedittext" id="MKSOLBirthday"
-									aria-describedby="MKSOLBirthday" name="dateOfBirth"> -->
-
+									id="MKSOLName" aria-describedby="MKSOLName" name="Name"
+									th:value="${user.getDisplay_name()}"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLAddress" aria-describedby="MKSOLAddress"
+									name="Address" th:value="${user.getPostal_address()}">
 								<input type="text" class="form-control  MKSOLedittext"
 									id="MKSOLPersonalsummary"
-									aria-describedby="MKSOLPersonalsummary" name="description">
+									aria-describedby="MKSOLPersonalsummary" name="description"
+									th:value="${user.getDescription()}">
 							</div>
 						</div>
 						<button type="submit"
@@ -113,7 +111,7 @@
 								Phonetic Pronunciation: <span class="fw-normal"
 									th:text="${user.getPhonetic_pronunciation()}"></span>
 							</p>
-					
+
 							<p class="fw-bold d-inline"
 								th:if="${user.getCommon_name() != null}">
 								Name Recording: <span class="fw-normal"
@@ -132,14 +130,14 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm2">
 
 				<div id="MKSOLeditpronunciationform" class="invisible">
 					<div class="container">
 						<div class="row">
 							<div class="col-3">
 								<p class="fw-bold">Pronouns:</p>
-								<p class="fw-bold">Birthday:</p>
+								<p class="fw-bold">Phonetic Pronunciation:</p>
 								<p>Examples:</p>
 								<p class="fw-bold">Name Recording:</p>
 
@@ -147,22 +145,23 @@
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
 									id="MKSOLPronouns" aria-describedby="MKSOLPronouns"
-									name="Pronouns"> <input type="text"
-									class="form-control  MKSOLedittext"
-									id="MKSOLPhoneticPronunciation	"
+									name="Pronouns" th:value="${user.getPronouns()}"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLPhoneticPronunciation"
 									aria-describedby="MKSOLPhoneticPronunciation"
-									name="PhoneticPronunciation">
+									name="PhoneticPronunciation"
+									th:value="${user.getPhonetic_pronunciation()}">
 								<p>kris-TEEN BEAR-it (Christine Berret) uh-JEET CHOW-lah
 									(Ajeet Chawla)</p>
 
 								<input type="text" class="form-control  MKSOLedittext"
 									id="MKSOLCommonName" aria-describedby="MKSOLCommonName"
-									name="CommonName">
+									name="CommonName" th:value="${user.getCommon_name()}">
 							</div>
 						</div>
 						<button type="submit"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
-							id="MKSOLeditsave">Save changes</button>
+							id="MKSOLeditpronunciationsave">Save changes</button>
 						<button type="button"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
 							id="MKSOLeditcancel"
@@ -181,28 +180,30 @@
 						<div class="col-9">
 
 							<p class="d-inline"
-								th:if="${user.getMail() == null && user.getHome_postal_address() == null && user.getTelephone_number() == null && user.getHome_phone() == null && user.getFax_number() == null}">You
+								th:if="${user.getLast_modified_by() == null && user.getHome_postal_address() == null && user.getTelephone_number() == null && user.getHome_phone() == null && user.getMobile() == null && user.getFax_number() == null}">You
 								haven't filled out any information yet</p>
-							<p class="fw-bold" th:if="${user.getMail() != null}">
-								Email: <span class="fw-normal" th:text="${user.getMail()}"></span>
+							<p class="fw-bold" th:if="${user.getLast_modified_by() != null}">
+								Email: <span class="fw-normal"
+									th:text="${user.getLast_modified_by()}"></span>
 							</p>
 							<p class="fw-bold"
 								th:if="${user.getHome_postal_address() != null}">
 								Home page: <span class="fw-normal"
 									th:text="${user.getHome_postal_address()}"></span>
 							</p>
-							<p class="fw-bold"
-								th:if="${user.getTelephone_number() != null}">
+							<p class="fw-bold" th:if="${user.getTelephone_number() != null}">
 								Work phone: <span class="fw-normal"
 									th:text="${user.getTelephone_number()}"></span>
 							</p>
-							<p class="fw-bold"
-								th:if="${user.getHome_phone() != null}">
-								Mobile phone: <span class="fw-normal"
+							<p class="fw-bold" th:if="${user.getHome_phone() != null}">
+								Home phone: <span class="fw-normal"
 									th:text="${user.getHome_phone()}"></span>
 							</p>
-							<p class="fw-bold"
-								th:if="${user.getFax_number() != null}">
+							<p class="fw-bold" th:if="${user.getMobile() != null}">
+								Mobile phone: <span class="fw-normal"
+									th:text="${user.getMobile()}"></span>
+							</p>
+							<p class="fw-bold" th:if="${user.getFax_number() != null}">
 								Facsimile: <span class="fw-normal"
 									th:text="${user.getFax_number()}"></span>
 							</p>
@@ -218,7 +219,7 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm3">
 
 				<div id="MKSOLeditcontactform" class="invisible">
 					<div class="container">
@@ -234,28 +235,28 @@
 							</div>
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
-									id="MKSOLEmail" aria-describedby="MKSOLEmail" name="Email">
-
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLHomepage" aria-describedby="MKSOLHomepage"
-									name="Homepage"> <input type="text"
-									class="form-control  MKSOLedittext" id="MKSOLWorkphone"
-									aria-describedby="MKSOLWorkphone" name="Workphone"> <input
+									id="MKSOLEmail" aria-describedby="MKSOLEmail" name="Email"
+									th:value="${user.getLast_modified_by()}"> <input
 									type="text" class="form-control  MKSOLedittext"
-									id="MKSOLHomephone" aria-describedby="MKSOLHomephone"
-									name="Homephone"> <input type="text"
-									class="form-control  MKSOLedittext" id="MKSOLMobilephone"
-									aria-describedby="MKSOLMobilephone" name="Mobilephone">
-
-
+									id="MKSOLHomepage" aria-describedby="MKSOLHomepage"
+									name="Homepage" th:value="${user.getHome_postal_address()}">
 								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLWorkphone" aria-describedby="MKSOLWorkphone"
+									name="Workphone" th:value="${user.getTelephone_number()}">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLHomephone" aria-describedby="MKSOLHomephone"
+									name="Homephone" th:value="${user.getHome_phone()}"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLMobilephone" aria-describedby="MKSOLMobilephone"
+									name="Mobilephone" th:value="${user.getMobile()}"> <input
+									type="text" class="form-control  MKSOLedittext"
 									id="MKSOLFacsimile" aria-describedby="MKSOLFacsimile"
-									name="Facsimile">
+									name="Facsimile" th:value="${user.getFax_number()}">
 							</div>
 						</div>
 						<button type="submit"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
-							id="MKSOLeditsave">Save changes</button>
+							id="MKSOLeditcontactsave">Save changes</button>
 						<button type="button"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
 							id="MKSOLeditcancel" onclick="MKSOLeditcontactcancelvisible()">Cancel</button>
@@ -274,7 +275,7 @@
 						<div class="col-9">
 
 							<p class="d-inline"
-								th:if="${user.getStaff_profile() == null && user.getDepartment_number() == null && user.getOrg_unit_dn() == null && user.getRoom_number() == null && user.getEmployee_type() == null && user.getUniversity_profile_url() == null && user.getAcademic_profile_url() == null && user.getPublications() == null}">You
+								th:if="${user.getStaff_profile() == null && user.getDepartment_number() == null && user.getOrganization() == null && user.getRoom_number() == null && user.getEmployee_type() == null && user.getUniversity_profile_url() == null && user.getAcademic_profile_url() == null && user.getPublications() == null}">You
 								haven't filled out any information yet</p>
 							<p class="fw-bold" th:if="${user.getEmployee_type() != null}">
 								Position: <span class="fw-normal"
@@ -285,17 +286,15 @@
 									th:text="${user.getDepartment_number()}"></span>
 							</p>
 							<p class="fw-bold d-inline"
-								th:if="${user.getOrg_unit_dn() != null}">
+								th:if="${user.getOrganization() != null}">
 								School: <span class="fw-normal"
-									th:text="${user.getOrg_unit_dn()}"></span>
+									th:text="${user.getOrganization()}"></span>
 							</p>
-							<p class="fw-bold"
-								th:if="${user.getRoom_number() != null}">
+							<p class="fw-bold" th:if="${user.getRoom_number() != null}">
 								Room: <span class="fw-normal" th:text="${user.getRoom_number()}"></span>
 							</p>
 
-							<p class="fw-bold"
-								th:if="${user.getStaff_profile() != null}">
+							<p class="fw-bold" th:if="${user.getStaff_profile() != null}">
 								Staff profile: <span class="fw-normal"
 									th:text="${user.getStaff_profile()}"></span>
 							</p>
@@ -309,8 +308,7 @@
 								Academic/research URL: <span class="fw-normal"
 									th:text="${user.getAcademic_profile_url()}"></span>
 							</p>
-							<p class="fw-bold"
-								th:if="${user.getPublications() != null}">
+							<p class="fw-bold" th:if="${user.getPublications() != null}">
 								Publications and conferences: <span class="fw-normal"
 									th:text="${user.getPublications()}"></span>
 							</p>
@@ -326,7 +324,7 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm4">
 
 				<div id="MKSOLeditstaffform" class="invisible">
 					<div class="container">
@@ -344,33 +342,39 @@
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
 									id="MKSOLPosition" aria-describedby="MKSOLPosition"
-									name="Position"> <input type="text"
-									class="form-control  MKSOLedittext" id="MKSOLDepartment"
-									aria-describedby="MKSOLDepartment" name="Department"> <input
+									name="Position" th:value="${user.getEmployee_type()}">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLDepartment" aria-describedby="MKSOLDepartment"
+									name="Department" th:value="${user.getDepartment_number()}">
+								<input type="text" class="form-control  MKSOLedittext"
+									id="MKSOLSchool" aria-describedby="MKSOLSchool" name="School"
+									th:value="${user.getOrganization()}"> <input
+									type="text" class="form-control  MKSOLedittext" id="MKSOLRoom"
+									aria-describedby="MKSOLRoom" name="Room"
+									th:value="${user.getRoom_number()}"> <input type="text"
+									class="form-control  MKSOLedittext" id="MKSOLStaffprofile"
+									aria-describedby="MKSOLStaffprofile" name="Staffprofile"
+									th:value="${user.getStaff_profile()}"> <input
 									type="text" class="form-control  MKSOLedittext"
-									id="MKSOLSchool" aria-describedby="MKSOLSchool" name="School">
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLRoom" aria-describedby="MKSOLRoom" name="Room">
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLStaffprofile" aria-describedby="MKSOLStaffprofile"
-									name="Staffprofile"> <input type="text"
-									class="form-control  MKSOLedittext"
 									id="MKSOLUniversityprofileURL"
 									aria-describedby="MKSOLUniversityprofileURL"
-									name="UniversityprofileURL"> <input type="text"
-									class="form-control  MKSOLedittext"
+									name="UniversityprofileURL"
+									th:value="${user.getUniversity_profile_url()}"> <input
+									type="text" class="form-control  MKSOLedittext"
 									id="MKSOLAcademicresearchURL"
 									aria-describedby="MKSOLAcademicresearchURL"
-									name="AcademicresearchURL"> <input type="text"
-									class="form-control  MKSOLedittext"
+									name="AcademicresearchURL"
+									th:value="${user.getAcademic_profile_url()}"> <input
+									type="text" class="form-control  MKSOLedittext"
 									id="MKSOLPublicationsandconferences"
 									aria-describedby="MKSOLPublicationsandconferences"
-									name="Publicationsandconferences">
+									name="Publicationsandconferences"
+									th:value="${user.getPublications()}">
 							</div>
 						</div>
 						<button type="submit"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
-							id="MKSOLeditsave">Save changes</button>
+							id="MKSOLeditstaffsave">Save changes</button>
 						<button type="button"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
 							id="MKSOLeditcancel" onclick="MKSOLeditstaffcancelvisible()">Cancel</button>
@@ -413,7 +417,7 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm5">
 
 				<div id="MKSOLeditstudentform" class="invisible">
 					<div class="container">
@@ -426,7 +430,8 @@
 							</div>
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
-									id="MKSOLCourse" aria-describedby="MKSOLCourse" name="Course">
+									id="MKSOLCourse" aria-describedby="MKSOLCourse" name="Course"
+									th:value="${user.getEducation_course()}">
 
 								<!-- 			<input type="text"
 									class="form-control  MKSOLedittext" id="MKSOLBirthday"
@@ -434,12 +439,12 @@
 
 								<input type="text" class="form-control  MKSOLedittext"
 									id="MKSOLSubjects" aria-describedby="MKSOLSubjects"
-									name="Subjects">
+									name="Subjects" th:value="${user.getEducation_subjects()}">
 							</div>
 						</div>
 						<button type="submit"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
-							id="MKSOLeditsave">Save changes</button>
+							id="MKSOLeditstudentsave">Save changes</button>
 						<button type="button"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
 							id="MKSOLeditcancel" onclick="MKSOLeditstudentcancelvisible()">Cancel</button>
@@ -580,7 +585,7 @@
 
 				</div>
 			</div>
-			<form id="updateForm">
+			<form id="updateForm6">
 
 				<div id="MKSOLeditpersonalform" class="invisible">
 					<div class="container">
@@ -597,21 +602,22 @@
 							</div>
 							<div class="col-8">
 								<input type="text" class="form-control MKSOLedittext"
-									id="MKSOLbooks" aria-describedby="MKSOLbooks" name="books">
-
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLshows" aria-describedby="MKSOLshows" name="shows">
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLmovies" aria-describedby="MKSOLmovies" name="movies">
-
-
-								<input type="text" class="form-control  MKSOLedittext"
-									id="MKSOLquotes" aria-describedby="MKSOLquotes" name="quotes">
+									id="MKSOLbooks" aria-describedby="MKSOLbooks" name="books"
+									th:value="${user.getFavourite_books()}"> <input
+									type="text" class="form-control  MKSOLedittext" id="MKSOLshows"
+									aria-describedby="MKSOLshows" name="shows"
+									th:value="${user.getFavourite_tv_shows()}"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLmovies" aria-describedby="MKSOLmovies" name="movies"
+									th:value="${user.getFavourite_movies()}"> <input
+									type="text" class="form-control  MKSOLedittext"
+									id="MKSOLquotes" aria-describedby="MKSOLquotes" name="quotes"
+									th:value="${user.getFavourite_quotes()}">
 							</div>
 						</div>
 						<button type="submit"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
-							id="MKSOLeditsave">Save changes</button>
+							id="MKSOLeditpersonalsave">Save changes</button>
 						<button type="button"
 							class="btn btn-secondary d-inline MKSOLbtneditform"
 							id="MKSOLeditcancel" onclick="MKSOLeditpersonalcancelvisible()">Cancel</button>
@@ -630,30 +636,96 @@
 
 
 <script>
-	document.getElementById('MKSOLeditsave').addEventListener(
-			'click',
-			function() {
-				var form = document.getElementById('updateForm');
-				var formData = new FormData(form);
+function handleSubmit(formId) {
+    var form = document.getElementById(formId);
+    var formData = new FormData(form);
 
-				var description = formData.get('description');
+    var description = formData.get('description');
+    var Name = formData.get('Name');
+    var Address = formData.get('Address');
+    var Pronouns = formData.get('Pronouns');
+    var PhoneticPronunciation = formData.get('PhoneticPronunciation');
+    var CommonName = formData.get('CommonName');
+    var Email = formData.get('Email');
+    var Homepage = formData.get('Homepage');
+    var Workphone = formData.get('Workphone');
+    var Homephone = formData.get('Homephone');
+    var Mobilephone = formData.get('Mobilephone');
+    var Facsimile = formData.get('Facsimile');
+    var Position = formData.get('Position');
+    var Department = formData.get('Department');
+    var School = formData.get('School');
+    var Room = formData.get('Room');
+    var Staffprofile = formData.get('Staffprofile');
+    var UniversityprofileURL = formData.get('UniversityprofileURL');
+    var AcademicresearchURL = formData.get('AcademicresearchURL');
+    var Publicationsandconferences = formData.get('Publicationsandconferences');
+    var Course = formData.get('Course');
+    var Subjects = formData.get('Subjects');
+    var books = formData.get('books');
+    var shows = formData.get('shows');
+    var movies = formData.get('movies');
+    var quotes = formData.get('quotes');
 
-				var dateOfBirth = formData.get('dateOfBirth');
-				var nickname = formData.get('nickname');
+    var url = '/myo-web/MyProfileUpdate?';
 
-				var url = '/myo-web/MyProfileUpdate?' + 'description='
-						+ encodeURIComponent(description) + '&nickname='
-						+ encodeURIComponent(nickname);
+    url += 'description=' + encodeURIComponent(description) + '&';
+    url += 'Name=' + encodeURIComponent(Name) + '&';
+    url += 'Address=' + encodeURIComponent(Address) + '&';
+    url += 'Pronouns=' + encodeURIComponent(Pronouns) + '&';
+    url += 'PhoneticPronunciation=' + encodeURIComponent(PhoneticPronunciation) + '&';
+    url += 'CommonName=' + encodeURIComponent(CommonName) + '&';
+    url += 'Email=' + encodeURIComponent(Email) + '&';
+    url += 'Homepage=' + encodeURIComponent(Homepage) + '&';
+    url += 'Workphone=' + encodeURIComponent(Workphone) + '&';
+    url += 'Homephone=' + encodeURIComponent(Homephone) + '&';
+    url += 'Mobilephone=' + encodeURIComponent(Mobilephone) + '&';
+    url += 'Facsimile=' + encodeURIComponent(Facsimile) + '&';
+    url += 'Position=' + encodeURIComponent(Position) + '&';
+    url += 'Department=' + encodeURIComponent(Department) + '&';
+    url += 'School=' + encodeURIComponent(School) + '&';
+    url += 'Room=' + encodeURIComponent(Room) + '&';
+    url += 'Staffprofile=' + encodeURIComponent(Staffprofile) + '&';
+    url += 'UniversityprofileURL=' + encodeURIComponent(UniversityprofileURL) + '&';
+    url += 'AcademicresearchURL=' + encodeURIComponent(AcademicresearchURL) + '&';
+    url += 'Publicationsandconferences=' + encodeURIComponent(Publicationsandconferences) + '&';
+    url += 'Course=' + encodeURIComponent(Course) + '&';
+    url += 'Subjects=' + encodeURIComponent(Subjects) + '&';
+    url += 'books=' + encodeURIComponent(books) + '&';
+    url += 'shows=' + encodeURIComponent(shows) + '&';
+    url += 'movies=' + encodeURIComponent(movies) + '&';
+    url += 'quotes=' + encodeURIComponent(quotes);
 
-				var xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.onload = function() {
-					if (xhr.status === 200) {
-						alert('Profile updated successfully!');
-					} else {
-						alert('Failed to update profile. Please try again.');
-					}
-				};
-				xhr.send();
-			});
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            alert('Profile updated successfully!');
+        } else {
+            alert('Failed to update profile. Please try again.');
+        }
+    };
+    xhr.send();
+}
+
+document.getElementById('MKSOLeditsave').addEventListener('click', function() {
+    handleSubmit('updateForm1');
+});
+document.getElementById('MKSOLeditpronunciationsave').addEventListener('click', function() {
+    handleSubmit('updateForm2');
+});
+
+document.getElementById('MKSOLeditcontactsave').addEventListener('click', function() {
+    handleSubmit('updateForm3');
+});
+document.getElementById('MKSOLeditstaffsave').addEventListener('click', function() {
+    handleSubmit('updateForm4');
+});
+document.getElementById('MKSOLeditstudentsave').addEventListener('click', function() {
+    handleSubmit('updateForm5');
+});
+document.getElementById('MKSOLeditpersonalsave').addEventListener('click', function() {
+    handleSubmit('updateForm6');
+});
+
 </script>

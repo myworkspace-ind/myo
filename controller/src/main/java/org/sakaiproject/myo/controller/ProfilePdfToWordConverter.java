@@ -120,6 +120,7 @@ public class ProfilePdfToWordConverter {
 		    
 			document.write(out);
 			out.close();
+			document.close();
 			System.out.println("Document created successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
