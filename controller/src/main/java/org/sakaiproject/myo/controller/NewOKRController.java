@@ -70,9 +70,9 @@ public class NewOKRController extends BaseController {
     protected void initBinder(WebDataBinder binder) {
         // Sample init of Custom Editor
 
-//        Class<List<ItemKine>> collectionType = (Class<List<ItemKine>>)(Class<?>)List.class;
-//        PropertyEditor orderNoteEditor = new MotionRuleEditor(collectionType);
-//        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
+        Class<List<ItemKine>> collectionType = (Class<List<ItemKine>>)(Class<?>)List.class;
+        PropertyEditor orderNoteEditor = new MotionRuleEditor(collectionType);
+        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
 
     }
 
