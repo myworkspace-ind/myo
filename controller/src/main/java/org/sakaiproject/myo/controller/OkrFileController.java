@@ -28,37 +28,10 @@ public class OkrFileController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file, @ModelAttribute("model") ExcelFileModel model) throws IOException {
 		ModelAndView m = new ModelAndView("okr_file");
-
 		model.setFile(file);
-		List<List<String>> data = new ArrayList<>();
+		int[][] indexes = {{2, 12}, {1, 2}, {2, 1}};
+		List<List<String>> data = model.getOkrFromExcel(file, indexes);
 
-		// get excel data and pass to "data" variable
-		try (InputStream is = file.getInputStream()) {
-			Workbook workbook = WorkbookFactory.create(is);
-			Sheet sheet = workbook.getSheetAt(0); // first sheet
-			for (Object objRow : sheet) {
-				List<String> rowData = new ArrayList<>();
-				Row row = (Row) objRow;
-				for (Cell cell : row) {
-					switch (cell.getCellType()) {
-					case STRING:
-						rowData.add(cell.getStringCellValue());
-						break;
-					case NUMERIC:
-						rowData.add(String.valueOf(cell.getNumericCellValue()));
-						break;
-					// Handle other cell types as needed
-					default:
-						rowData.add("");
-						break;
-					}
-				}
-				data.add(rowData);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// pass data to view to display
 		m.addObject("data", data);
 		return m;
 	}

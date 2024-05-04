@@ -17,14 +17,16 @@ public class UserRepositoryTestFindByEmail {
 
 	@Test
 	public void testFindByEmail() {
-		UUID user_id = UUID.fromString("1111");
+		
 		OkrUser user = new OkrUser();
-		user.setUserId(user_id);
 		user.setEmail("nhan@gmail.com");
+		
 		try {
 			OkrUser obj = up.findByEmail("nhan@gmail.com");
+			
 			Assert.assertNotNull(obj);
-			Assert.assertEquals(obj.getUserId(),user.getUserId());
+			Assert.assertEquals(obj,user);
+			
 		}catch (NoResultException e) {
             fail("User not found for email: nhan@gmail.com");
 		}catch (Exception e) {
