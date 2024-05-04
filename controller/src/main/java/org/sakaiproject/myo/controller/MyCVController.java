@@ -19,35 +19,33 @@
 
 package org.sakaiproject.myo.controller;
 
-import java.math.BigInteger;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
 import org.sakaiproject.myo.entity.OkrUserProfile;
 import org.sakaiproject.myo.repository.UserRepositoryProfile;
-import org.sakaiproject.myo.service.OrgService;
-import org.sakaiproject.myo.service.UserService;
-import org.sakaiproject.myo.service.UserServiceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.OutputStream;
+import java.sql.ResultSet;
 
 /**
  * Handles requests for the application home page.
  */
-@Slf4j
 @Controller
-public class MyProfileController extends BaseController {
+public class MyCVController extends BaseController {
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
@@ -65,32 +63,32 @@ public class MyProfileController extends BaseController {
 	}
 
 	@Autowired
-	UserServiceProfile userService;
-	@Autowired
 	UserRepositoryProfile userRepositoryProfile;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	@RequestMapping(value = { "MyProfile" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("my_profile");
-		/*
-		 * List<OkrUserProfile> allUsers = userService.findAll(); int len = (allUsers !=
-		 * null) ? allUsers.size(): 0; log.info("Number of users: " + len);
-		 * mav.addObject("users", allUsers);
-		 */
+	@RequestMapping(value = { "MyCV" }, method = RequestMethod.GET)
+	public ModelAndView displayHome(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) throws Exception {
+		ModelAndView mav = new ModelAndView("my_cv");
+
+		initSession(request, httpSession);
 
 		String userEmail = "micrayon2812@gmail.com";
 		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		ProfilePdfWriter.writeProfileToPdf(user, byteArrayOutputStream);
 
-		if (user != null) {
-			mav.addObject("user", user);
+		byte[] pdfBytes = byteArrayOutputStream.toByteArray();
 
-		} 
+		response.setContentType("application/pdf");
+		response.setContentLength(pdfBytes.length);
+		response.setHeader("Content-Disposition", "inline; filename=\"My_cv.pdf\"");
+		response.getOutputStream().write(pdfBytes);
+
 		return mav;
 	}
-
 }

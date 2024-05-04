@@ -162,4 +162,33 @@ body {
 .MKSOLedittext {
 	background-color: #1f2225;
 	width: 100%;
- }
+	color: white;
+}
+
+.MKSOLedittext:focus {
+	background-color: #1f2225;
+	color: white;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	z-index: 1000;
+	background-color: #1f2225;
+	padding: 10px;
+}
+
+.dropdown-menu.show {
+	display: block;
+}
+
+.dropdown-item {
+	color: white;
+	padding: 0;
+	background-color: #1f2225;
+}
+.dropdown-divider{
+	color: white;
+	border-color: white;
+	
+}

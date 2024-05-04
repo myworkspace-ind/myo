@@ -19,35 +19,46 @@
 
 package org.sakaiproject.myo.controller;
 
-import java.math.BigInteger;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.sakaiproject.myo.entity.OkrUserProfile;
 import org.sakaiproject.myo.repository.UserRepositoryProfile;
-import org.sakaiproject.myo.service.OrgService;
-import org.sakaiproject.myo.service.UserService;
-import org.sakaiproject.myo.service.UserServiceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.OutputStream;
+import java.sql.ResultSet;
+import java.io.ByteArrayInputStream;
 
 /**
  * Handles requests for the application home page.
  */
-@Slf4j
 @Controller
-public class MyProfileController extends BaseController {
+public class MyCVWordController extends BaseController {
 
 	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
@@ -65,32 +76,30 @@ public class MyProfileController extends BaseController {
 	}
 
 	@Autowired
-	UserServiceProfile userService;
-	@Autowired
 	UserRepositoryProfile userRepositoryProfile;
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = { "MyProfile" }, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("my_profile");
-		/*
-		 * List<OkrUserProfile> allUsers = userService.findAll(); int len = (allUsers !=
-		 * null) ? allUsers.size(): 0; log.info("Number of users: " + len);
-		 * mav.addObject("users", allUsers);
-		 */
+	@GetMapping("/MyCVWord")
+	public void generateWordCV(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String userEmail = "micrayon2812@gmail.com";
+			OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
 
-		String userEmail = "micrayon2812@gmail.com";
-		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
+			ProfilePdfToWordConverter.writeProfileToWord(user, "MyCV.docx");
 
-		if (user != null) {
-			mav.addObject("user", user);
+			response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+			response.setHeader("Content-Disposition", "attachment; filename=MyCV.docx");
 
-		} 
-		return mav;
+			FileInputStream in = new FileInputStream("MyCV.docx");
+			OutputStream out = response.getOutputStream();
+			byte[] buffer = new byte[4096];
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}
+			out.flush();
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
 }

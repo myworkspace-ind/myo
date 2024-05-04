@@ -1,3 +1,5 @@
+
+
 <ul class="nav nav-tabs MKSOLheadertabs">
 	<li class="nav-item MKSOLheaderitem"><a
 		class="nav-link MKSOLheaderlink active" href="/myo-web/MyProfile"
@@ -6,14 +8,49 @@
 		class="nav-link MKSOLheaderlink" href="/myo-web/MyPictures"
 		id="tabPictures">Pictures </a></li>
 	<li class="nav-item MKSOLheaderitem"><a
-		class="nav-link MKSOLheaderlink" href="/myo-web/MyConnections" id="tabConnections">Connections</a></li>
+		class="nav-link MKSOLheaderlink" href="/myo-web/MyConnections"
+		id="tabConnections">Connections</a></li>
 	<li class="nav-item MKSOLheaderitem"><a
-		class="nav-link MKSOLheaderlink" href="/myo-web/MyMessages" id="tabMessages">Messages</a></li>
+		class="nav-link MKSOLheaderlink" href="/myo-web/MyMessages"
+		id="tabMessages">Messages</a></li>
 	<li class="nav-item MKSOLheaderitem"><a
-		class="nav-link MKSOLheaderlink" href="/myo-web/MySearch" id="tabSearch">Search</a></li>
+		class="nav-link MKSOLheaderlink" href="/myo-web/MySearch"
+		id="tabSearch">Search</a></li>
 	<li class="nav-item MKSOLheaderitem"><a
-		class="nav-link MKSOLheaderlink" href="/myo-web/MyPrivacy" id="tabPrivacy">Privacy</a></li>
+		class="nav-link MKSOLheaderlink" href="/myo-web/MyPrivacy"
+		id="tabPrivacy">Privacy</a></li>
 	<li class="nav-item MKSOLheaderitem"><a
-		class="nav-link MKSOLheaderlink" href="/myo-web/MyPreferences" id="tabPreferences">Preferences</a></li>
-</ul>
+		class="nav-link MKSOLheaderlink" href="/myo-web/MyPreferences"
+		id="tabPreferences">Preferences</a></li>
+	<li class="nav-item MKSOLheaderitem" id="navbarDropdown"><a
+		class="nav-link MKSOLheaderlink" href="#" role="button"
+		aria-haspopup="true" aria-expanded="false"> CV </a>
+		<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			<a class="dropdown-item" href="/myo-web/MyCV">PDF</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="/myo-web/MyCVWord">Word</a>
+		</div></li>
 
+
+</ul>
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		var dropdownToggle = document.getElementById("navbarDropdown");
+		var dropdownMenu = dropdownToggle.querySelector(".dropdown-menu");
+
+		dropdownToggle.addEventListener("click", function() {
+			if (dropdownMenu.classList.contains("show")) {
+				dropdownMenu.classList.remove("show");
+			} else {
+				dropdownMenu.classList.add("show");
+			}
+		});
+
+		document.addEventListener("click", function(event) {
+			if (!dropdownToggle.contains(event.target)
+					&& !dropdownMenu.contains(event.target)) {
+				dropdownMenu.classList.remove("show");
+			}
+		});
+	});
+</script>
