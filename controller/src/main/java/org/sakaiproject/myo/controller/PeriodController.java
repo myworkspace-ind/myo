@@ -29,14 +29,18 @@ import org.sakaiproject.myo.entity.OkrPeriod;
 import org.sakaiproject.myo.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.UUID;
 import org.springframework.ui.Model;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sakaiproject.myo.model.TableStructure;
 
 /**
  * Handles requests for the application home page.
@@ -47,62 +51,49 @@ public class PeriodController extends BaseController {
 	@Autowired
 	PeriodService periodService;
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-     * @return 
-	 */
-	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
+	@Value("${productList.colHeaders:Year,Name,Start date,End date,Note}")
+	private String[] productListColHeaders;
+
+	@Value("${productList.colWidths:80,250,200,200,80}")
+	private int[] productListColWidths;
+
+	@GetMapping(value = "/period")
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("period");
-		initSession(request, httpSession);
-		List<List<Object>> data = new ArrayList<>();
-
-		List<OkrPeriod> allPeriods = periodService.findAll(); 
-
-		List<Object> periodYear = new ArrayList<>();
-		List<Object> periodName = new ArrayList<>();
-		List<Object> periodStartDate = new ArrayList<>();
-		List<Object> periodEndDate = new ArrayList<>();
-		List<Object> periodNote = new ArrayList<>();
-
-		for (OkrPeriod period : allPeriods) {
-			List<Object> periodData = new ArrayList<>();
-			periodData.add(String.valueOf(period.getYear()));
-			periodYear.add(String.valueOf(period.getYear()));
-			periodData.add(String.valueOf(period.getName()));
-			periodName.add(String.valueOf(period.getName()));
-			periodData.add(String.valueOf(period.getStartDate()));
-			periodStartDate.add(String.valueOf(period.getStartDate())); 
-			periodData.add(String.valueOf(period.getEndDate()));
-			periodEndDate.add(String.valueOf(period.getEndDate()));
-			periodData.add(String.valueOf(period.getNote()));
-			periodNote.add(String.valueOf(period.getNote()));
-            // Add other properties as needed
-            data.add(periodData);
-        }
-
-		
-		System.out.println("Periods found with findAll():");
-		System.out.println("-------------------------------");
-		
-		int len = (allPeriods != null) ? allPeriods.size(): 0;
-		System.out.println("Number of periods: " + len);
-		
-		int lenTest = (data != null) ? data.size(): 0;
-		System.out.println("Number of periods data: " + lenTest);
-		System.out.println("Data: " + data);
-		
-		periodService.processPeriods();
-
-		mav.addObject("periods", allPeriods);
-		mav.addObject("period", data);
-		mav.addObject("periodYear", periodYear);
-		mav.addObject("periodName", periodName);
-		mav.addObject("periodStartDate", periodStartDate);
-		mav.addObject("periodEndDate", periodEndDate);
-		mav.addObject("periodNote", periodNote);
+		System.out.println("productListColWidths");
 
 		return mav;
+	}
+
+
+
+	@GetMapping(value = { "/period/loaddata" }, produces = "application/json")
+	@ResponseBody
+	public TableStructure getProductTableData() {
+		List<Object[]> lstProducts = getDemoData();
+
+		TableStructure productTable = new TableStructure(productListColWidths, productListColHeaders, lstProducts);
+
+		return productTable;
+	}
+
+	private List<Object[]> getDemoData() {
+		List<Object[]> data = new ArrayList<>();
+		List<OkrPeriod> periods = periodService.findAll();
+
+		for (OkrPeriod period : periods) {
+			Object[] row = new Object[5];
+
+			row[0] = period.getYear();
+			row[1] = period.getName();
+			row[2] = period.getStartDate();
+			row[3] = period.getEndDate();
+			row[4] = period.getNote();
+
+			data.add(row);
+		}
+
+		return data;
 	}
 
 }

@@ -1,23 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Periods</title>
-    <!-- Include Handsontable CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+    <th:block th:include="fragments/head"></th:block>
+    <link type="text/css" rel="stylesheet" href="/library/webjars/handsontable/handsontable.full.min.css" /> 
 </head>
 <body>
-    <!-- Container for the table -->
+	<div id="periods-title">Period</div>
     <div id="periods-table"></div>
 	<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-	<div id="periods-data" th:attr="data-periods=${period}"></div>
-    <!-- Embed the period data -->
-    <script>
-    	const period = document.getElementById('periods-data').getAttribute('data-periods');
-    </script>
-
-    <!-- Include the JavaScript file -->
+    <script type="text/javascript" src="/library/webjars/handsontable/handsontable.full.min.js"></script>
     <script src="resources/js/period.js"></script>
+
 </body>
 </html>
