@@ -187,8 +187,145 @@ body {
 	padding: 0;
 	background-color: #1f2225;
 }
-.dropdown-divider{
+
+.dropdown-divider {
 	color: white;
 	border-color: white;
-	
+}
+
+/* aaaaa */
+.MKSOLprivacyselect {
+	margin-left: 2%;
+	width: 15%;
+	height: 60%;
+	background-color: #31353b;
+	border-radius: 0%;
+	font-size: 95%;
+	color: white;
+	display: inline;
+}
+
+.MKSOLbackground {
+	background-color: #1f2225;
+	border-color: white;
+	border-width: 1px;
+}
+
+#dropdownMenuLink {
+	border-color: white;
+	background-color: #1f2225;
+	color: white;
+}
+
+.dropdown-menu {
+	background-color: #1f2225;
+	padding: 10px;
+	margin: 0
+}
+
+.dropdown-item {
+	color: white !important;
+	background-color: #1f2225 !important;
+}
+
+.dropdown-item:focus {
+	background-color: #000080 !important;
+}
+
+.MKSOLheaderlink {
+	color: white !important;
+	background-color: #1f2225 !important;
+}
+
+/* lightmode */
+
+body.light-mode {
+	background-color: #ffffff;
+	color: #1f2225;
+	padding: 0;
+	margin: 0;
+}
+
+.MKSOLlogo.light-mode {
+	background-color: #003a6b;
+}
+
+.MKSOLnav.light-mode {
+	background-color: #333435;
+}
+
+.MKSOL-ml-5.light-mode {
+	margin-left: 16% !important;
+}
+
+.MKSOLhome.light-mode {
+	color: #1f2225;
+}
+
+.MKSOLfont.light-mode {
+	color: #1f2225;
+}
+
+.MKSOLLogoGroup.light-mode {
+	background-color: #003a6b;
+}
+
+#myBox.light-mode {
+	background-color: #ffffff;
+	color: #1f2225;
+}
+
+#blackboxText.light-mode {
+	background-color: #ffffff;
+	color: #1f2225;
+}
+
+.MKSOLheaderitem.light-mode {
+	border-color: #1f2225 !important;
+}
+
+.MKSOLheaderlink.light-mode {
+	color: #1f2225;
+}
+
+.MKSOuploadform.light-mode {
+	background-color: #f2f2f2;
+}
+
+.MKSOLbtneditform.light-mode {
+	background-color: #f2f2f2;
+}
+
+.MKSOLedittext.light-mode {
+	background-color: #ffffff;
+	color: #1f2225;
+}
+
+.dropdown-menu.light-mode {
+	background-color: #ffffff;
+}
+
+.dropdown-item.light-mode {
+	color: #1f2225;
+	background-color: #ffffff;
+}
+
+.dropdown-divider.light-mode {
+	color: #1f2225;
+	border-color: #1f2225;
+}
+
+.MKSOLprivacyselect.light-mode {
+	background-color: #f2f2f2;
+	color: #1f2225;
+}
+
+.MKSOLbackground.light-mode {
+	background-color: #ffffff;
+	border-color: #1f2225;
+}
+
+#dropdownMenuLink.light-mode {
+	border-color: #1f2225;
+	color: #1f2225;
 }

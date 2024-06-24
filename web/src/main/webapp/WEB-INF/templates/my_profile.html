@@ -5,15 +5,21 @@
 <th:block th:include="fragments/head"></th:block>
 <link rel="stylesheet" type="text/css"
 	href="resources/css/my_profile.css">
-<script src="resources/js/profile/my_profile.js"> </script>
+<script src="resources/js/profile/my_profile.js">
+	
+</script>
+<script src="resources/js/profile/profile.js"></script>
 
 
 </head>
 <body>
 	<th:block th:include="fragments/profile/my_navbar"></th:block>
+
 	<th:block th:include="fragments/profile/my_header"></th:block>
 	<th:block th:include="fragments/profile/my_menu"></th:block>
 	<th:block th:include="fragments/profile/my_profiledisplay"></th:block>
+	<button type="button" class="btn btn-primary" id="MKSOLchangemode">Change
+		mode</button>
 
 
 </body>
