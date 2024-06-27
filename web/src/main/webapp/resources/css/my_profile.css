@@ -61,7 +61,7 @@ body {
 	margin: 0;
 }
 
-#myBox {
+#MKSOLDirectLinkbox {
 	width: 200px;
 	height: 200px;
 	background-color: #1f2225;
@@ -70,6 +70,7 @@ body {
 	padding-left: 1%;
 	margin-left: -15%;
 	position: absolute;
+	border: gray;
 }
 
 #MKSOLlink {
@@ -92,12 +93,14 @@ body {
 	background-color: #1f2225;
 }
 
-#myButton {
+#MKSOLLinkbox {
 	width: 45px;
 	height: 20px;
 	padding: 0;
-	font-size: 14px;
+	font-size: 12px;
 	border-radius: 0;
+	color: white;
+	border-color: gray;
 }
 
 .MKSOLheaderitem {
@@ -107,14 +110,17 @@ body {
 	padding: 0.5%;
 	padding-bottom: 0% !important;
 	text-align: center;
+	background-color: #1f2225;
+	color: white;
 }
 
 .MKSOLheaderlink {
-	color: white;
+	color: white !important;
 	font-size: 12px;
 	line-height: 32px;
 	margin: 0;
 	padding: 0;
+	background-color: #1f2225 !important;
 }
 
 .MKSOLheadertabs {
@@ -138,6 +144,7 @@ body {
 
 .MKSOuploadform {
 	background-color: #31353b;
+	color: white !important;
 }
 
 .MKSOLbtnedit {
@@ -146,6 +153,7 @@ body {
 	height: 3%;
 	padding: 0;
 	font-size: 90%;
+	color: white;
 }
 
 .MKSOLbtneditform {
@@ -232,13 +240,7 @@ body {
 	background-color: #000080 !important;
 }
 
-.MKSOLheaderlink {
-	color: white !important;
-	background-color: #1f2225 !important;
-}
-
 /* lightmode */
-
 body.light-mode {
 	background-color: #ffffff;
 	color: #1f2225;
@@ -282,14 +284,17 @@ body.light-mode {
 
 .MKSOLheaderitem.light-mode {
 	border-color: #1f2225 !important;
+	background-color: white !important;
 }
 
 .MKSOLheaderlink.light-mode {
-	color: #1f2225;
+	color: black !important;
+	background-color: white !important;
 }
 
 .MKSOuploadform.light-mode {
 	background-color: #f2f2f2;
+	color: black !important;
 }
 
 .MKSOLbtneditform.light-mode {
@@ -328,4 +333,80 @@ body.light-mode {
 #dropdownMenuLink.light-mode {
 	border-color: #1f2225;
 	color: #1f2225;
+}
+
+#MKSOLLinkbox.light-mode {
+	width: 45px;
+	height: 20px;
+	padding: 0;
+	font-size: 12px;
+	border-radius: 0;
+	color: black;
+	border-color: black;
+}
+
+#MKSOLDirectLinkbox.light-mode {
+	background-color: white;
+	color: #1f2225;
+}
+
+#ShortURL.light-mode {
+	background-color: white;
+}
+
+#blackboxText.light-mode {
+	margin-top: 5%;
+	background-color: white;
+	color: black;
+	border-radius: 0;
+}
+
+.black-box.light-mode {
+	background-color: white;
+}
+
+#MKSOLlink.light-mode {
+	background-color: white;
+	color: black;
+}
+
+.dropdown-item.light-mode {
+	background-color: white !important;
+	color: black !important;
+}
+
+#dropdownMenuLink.light-mode {
+	background-color: white !important;
+	color: black !important;
+	border-color: gray !important;
+	border-width: 1px;
+}
+
+.MKSOLPreferencestable {
+	background-color: black !important;
+	color: white !important;
+}
+
+.MKSOLPreferencestable.light-mode {
+	background-color: white !important;
+	color: black !important;
+}
+
+.MKSOLPreferencesinfo {
+	color: white;
+}
+
+.MKSOLPreferencesinfo.light-mode {
+	color: black;
+}
+
+.MKSOLProfileEdit {
+	color: white;
+}
+
+.MKSOLProfileEdit.light-mode {
+	color: black;
+}
+.MKSOLbtnedit.light-mode {
+	color: black;
 }
