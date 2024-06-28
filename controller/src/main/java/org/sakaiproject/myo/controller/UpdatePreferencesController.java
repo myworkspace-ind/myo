@@ -104,7 +104,7 @@ public class UpdatePreferencesController extends BaseController {
 			@RequestParam(required = false) Boolean useGravatar, @RequestParam(required = false) Boolean showKudosRating,
 			@RequestParam(required = false) Boolean showPictures,
 			@RequestParam(required = false) Boolean showOnlineStatus) {
-		String uuid = "micrayon2812@gmail.com";
+		String uuid = "179f6307-fa79-4639-9b5f-2bab7ab6f370";
 
 	    uuid = (uuid != null && !uuid.isEmpty()) ? uuid : null;
 	    profileImagePrivacy = (profileImagePrivacy != null && !profileImagePrivacy.isEmpty()) ? profileImagePrivacy : null;

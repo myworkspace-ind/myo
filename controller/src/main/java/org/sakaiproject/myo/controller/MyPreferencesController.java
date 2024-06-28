@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.sakaiproject.myo.entity.OkrUserProfileDetail;
+import org.sakaiproject.myo.repository.UserRepositoryProfileDetail;
+import org.sakaiproject.myo.service.UserServiceProfileDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -36,34 +40,51 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  */
 @Controller
 public class MyPreferencesController extends BaseController {
- 
-	   /**
-     * This method is called when binding the HTTP parameter to bean (or model).
-     * 
-     * @param binder
-     */
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        // Sample init of Custom Editor
+
+	/**
+	 * This method is called when binding the HTTP parameter to bean (or model).
+	 * 
+	 * @param binder
+	 */
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		// Sample init of Custom Editor
 
 //        Class<List<ItemKine>> collectionType = (Class<List<ItemKine>>)(Class<?>)List.class;
 //        PropertyEditor orderNoteEditor = new MotionRuleEditor(collectionType);
 //        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
 
-    }
-    
+	}
+
 	/**
 	 * Simply selects the home view to render by returning its name.
-     * @return 
+	 * 
+	 * @return
 	 */
-	@RequestMapping(value = {"MyPreferences"}, method = RequestMethod.GET)
+	@Autowired
+	UserServiceProfileDetail userServiceDetail;
+	@Autowired
+	UserRepositoryProfileDetail userRepositoryProfileDetail;
+
+	@RequestMapping(value = { "MyPreferences" }, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("my_preferences");
 
-		initSession(request, httpSession);
-		
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+		/*
+		 * initSession(request, httpSession);
+		 * 
+		 * mav.addObject("currentSiteId", getCurrentSiteId());
+		 * mav.addObject("userDisplayName", getCurrentUserDisplayName());
+		 */
+
+		String uuid = "179f6307-fa79-4639-9b5f-2bab7ab6f370";
+		OkrUserProfileDetail userdetail = userRepositoryProfileDetail.findByUUID(uuid);
+
+		if (userdetail != null) {
+			mav.addObject("user", userdetail);
+			System.out.println(userdetail.getProfileImagePrivacy());
+
+		}
 
 		return mav;
 	}

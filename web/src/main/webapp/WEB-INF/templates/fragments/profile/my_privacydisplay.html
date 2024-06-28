@@ -29,10 +29,16 @@
 			<select class="
 					form-select
 					MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.basicInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.basicInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.basicInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.basicInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -42,10 +48,16 @@
 		<p>
 			Choose who can see things like your email addresses and phone numbers
 			<select class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.contactInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.contactInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.contactInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.contactInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -55,10 +67,16 @@
 		<p>
 			Choose who can see your staff information <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.staffInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.staffInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.staffInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.staffInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -68,10 +86,16 @@
 		<p>
 			Choose who can see your student information <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.studentInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.studentInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.studentInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.studentInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -82,10 +106,16 @@
 			Choose who can see your social networking information, such as your
 			Facebook, LinkedIn and MySpace profiles <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.socialInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.socialInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.socialInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.socialInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -95,28 +125,40 @@
 		<p>
 			Choose who can see your favorite books and tv shows etc <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.personalInfoPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.personalInfoPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.personalInfoPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.personalInfoPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
 		</br>
 
 		<p>Show Birth Year</p>
-		<input class="form-check-input me-2" type="checkbox" value=""
-			id="defaultCheck1">Choose whether or not to show or hide your
-		birth year. Ticked means visible</br> </br>
+		<input class="form-check-input me-2" type="checkbox"
+			id="defaultCheck1" th:field="${user.showBirthYear}">Choose
+		whether or not to show or hide your birth year. Ticked means visible</br> </br>
 
 		<p>Who can view my connections?</p>
 		<p>
 			Choose who can view your list of connections <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Only me</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.viewConnectionsPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.viewConnectionsPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.viewConnectionsPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Only me"
+					th:selected="${user.viewConnectionsPrivacy == 'Only me'}">Only
+					me</option>
 			</select>
 
 		</p>
@@ -126,9 +168,13 @@
 		<p>
 			Choose who can see your online status <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.viewOnlineStatusPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.viewOnlineStatusPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.viewOnlineStatusPrivacy == 'Only my connections'}">Only
+					my connections</option>
 			</select>
 
 		</p>
@@ -138,9 +184,13 @@
 		<p>
 			Choose who can see your status updates <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.viewStatusUpdatesPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.viewStatusUpdatesPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.viewStatusUpdatesPrivacy == 'Only my connections'}">Only
+					my connections</option>
 			</select>
 
 		</p>
@@ -150,9 +200,13 @@
 		<p>
 			Choose who can see your picture gallery <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.viewPicturesPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.viewPicturesPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.viewPicturesPrivacy == 'Only my connections'}">Only
+					my connections</option>
 			</select>
 
 		</p>
@@ -162,10 +216,15 @@
 		<p>
 			Choose who can send you messages <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
-				<option value="2">Nobody</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.sendMessagesPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.sendMessagesPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.sendMessagesPrivacy == 'Only my connections'}">Only
+					my connections</option>
+				<option value="Nobody"
+					th:selected="${user.sendMessagesPrivacy == 'Nobody'}">Nobody</option>
 			</select>
 
 		</p>
@@ -175,9 +234,13 @@
 		<p>
 			Choose who can see your kudos rating (if enabled in Preferences) <select
 				class="form-select MKSOLprivacyselect"
-				aria-label=".form-select-sm example">
-				<option selected>Everyone</option>
-				<option value="1">Only my connections</option>
+				aria-label=".form-select-sm example"
+				th:field="${user.viewKudosRatingPrivacy}">
+				<option value="Everyone"
+					th:selected="${user.viewKudosRatingPrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.viewKudosRatingPrivacy == 'Only my connections'}">Only
+					my connections</option>
 			</select>
 
 		</p>

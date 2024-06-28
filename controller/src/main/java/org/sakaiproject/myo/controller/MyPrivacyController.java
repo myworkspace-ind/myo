@@ -77,7 +77,7 @@ public class MyPrivacyController extends BaseController {
 		/*
 		 * initSession(request, httpSession);
 		 */		
-		String uuid = "3faa392a-0d50-48f4-833a-16746ca34546";
+		String uuid = "179f6307-fa79-4639-9b5f-2bab7ab6f370";
 		OkrUserProfileDetail userdetail = userRepositoryProfileDetail.findByUUID(uuid);
 		
 		if (userdetail != null) {
