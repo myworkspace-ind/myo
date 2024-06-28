@@ -32,6 +32,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.mail.HtmlEmail;
 import org.sakaiproject.myo.service.OrgService;
 import org.sakaiproject.myo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,23 +89,6 @@ public class SubmitController extends BaseController {
 //		mav.addObject("orgs", orgService.findAll());
 		return "submit_test";
 	}
-    
-	/*  
-	@RequestMapping(value = "submit_test/send", method = RequestMethod.GET)
-	public String displayFailSubmitPage(HttpServletRequest request, HttpSession httpSession) {
-
-		initSession(request, httpSession);
-
-//		List<OkrUser> allUsers = userService.findAll();
-//		int len = (allUsers != null) ? allUsers.size(): 0;
-//		log.info("Number of users: " + len);
-
-//		mav.addObject("users", allUsers);
-//		mav.addObject("orgs", orgService.findAll());
-
-		return "email_submit_error";
-	}
-	*/
 	
 	/**
 	  * This method handle sending Email when submit a form with recipient Email and its content.
@@ -121,60 +105,94 @@ public class SubmitController extends BaseController {
         final String password = "jzst hwrb kcas krzr";
         
         // This used for check log
-        String checkRecip = recipientEmail;
-        String checkContent = emailContent;
-        System.out.println("Recipient: "+checkRecip);
-        System.out.println("Email: "+checkContent);
+        System.out.println("Recipient: "+recipientEmail);
+        System.out.println("Email: "+ emailContent);
         
+        String templateContent = "\n"+
+        		"<!DOCTYPE html>\r \n"
+				+ "<html>\r\n"
+				+ "<body> \r\n"
+				+ "\r\n"
+				+ "<h1>Click <a href=\"https://www.vnexpress.net\">here</a> to redirect to content of user's OKR. </h1>\n"
+				+ "\r\n"
+				+ "</body> \r\n"
+				+ "</html>";
+        
+        try {
+        	// Configure email 
+			HtmlEmail email = new HtmlEmail();
+			email.setHostName("smtp.gmail.com");
+			email.setSmtpPort(587);
+			email.setAuthentication(from, password);
+			email.setStartTLSEnabled(true);
+			
+			// Configure address and content
+			email.setFrom(from);
+			email.addTo(recipientEmail);
+			email.setSubject("Test about send email. Number:"+ System.currentTimeMillis());
+			email.setHtmlMsg(emailContent + templateContent);
+			
+			email.send();
+			System.out.println("Email sent successfully!");
+			return "home";
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.print("Failed to submit");
+			e.printStackTrace();
+			
+			return "Failed to submit";
+		}
        
         /* ------------- Configuration -------------- */
         // Initialize attributes for props - configuration
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        // props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-
-        
-        // Create Authenticator, thru this function => get authenticator to sign-in email
-		Authenticator auth = new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				// TODO Auto-generated method stub
-				return new PasswordAuthentication(from, password);
-			}
-			
-		};
-		
-		// Add session 
-		Session session = Session.getInstance(props, auth);
-        
-        // Add new one message
-        MimeMessage message = new MimeMessage(session);
-        
-        /* --------------- Send Email --------------- */
-        try {
-        	// Add header
-        	message.addHeader("Content-type", "text/HTML; charset=UTF-8"); 
-        	
-        	//message.setFrom(from);
-        	InternetAddress fromAddr = new InternetAddress(from);
-            message.setFrom(fromAddr);
+//        Properties props = new Properties();
+//        props.put("mail.smtp.host", "smtp.gmail.com");
+//        props.put("mail.smtp.port", "587");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.starttls.enable", "true");
+//        // props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//
+//        
+//        // Create Authenticator, thru this function => get authenticator to sign-in email
+//		Authenticator auth = new Authenticator() {
+//			@Override
+//			protected PasswordAuthentication getPasswordAuthentication() {
+//				// TODO Auto-generated method stub
+//				return new PasswordAuthentication(from, password);
+//			}
+//			
+//		};
+//		
+//		// Add session 
+//		Session session = Session.getInstance(props, auth);
+//        
+//        // Add new one message
+//        MimeMessage message = new MimeMessage(session);
+//        
+//        /* --------------- Send Email --------------- */
+//        try {
+//        	// Add header
+//        	message.addHeader("Content-type", "text/HTML; charset=UTF-8"); 
+//        	
+//        	//message.setFrom(from);
+//        	InternetAddress fromAddr = new InternetAddress(from);
+//            message.setFrom(fromAddr);
+//            
+//            // Setting Recipient and Type of sending (TO). Other types: CC, BCC.
+//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail, false));
+//            
+//            /*Content of an email*/
+//            // 1. Subject of mail
+//            message.setSubject("Test about send email. Number: " + System.currentTimeMillis());  
+//            // 2. Sent Date
+//            message.setSentDate(new Date());
+//            // 3. Content of mail
+//            message.setText(emailContent);
+//            
+//            // Set HTML to support attach link inside the content in real business.
             
-            // Setting Recipient and Type of sending (TO). Other types: CC, BCC.
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail, false));
-            
-            /*Content of an email*/
-            // 1. Subject of mail
-            message.setSubject("Test about send email. Number: " + System.currentTimeMillis());  
-            // 2. Sent Date
-            message.setSentDate(new Date());
-            // 3. Content of mail
-            message.setText(emailContent);
-            
-            // Set HTML to support attach link inside the content in real business.
-            /*
+        	/*
 			message.setContent("<!DOCTYPE html>\r \n"
 					+ "<html>\r\n"
 					+ "<body> \r\n"
@@ -184,23 +202,24 @@ public class SubmitController extends BaseController {
 					+ "</body> \r\n"
 					+ "</html>", "text/html");
             */
-            
-            Transport.send(message);
-            
-            System.out.println("Email sent successfully!");
-  
-            return "Successfully";
-            
-        } catch (Exception e) {
-        	
-        	System.out.println("Failed to send email");
-        	
-        	e.printStackTrace();
-        	
-        	return "Failed to submit";
-			
-        }
+//            
+//            Transport.send(message);
+//            
+//            System.out.println("Email sent successfully!");
+//  
+//            return "Successfully";
+//            
+//        } catch (Exception e) {
+//        	
+//        	System.out.println("Failed to send email");
+//        	
+//        	e.printStackTrace();
+//        	
+//        	return "Failed to submit";
+//			
+//        }
     }
 }
+
 
 
