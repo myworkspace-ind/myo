@@ -4,177 +4,189 @@
 	<hr class="text-white"></hr>
 
 </h5>
-<div class="ms-5">
-	<p>Profile Image</p>
-	<p>
-		Choose who can see your profile picture <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-		</select>
+<form th:action="@{/MyPrivacyUpdate}" method="get">
 
-	</p>
-	</br>
+	<div class="ms-5" th:if="${user}">
+		<p>Profile Image</p>
+		<p>
+			Choose who can see your profile picture <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example"
+				th:field="${user.profileImagePrivacy}">
+				<option value="Everyone"
+					th:selected="${user.profileImagePrivacy == 'Everyone'}">Everyone</option>
+				<option value="Only my connections"
+					th:selected="${user.profileImagePrivacy == 'Only my connections'}">Only
+					my connections</option>
+			</select>
 
-	<p>Basic Info</p>
-	<p>
-		Choose who can see your basic information like nickname and birthday <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Basic Info</p>
+		<p>
+			Choose who can see your basic information like nickname and birthday
+			<select class="
+					form-select
+					MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Contact Info</p>
-	<p>
-		Choose who can see things like your email addresses and phone numbers
-		<select class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Contact Info</p>
+		<p>
+			Choose who can see things like your email addresses and phone numbers
+			<select class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Staff Info</p>
-	<p>
-		Choose who can see your staff information <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Staff Info</p>
+		<p>
+			Choose who can see your staff information <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Student Info</p>
-	<p>
-		Choose who can see your student information <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Student Info</p>
+		<p>
+			Choose who can see your student information <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Social Info</p>
-	<p>
-		Choose who can see your social networking information, such as your
-		Facebook, LinkedIn and MySpace profiles <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Social Info</p>
+		<p>
+			Choose who can see your social networking information, such as your
+			Facebook, LinkedIn and MySpace profiles <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Personal Info</p>
-	<p>
-		Choose who can see your favorite books and tv shows etc <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Personal Info</p>
+		<p>
+			Choose who can see your favorite books and tv shows etc <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Show Birth Year</p>
-	<input class="form-check-input me-2" type="checkbox" value=""
-		id="defaultCheck1">Choose whether or not to show or hide your
-	birth year. Ticked means visible</br> </br>
+		</p>
+		</br>
 
-	<p>Who can view my connections?</p>
-	<p>
-		Choose who can view your list of connections <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Only me</option>
-		</select>
+		<p>Show Birth Year</p>
+		<input class="form-check-input me-2" type="checkbox" value=""
+			id="defaultCheck1">Choose whether or not to show or hide your
+		birth year. Ticked means visible</br> </br>
 
-	</p>
-	</br>
+		<p>Who can view my connections?</p>
+		<p>
+			Choose who can view your list of connections <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Only me</option>
+			</select>
 
-	<p>Who can see my online status?</p>
-	<p>
-		Choose who can see your online status <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Who can see my online status?</p>
+		<p>
+			Choose who can see your online status <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+			</select>
 
-	<p>Who can see my status updates?</p>
-	<p>
-		Choose who can see your status updates <select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-		</select>
+		</p>
+		</br>
 
-	</p>
-	</br>
+		<p>Who can see my status updates?</p>
+		<p>
+			Choose who can see your status updates <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+			</select>
 
-	<p>Who can view my pictures?</p>
-	<p>Choose who can see your picture gallery
-	<select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-		</select>
-	
-	</p>
-	</br>
+		</p>
+		</br>
 
-	<p>Who can send me messages?</p>
-	<p>Choose who can send you messages
-	<select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-			<option value="2">Nobody</option>
-		</select>
-	
-	</p>
-	</br>
+		<p>Who can view my pictures?</p>
+		<p>
+			Choose who can see your picture gallery <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+			</select>
 
-	<p>Who can see my kudos rating?</p>
-	<p>Choose who can see your kudos rating (if enabled in Preferences)
-	<select
-			class="form-select MKSOLprivacyselect"
-			aria-label=".form-select-sm example">
-			<option selected>Everyone</option>
-			<option value="1">Only my connections</option>
-		</select>
-	
-	</p>
-	</br>
-	<button type="button" class="btn MKSOuploadform text-white">Save
-		settings</button>
+		</p>
+		</br>
 
-</div>
+		<p>Who can send me messages?</p>
+		<p>
+			Choose who can send you messages <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+				<option value="2">Nobody</option>
+			</select>
+
+		</p>
+		</br>
+
+		<p>Who can see my kudos rating?</p>
+		<p>
+			Choose who can see your kudos rating (if enabled in Preferences) <select
+				class="form-select MKSOLprivacyselect"
+				aria-label=".form-select-sm example">
+				<option selected>Everyone</option>
+				<option value="1">Only my connections</option>
+			</select>
+
+		</p>
+		</br>
+		<button type="submit" class="btn MKSOuploadform text-white">Save
+			settings</button>
+
+	</div>
+	<div th:unless="${user}">
+		<p>User not found!</p>
+	</div>
+</form>
