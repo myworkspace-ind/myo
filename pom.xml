@@ -89,14 +89,15 @@
 
   <modules>
     <module>api</module>
-	<module>common</module>
+    <module>common</module>
+    <module>email</module>
     <module>impl</module>
     <module>jpa</module>
     <module>biz</module>
     <module>pack</module>
-	<module>controller</module>
-	<module>tool</module>
-	<module>web</module>
+    <module>controller</module>
+    <module>tool</module>
+    <module>web</module>
   </modules>
   
 </project>
