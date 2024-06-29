@@ -53,8 +53,7 @@ public class NewOKRController extends BaseController {
 	@Value("${okr.colHeaders}")
 	private String[] okrColHeaders;
 	
-	@Value("${okr.colWidths}")
-	private int[] okrColWidths;
+	private int[] okrColWidths = {200, 300, 150, 150, 400};
 
 	@Autowired
 	UserService userService;
