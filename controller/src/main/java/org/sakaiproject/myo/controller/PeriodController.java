@@ -19,21 +19,28 @@
 
 package org.sakaiproject.myo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.sakaiproject.myo.entity.OkrUser;
-import org.sakaiproject.myo.service.OrgService;
-import org.sakaiproject.myo.service.UserService;
+import org.sakaiproject.myo.entity.OkrPeriod;
+import org.sakaiproject.myo.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.UUID;
+import org.springframework.ui.Model;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sakaiproject.myo.model.TableStructure;
 
 /**
  * Handles requests for the application home page.
@@ -41,36 +48,52 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class PeriodController extends BaseController {
- 
 	@Autowired
-	UserService userService;
-	
-	@Autowired
-	OrgService orgService;
+	PeriodService periodService;
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-     * @return 
-	 */
-	@RequestMapping(value = {"/period"}, method = RequestMethod.GET)
+	@Value("${productList.colHeaders:Year,Name,Start date,End date,Note}")
+	private String[] productListColHeaders;
+
+	@Value("${productList.colWidths:80,250,200,200,80}")
+	private int[] productListColWidths;
+
+	@GetMapping(value = "/period")
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("period");
-
-		initSession(request, httpSession);
-
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-
-		List<OkrUser> allUsers = userService.findAll();
-		int len = (allUsers != null) ? allUsers.size(): 0;
-		log.info("Number of users: " + len);
-
-		mav.addObject("users", allUsers);
-		
-		mav.addObject("orgs", orgService.findAll());
+		System.out.println("productListColWidths");
 
 		return mav;
 	}
-    
+
+
+
+	@GetMapping(value = { "/period/loaddata" }, produces = "application/json")
+	@ResponseBody
+	public TableStructure getProductTableData() {
+		List<Object[]> lstProducts = getDemoData();
+
+		TableStructure productTable = new TableStructure(productListColWidths, productListColHeaders, lstProducts);
+
+		return productTable;
+	}
+
+	private List<Object[]> getDemoData() {
+		List<Object[]> data = new ArrayList<>();
+		List<OkrPeriod> periods = periodService.findAll();
+
+		for (OkrPeriod period : periods) {
+			Object[] row = new Object[5];
+
+			row[0] = period.getYear();
+			row[1] = period.getName();
+			row[2] = period.getStartDate();
+			row[3] = period.getEndDate();
+			row[4] = period.getNote();
+
+			data.add(row);
+		}
+
+		return data;
+	}
 
 }
