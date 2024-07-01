@@ -4,7 +4,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sakaiproject.myo</groupId>
 	<artifactId>myo</artifactId>
-	<version>23.0</version>
 	<packaging>pom</packaging>
 	<name>sakai-spring-maven-archetype</name>
 	<description>Archetype to generate a project with sakai and spring</description>
