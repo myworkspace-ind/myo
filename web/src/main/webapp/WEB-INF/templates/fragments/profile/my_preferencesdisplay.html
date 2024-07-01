@@ -3,124 +3,153 @@
 	<hr class="text-white"></hr>
 
 </h5>
+<form th:action="@{/MyPreferencesUpdate}" method="get">
 
-<div class="ms-5">
-	<h6>Email notifications</h6>
-	<p class="">Email me when someone:</p>
-	<table class="table table-hover MKSOLPreferencestable">
-		<thead>
-			<tr>
-				<th scope="col"></th>
-				<th scope="col">On</th>
-				<th scope="col">Off</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th scope="row">Adds me as a connection</th>
+	<div class="ms-5" th:if="${user}">
+		<h6>Email notifications</h6>
+		<p class="">Email me when someone:</p>
+		<table class="table table-hover MKSOLPreferencestable">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col">On</th>
+					<th scope="col">Off</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Adds me as a connection</th>
 
-				<td><input class="form-check-input" type="radio" name="Adds"
-					value="option1" checked></td>
-				<td><input class="form-check-input" type="radio" name="Adds"
-					value="option2"></td>
-			</tr>
-			<tr>
-				<th scope="row">Confirms my connection request</th>
-				<td><input class="form-check-input" type="radio" name="request"
-					value="option1" checked>
-				<td><input class="form-check-input" type="radio" name="request"
-					value="option2"></td>
-			</tr>
-			<tr>
-				<th scope="row">Sends me a new message</th>
-				<td><input class="form-check-input" type="radio" name="Sends"
-					value="option1" checked></td>
-				<td><input class="form-check-input" type="radio" name="Sends"
-					value="option2"></td>
-			</tr>
-			<tr>
-				<th scope="row">Replies to one of my messages</th>
-				<td><input class="form-check-input" type="radio" name="Replies"
-					value="option1" checked></td>
-				<td><input class="form-check-input" type="radio" name="Replies"
-					value="option2"></td>
-			</tr>
-			<tr>
-				<th scope="row">Adds me to a new worksite</th>
-				<td><input class="form-check-input" type="radio"
-					name="worksite" value="option1" checked></td>
-				<td><input class="form-check-input" type="radio"
-					name="worksite" value="option2"></td>
-			</tr>
-		</tbody>
-	</table>
-	</br>
-	<h5>Twitter integration</h5>
-	<p class="fst-italic">Your status updates can also update your
-		Twitter account</p>
-	<h6>
-		<i class="bi bi-twitter-x me-2"></i><a href="#"
-			class="text-white me-5">Link Twitter account</a> <input
-			class="MKSOLbackground w-10"></input>
-		<button type="button" class="btn text-white MKSOuploadform">Link</button>
-	</h6>
-	</br>
-	<h5>Profile image settings</h5>
-	<p class="fst-italic">Configure settings related to your profile
-		image</p>
+					<td><input class="form-check-input" type="radio" name="Adds"
+						value="option1"
+						th:checked="${user.emailNotificationsAdds == 'option1'}"
+						th:field="${user.emailNotificationsAdds}"></td>
+					<td><input class="form-check-input" type="radio" name="Adds"
+						value="option2"
+						th:checked="${user.emailNotificationsAdds == 'option2'}"
+						th:field="${user.emailNotificationsAdds}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Confirms my connection request</th>
+					<td><input class="form-check-input" type="radio"
+						name="request" value="option1"
+						th:checked="${user.emailNotificationsConnectionRequest == 'option1'}"
+						th:field="${user.emailNotificationsConnectionRequest}">
+					<td><input class="form-check-input" type="radio"
+						name="request" value="option2"
+						th:checked="${user.emailNotificationsConnectionRequest == 'option2'}"
+						th:field="${user.emailNotificationsConnectionRequest}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Sends me a new message</th>
+					<td><input class="form-check-input" type="radio" name="Sends"
+						value="option1"
+						th:checked="${user.emailNotificationsNewMessage == 'option1'}"
+						th:field="${user.emailNotificationsNewMessage}"></td>
+					<td><input class="form-check-input" type="radio" name="Sends"
+						value="option2"
+						th:checked="${user.emailNotificationsNewMessage == 'option2'}"
+						th:field="${user.emailNotificationsNewMessage}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Replies to one of my messages</th>
+					<td><input class="form-check-input" type="radio"
+						name="Replies" value="option1"
+						th:checked="${user.emailNotificationsReplyMessage == 'option1'}"
+						th:field="${user.emailNotificationsReplyMessage}"></td>
+					<td><input class="form-check-input" type="radio"
+						name="Replies" value="option2"
+						th:checked="${user.emailNotificationsReplyMessage == 'option2'}"
+						th:field="${user.emailNotificationsReplyMessage}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Adds me to a new worksite</th>
+					<td><input class="form-check-input" type="radio"
+						name="worksite" value="option1"
+						th:checked="${user.emailNotificationsAddWorksite == 'option1'}"
+						th:field="${user.emailNotificationsAddWorksite}"></td>
+					<td><input class="form-check-input" type="radio"
+						name="worksite" value="option2"
+						th:checked="${user.emailNotificationsAddWorksite == 'option2'}"
+						th:field="${user.emailNotificationsAddWorksite}"></td>
+				</tr>
+			</tbody>
+		</table>
+		</br>
+		<h5>Twitter integration</h5>
+		<p class="fst-italic">Your status updates can also update your
+			Twitter account</p>
+		<h6>
+			<i class="bi bi-twitter-x me-2"></i><a href="#"
+				class="text-white me-5">Link Twitter account</a> <input
+				class="MKSOLbackground w-10"></input>
+			<button type="button" class="btn text-white MKSOuploadform">Link</button>
+		</h6>
+		</br>
+		<h5>Profile image settings</h5>
+		<p class="fst-italic">Configure settings related to your profile
+			image</p>
 
-	<div class="form-check">
-		<input class="form-check-input" type="checkbox" value=""
-			id="flexChecksettings"> <label class="form-check-label"
-			for="flexChecksettings"> Use my gravatar as my profile image
-		</label>
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox"
+				id="flexChecksettings" th:checked="${user.useGravatar  == '1'}"
+				th:field="${user.useGravatar}"> <label
+				class="form-check-label" for="flexChecksettings"> Use my
+				gravatar as my profile image </label>
+		</div>
+		</br>
+		<h5>Widget settings</h5>
+		<p class="fst-italic">Control which widgets appear on your profile
+		</p>
+		<table class="table table-hover MKSOLPreferencestable">
+			<tbody>
+				<tr>
+					<th scope="row">Show my kudos rating</th>
+
+					<td><input class="form-check-input" type="checkbox" value=""
+						id="flexCheckChecked" th:checked="${user.showKudosRating == '1'}" th:field="${user.showKudosRating}"></td>
+					<td>
+						<button type="button" class="btn m-0 p-0 d-inline"
+							data-toggle="tooltip" data-placement="right"
+							title="Your kudos rating will appear on your Profile once your score has been calculated">
+							<i
+								class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Show my pictures</th>
+					<td><input class="form-check-input" type="checkbox" value=""
+						id="flexCheckChecked"  th:checked="${user.showPictures == '1'}" th:field="${user.showPictures}">
+					<td>
+						<button type="button" class="btn m-0 p-0 d-inline"
+							data-toggle="tooltip" data-placement="right"
+							title="Your pictures will appear on your Profile if checked">
+							<i
+								class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
+					</td>
+
+				</tr>
+				<tr>
+					<th scope="row">Show my online status</th>
+					<td><input class="form-check-input" type="checkbox" value=""
+						id="flexCheckChecked"  th:checked="${user.showOnlineStatus == '1'}" th:field="${user.showOnlineStatus}"></td>
+					<td>
+						<button type="button" class="btn m-0 p-0 d-inline"
+							data-toggle="tooltip" data-placement="right"
+							title="Shows whether or not you are online. If enabled you can further control this in your Privacy settings. If disabled you will appear to be offline">
+							<i
+								class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+		</br>
+		<button type="submit" class="btn text-white MKSOuploadform">Save
+			settings</button>
+
 	</div>
-	</br>
-	<h5>Widget settings</h5>
-	<p class="fst-italic">Control which widgets appear on your profile
-	</p>
-	<table class="table table-hover MKSOLPreferencestable">
-		<tbody>
-			<tr>
-				<th scope="row">Show my kudos rating</th>
-
-				<td><input class="form-check-input" type="checkbox" value=""
-					id="flexCheckChecked" checked></td>
-				<td>
-					<button type="button" class="btn m-0 p-0 d-inline"
-						data-toggle="tooltip" data-placement="right"
-						title="Your kudos rating will appear on your Profile once your score has been calculated">
-						<i class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">Show my pictures</th>
-				<td><input class="form-check-input" type="checkbox" value=""
-					id="flexCheckChecked" checked>
-				<td>
-					<button type="button" class="btn m-0 p-0 d-inline"
-						data-toggle="tooltip" data-placement="right"
-						title="Your pictures will appear on your Profile if checked">
-						<i class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
-				</td>
-
-			</tr>
-			<tr>
-				<th scope="row">Show my online status</th>
-				<td><input class="form-check-input" type="checkbox" value=""
-					id="flexCheckChecked" checked></td>
-				<td>
-					<button type="button" class="btn m-0 p-0 d-inline"
-						data-toggle="tooltip" data-placement="right"
-						title="Shows whether or not you are online. If enabled you can further control this in your Privacy settings. If disabled you will appear to be offline">
-						<i class="bi bi-info-circle-fill MKSOuploadform MKSOLPreferencesinfo"></i>
-				</td>
-
-			</tr>
-		</tbody>
-	</table>
-	</br>
-	<button type="button" class="btn text-white MKSOuploadform">Save
-		settings</button>
-
-</div>
+	<div th:unless="${user}">
+		<p>User not found!</p>
+	</div>
+</form>

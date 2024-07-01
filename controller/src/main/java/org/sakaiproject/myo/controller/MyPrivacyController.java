@@ -23,6 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.sakaiproject.myo.entity.OkrUserProfile;
+import org.sakaiproject.myo.entity.OkrUserProfileDetail;
+import org.sakaiproject.myo.repository.UserRepositoryProfile;
+import org.sakaiproject.myo.repository.UserRepositoryProfileDetail;
+import org.sakaiproject.myo.service.UserServiceProfile;
+import org.sakaiproject.myo.service.UserServiceProfileDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -30,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Handles requests for the application home page.
@@ -51,6 +60,11 @@ public class MyPrivacyController extends BaseController {
 //        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
 
     }
+
+	@Autowired
+	UserServiceProfileDetail userServiceDetail;
+	@Autowired
+	UserRepositoryProfileDetail userRepositoryProfileDetail;
     
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -60,10 +74,17 @@ public class MyPrivacyController extends BaseController {
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("my_privacy");
 
-		initSession(request, httpSession);
+		/*
+		 * initSession(request, httpSession);
+		 */		
+		String uuid = "179f6307-fa79-4639-9b5f-2bab7ab6f370";
+		OkrUserProfileDetail userdetail = userRepositoryProfileDetail.findByUUID(uuid);
 		
-		mav.addObject("currentSiteId", getCurrentSiteId());
-		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+		if (userdetail != null) {
+			mav.addObject("user", userdetail);
+            System.out.println(userdetail.getProfileImagePrivacy());
+
+		} 
 
 		return mav;
 	}
