@@ -40,7 +40,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.beans.propertyeditors.PropertiesEditor;
+
+
+
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,25 +64,7 @@ public class NewOKRController extends BaseController {
 	
 	@Autowired
 	OrgService orgService;
-	   /**
-     * This method is called when binding the HTTP parameter to bean (or model).
-     * 
-     * @param binder
-     */
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        // Sample init of Custom Editor
-
-        Class<List<ItemKine>> collectionType = (Class<List<ItemKine>>)(Class<?>)List.class;
-        PropertyEditor orderNoteEditor = new MotionRuleEditor(collectionType);
-        binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class, orderNoteEditor);
-
-    }
-
-	/**
-	 * Simply selects the home view to render by returning its name.
-     * @return 
-	 */
+	
     @GetMapping(value = "newokr")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("newokr");
