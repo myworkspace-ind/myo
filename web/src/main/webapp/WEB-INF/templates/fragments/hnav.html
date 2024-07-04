@@ -1,5 +1,5 @@
 <!-- Fragment: Horizontal menu -->
-<ul class="navIntraTool actionToolbar">
+<!-- <ul class="navIntraTool actionToolbar">
   <li>  
       <span title="Home">
         <a th:href="@{/}">Home</a>
@@ -35,4 +35,40 @@
        <a th:href="@{/period}">Period</a>
      </span>
  </li>
+   <li> 
+     <span title="Profile">
+       <a th:href="@{/MyProfile}">Profile</a>
+     </span>
+ </li>
+</ul> -->
+<link rel="stylesheet" type="text/css"
+	href="resources/css/my_profile.css">
+<script src="resources/js/profile/my_profile.js">
+	
+</script>
+<ul class="nav nav-tabs MKSOLheadertabs">
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/" id="tabprofile">Home</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/view-configuration"
+		id="tabPictures">Configuration </a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink active" href="/myo-web/landing-page"
+		id="tabConnections">Landing</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/crud" id="tabMessages">CRUD</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/upload" id="tabSearch">Upload</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/newokr"
+		id="tabPrivacy">New OKR</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/MyProfile"
+		id="tabPreferences">Profile</a></li>
+	<li class="nav-item MKSOLheaderitem"><a
+		class="nav-link MKSOLheaderlink" href="/myo-web/period"
+		id="tabPreferences">Period</a></li>
+
 </ul>
+
+

@@ -91,9 +91,9 @@
 			image</p>
 
 		<div class="form-check">
-			<input class="form-check-input" type="checkbox"
+			<input class="form-check-input" type="checkbox" value=""
 				id="flexChecksettings" th:checked="${user.useGravatar  == '1'}"
-				th:field="${user.useGravatar}"> <label
+				th:field="${user.useGravatar}" name="useGravatar"> <label
 				class="form-check-label" for="flexChecksettings"> Use my
 				gravatar as my profile image </label>
 		</div>
@@ -106,8 +106,10 @@
 				<tr>
 					<th scope="row">Show my kudos rating</th>
 
-					<td><input class="form-check-input" type="checkbox" value=""
-						id="flexCheckChecked" th:checked="${user.showKudosRating == '1'}" th:field="${user.showKudosRating}"></td>
+					<td><input class="form-check-input" type="checkbox"
+						name="showKudosRating" id="flexCheckChecked1"
+						th:checked="${user.showKudosRating}"
+						></td>
 					<td>
 						<button type="button" class="btn m-0 p-0 d-inline"
 							data-toggle="tooltip" data-placement="right"
@@ -118,8 +120,10 @@
 				</tr>
 				<tr>
 					<th scope="row">Show my pictures</th>
-					<td><input class="form-check-input" type="checkbox" value=""
-						id="flexCheckChecked"  th:checked="${user.showPictures == '1'}" th:field="${user.showPictures}">
+					<td><input class="form-check-input" type="checkbox"
+						name="showPictures" value="" id="flexCheckChecked2"
+						th:checked="${user.showPictures == '1'}"
+						th:field="${user.showPictures}">
 					<td>
 						<button type="button" class="btn m-0 p-0 d-inline"
 							data-toggle="tooltip" data-placement="right"
@@ -131,8 +135,10 @@
 				</tr>
 				<tr>
 					<th scope="row">Show my online status</th>
-					<td><input class="form-check-input" type="checkbox" value=""
-						id="flexCheckChecked"  th:checked="${user.showOnlineStatus == '1'}" th:field="${user.showOnlineStatus}"></td>
+					<td><input class="form-check-input" type="checkbox"
+						name="showOnlineStatus" value="" id="flexCheckChecked3"
+						th:checked="${user.showOnlineStatus == '1'}"
+						th:field="${user.showOnlineStatus}"></td>
 					<td>
 						<button type="button" class="btn m-0 p-0 d-inline"
 							data-toggle="tooltip" data-placement="right"

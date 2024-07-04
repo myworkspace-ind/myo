@@ -82,7 +82,7 @@ public class MyPreferencesController extends BaseController {
 
 		if (userdetail != null) {
 			mav.addObject("user", userdetail);
-			System.out.println(userdetail.getProfileImagePrivacy());
+			System.out.println(userdetail.isShowKudosRating());
 
 		}
 
