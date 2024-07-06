@@ -32,13 +32,17 @@ function loadTableData() {
 function initTable() {
   var container = document.getElementById('periods-table');
   
+  if (container == null) {
+        return;
+    }
+  
   hotProduct = new Handsontable(container, {
         data: tblProductData.data,
         colHeaders: tblProductData.colHeaders,
         colWidths: tblProductData.colWidths,
-        height: 800,
+        height: 300,
         rowHeaders: true,
-        minRows: 10,
+        minRows: 5,
         currentRowClassName: 'currentRow',
         currentColClassName: 'currentCol',
         manualColumnResize: true,
@@ -48,3 +52,13 @@ function initTable() {
         licenseKey: 'non-commercial-and-evaluation'
   });
 }
+
+$(function () {
+			    $('#new_period').click(function() {
+			        const popUp = $('#popup');
+			        const bootstrapModal = new bootstrap.Modal(popUp);
+			        
+			        bootstrapModal.show();
+			        updateInfo();
+			    });
+			});
