@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <script src="resource/js/jquery-1.11.0.js"></script>
@@ -30,12 +30,12 @@
 	href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700"
 	rel="stylesheet" type="text/css">
 <link href="resources/css/styles.css" rel="stylesheet">
-<!-- Core theme CSS (includes Bootstrap)-->
+Core theme CSS (includes Bootstrap)
 
 
 
 <title>CRUD</title>
-<!-- Handsontable CSS -->
+Handsontable CSS
 <style>
 body {
 	display: flex;
@@ -153,7 +153,228 @@ body {
 
 
 
-	<!-- Handsontable JavaScript -->
+	Handsontable JavaScript
 
+</body>
+</html>
+ -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>My OKR</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<link
+	href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
+<link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-3" id="sidebar">
+				<div class="card">
+					<div class="card-body">
+						<div id="jstree">
+							<ul>
+								<li>My OKR
+									<ul>
+										<li>Create OKR</li>
+										<li>Review OKR</li>
+									</ul>
+								</li>
+								<li>Configuration
+									<ul>
+										<li>Periods</li>
+										<li>Units</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-9">
+				<div class="card">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item"><a
+								class="nav-link active MKSOLCRUDTabmenu" href="#okr-tracking"
+								data-bs-toggle="tab">OKR Tracking</a></li>
+							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
+								href="#okr-layout" data-bs-toggle="tab">OKR Layout</a></li>
+							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
+								href="#okr-dashboard" data-bs-toggle="tab">OKR Dashboard</a></li>
+						</ul>
+					</div>
+
+
+					<div class="card-body tab-content">
+						<div class="tab-pane active" id="okr-tracking">
+							<div class="card p-3">
+
+								<div
+									class=" mb-3 d-flex justify-content-between align-items-center">
+									<p class="m-0">OKR Tracking</p>
+									<button type="button" class="btn btn-outline-dark btn-sm"
+										style="width: 10%; margin-right: 2%">Add OKR</button>
+								</div>
+								<div id="okr-table"></div>
+							</div>
+						</div>
+						<div class="tab-pane" id="okr-layout">
+							<div class="card">
+								<p style="margin: 2%">OKR Layout</p>
+								<div class="card-body">
+									<div class="mb-3">
+										<h5>Strengthen Master Angular</h5>
+										<p>Improve Angular skills and knowledge</p>
+										<p>Weight: 40%, Target: 90%, Current: 75%</p>
+										<p>
+											<small><i class="bi bi-calendar-check"></i> Target:
+												June 30, 2023</small>
+										</p>
+									</div>
+									<div class="mb-3">
+										<h5>Upgrade to Angular 15</h5>
+										<p>Weight: 60%, Target: 100%, Current: 80%</p>
+										<p>
+											<small><i class="bi bi-calendar-check"></i> Target:
+												June 30, 2023</small>
+										</p>
+									</div>
+									<div class="mb-3">
+										<h5>Expand Unit Testing coverage</h5>
+										<p>Increase unit test coverage to 90%</p>
+										<p>Weight: 100%, Target: 90%, Current: 75%</p>
+										<p>
+											<small><i class="bi bi-calendar-check"></i> Target:
+												September 30, 2023</small>
+										</p>
+									</div>
+									<div class="mb-3">
+										<h5>Improve project management and visibility</h5>
+										<p>
+											<small><i class="bi bi-calendar-check"></i> Target:
+												December 31, 2023</small>
+										</p>
+									</div>
+								</div>
+								<div class="card-footer">
+									<button class="btn btn-secondary btn-sm float-start">
+										<i class="bi bi-save"></i> Draft local save
+									</button>
+									<button class="btn btn-primary btn-sm float-end">
+										<i class="bi bi-upload"></i> Submit
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="okr-dashboard">
+							<div class="card p-3">
+
+								<div class="content">
+									<div class="row">
+										<div class="col">
+											<div
+												class=" mb-3 d-flex justify-content-between align-items-center">
+												<p class="m-0">OKR Dashboard</p>
+												<button type="button" class="btn btn-outline-dark btn-sm"
+													style="width: 10%">Add OKR</button>
+											</div>
+											<div class="card">
+												<div class="card-body">
+													<h5 class="card-title">Strengthen Master Angular</h5>
+													<p class="card-text">Improve Angular skills and
+														knowledge</p>
+													<p class="card-text">Weight: 40%, Target: 90%, Current:
+														75%</p>
+													<p class="card-text">Target: June 30, 2023</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row my-3">
+										<div class="col">
+											<button class="btn btn-light" id="self-scoring">
+												<i class="fa fa-pencil-square-o"></i> Self-scoring
+											</button>
+											<button class="btn btn-dark" id="upload-okr">
+												<i class="fa fa-upload"></i> Upload OKR
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+		$(document)
+				.ready(
+						function() {
+							$('#jstree').jstree();
+
+							var data = [
+									[ 'Q1 2023', 'Strengthen Master Angular',
+											'In Progress',
+											'Improve Angular skills and knowledge' ],
+									[ 'Q2 2023',
+											'Expand Unit Testing coverage',
+											'Pending',
+											'Increase unit test coverage to 90%' ],
+									[
+											'Q3 2023',
+											'Improve project management and visibility',
+											'In Progress',
+											'Implement project management tools and processes' ] ];
+
+							var container = document
+									.getElementById('okr-table');
+							var hot = new Handsontable(
+									container,
+									{
+										data : data,
+										rowHeaders : true,
+										colHeaders : [ 'Period', 'Name',
+												'Status', 'Notes' ],
+										colWidths : 200,
+										licenseKey : 'non-commercial-and-evaluation',
+										columns : [
+												{},
+												{},
+												{
+													type : 'dropdown',
+													source : [ 'Pending',
+															'In Progress',
+															'Completed' ]
+												}, {} ]
+									});
+						});
+	</script>
 </body>
 </html>
