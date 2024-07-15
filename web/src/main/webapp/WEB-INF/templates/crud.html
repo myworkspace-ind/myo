@@ -184,8 +184,7 @@ body {
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-<script
-	src="resources/js/crud.js"></script>
+<script src="resources/js/crud.js"></script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -195,19 +194,22 @@ body {
 					<div class="card-body">
 						<div id="jstree">
 							<ul>
-								<li>My OKR
+								<li><a href="#">My OKR</a>
 									<ul>
-										<li>Create OKR</li>
-										<li>Review OKR</li>
-									</ul>
-								</li>
-								<li>Configuration
+										<li><a href="crud">Create OKR</a>
+											<ul>
+												<li><a href="selfscoring">Self-scoring</a></li>
+												<li><a href="#">Upload OKR</a></li>
+											</ul></li>
+										<li><a href="#">Review OKR</a></li>
+									</ul></li>
+								<li><a href="#">Configuration</a>
 									<ul>
-										<li>Periods</li>
-										<li>Units</li>
-									</ul>
-								</li>
+										<li><a href="#">Periods</a></li>
+										<li><a href="#">Units</a></li>
+									</ul></li>
 							</ul>
+
 						</div>
 					</div>
 				</div>
@@ -332,7 +334,24 @@ body {
 			</div>
 		</div>
 	</div>
+	<script>
+		$('#jstree').jstree({
+			'core' : {
+				'themes' : {
+					'name' : 'default',
+					'responsive' : true
+				}
+			}
+		});
 
+		$('#jstree').on('click', 'a[href="crud"]', function() {
+			window.location.href = 'crud';
+		});
+
+		$('#jstree').on('click', 'a[href="selfscoring"]', function() {
+			window.location.href = 'selfscoring';
+		});
+	</script>
 
 </body>
 </html>
