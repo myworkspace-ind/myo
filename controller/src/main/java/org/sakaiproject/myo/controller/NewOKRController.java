@@ -53,39 +53,66 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class NewOKRController extends BaseController {
- 
+
 	@Value("${okr.colHeaders}")
 	private String[] okrColHeaders;
-	
+
 	private int[] okrColWidths = {200, 300, 150, 150, 400};
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	OrgService orgService;
-	
-    @GetMapping(value = "newokr")
+/**
+	 * This method is called when binding the HTTP parameter to bean (or model).
+	 * 
+	 * @param binder
+	 */
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		// Sample init of Custom Editor
+
+		/*
+		 * Class<List<ItemKine>> collectionType =
+		 * (Class<List<ItemKine>>)(Class<?>)List.class; PropertyEditor orderNoteEditor =
+		 * new MotionRuleEditor(collectionType);
+		 * binder.registerCustomEditor((Class<List<ItemKine>>)(Class<?>)List.class,
+		 * orderNoteEditor);
+		 */
+
+	}
+
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * 
+	 * @return
+	 */	@GetMapping(value = "newokr")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("newokr");
 		return mav;
 	}
-	@GetMapping(value = {"/newokr/load/okr"}, produces="application/json")
+
+	@GetMapping(value = { "/newokr/load/okr" }, produces = "application/json")
 	@ResponseBody
-    public TableStructure getEmployeeTableData() {
+	public TableStructure getEmployeeTableData() {
 
 		List<Object[]> lstOkrs = null;
 		TableStructure empTable = new TableStructure(okrColWidths, okrColHeaders, lstOkrs);
-				
-        return empTable;
-    }
-	
-    @PostMapping(value = "/newokr/save")
-    @ResponseBody
-	public String processSave(@ModelAttribute("model") OkrListModel model, BindingResult bindingResult, MultipartHttpServletRequest request) {
+
+		return empTable;
+	}
+
+	@PostMapping(value = "/newokr/save")
+	@ResponseBody
+	public String processSave(@ModelAttribute("model") OkrListModel model, BindingResult bindingResult,
+			MultipartHttpServletRequest request) {
 
 		// Debug
-		log.debug("Submitted data:" + model.getData());
+		/*
+		 * log.debug("Submitted data:" + model.getData());
+		 */
+		System.out.println(model.getData());
 
 		return "OK";
 	}

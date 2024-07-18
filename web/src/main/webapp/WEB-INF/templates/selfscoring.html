@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self Scoring</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<link
+	href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+
+
+
+<!-- <link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
+ -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<!-- <script src="resources/js/crud.js"></script>
+ -->
+<style>
+body {
+	margin-top: 7%;
+}
+
+.handsontable td, .handsontable th {
+	padding: 0.5rem !important;
+}
+
+.handsontable {
+	width: 100%;
+}
+
+.text-primary {
+	color: #007bff !important;
+}
+
+.font-weight-bold {
+	font-weight: bold !important;
+}
+
+#update-btn {
+	background-color: black;
+	color: white;
+}
+
+#jstree {
+	height: 100%;
+	border-right: 1px solid #ccc;
+	padding: 20px;
+}
+
+#MKSOLnhanvienbadge {
+	color: white;
+	background-color: gray;
+	font-size:small;
+}
+</style>
+</head>
+<body>
+	<div class="container-fluid my-5">
+		<div class="row">
+			<div class="col-3">
+				<div id="jstree">
+					<ul>
+						<li><a href="#">My OKR</a>
+							<ul>
+								<li><a href="crud">Create OKR</a>
+									<ul>
+										<li><a href="selfscoring">Self-scoring</a></li>
+										<li><a href="#">Upload OKR</a></li>
+									</ul></li>
+								<li><a href="#">Review OKR</a></li>
+							</ul></li>
+						<li><a href="#">Configuration</a>
+							<ul>
+								<li><a href="#">Periods</a></li>
+								<li><a href="#">Units</a></li>
+							</ul></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-9">
+				<h4 class=" mb-4 font-weight-bold ">
+					Le Van A 	<span class="badge" id="MKSOLnhanvienbadge">Nhân
+						Viên</span>
+
+				</h4>
+			
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<div class="form-group">
+						<input type="text" class="form-control" id="search-okrs"
+							placeholder="Search OKRs...">
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="checkbox" id="full-mode"
+							value="option1"> <label class="form-check-label"
+							for="full-mode">Full mode</label> <span
+							class="ml-3 font-weight-bold" id="current-date"></span>
+					</div>
+				</div>
+				<div id="okrs-table"></div>
+				<div class="text-right mt-3">
+					<button class="btn  float-end" id="update-btn">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var data = [
+				[
+						'Increase website traffic',
+						'30%',
+						'Improve SEO, Increase social media engagement, Optimize website content',
+						'Unique visitors', 5000, 10000, 99 ],
+				[
+						'Improve customer satisfaction',
+						'40%',
+						'Reduce customer support tickets, Increase NPS score, Improve product quality',
+						'NPS', 50, 70, 82 ],
+				[
+						'Increase sales revenue',
+						'30%',
+						'Improve sales conversion rate, Expand into new markets, Introduce new product offerings',
+						'USD', 500000, 750000, 77 ] ];
+
+		var container = document.getElementById('okrs-table');
+		var hot = new Handsontable(container, {
+			data : data,
+			rowHeaders : true,
+			colHeaders : [ 'Objective', 'Weight', 'Key Results', 'Unit',
+					'Start Value', 'Target', 'Self-score' ],
+			colWidths : 200,
+			licenseKey : 'non-commercial-and-evaluation',
+			height : 'auto',
+			licenseKey : 'non-commercial-and-evaluation'
+		});
+
+		$('#jstree').jstree({
+			'core' : {
+				'themes' : {
+					'name' : 'default',
+					'responsive' : true
+				}
+			}
+		});
+
+		$('#search-okrs').on('input', function() {
+			var searchTerm = $(this).val().toLowerCase();
+			hot.search(searchTerm);
+		});
+
+		$('#full-mode').on('change', function() {
+			if ($(this).is(':checked')) {
+				hot.updateSettings({
+					colWidths : 200
+				});
+			} else {
+				hot.updateSettings({
+					colWidths : 150
+				});
+			}
+		});
+
+		$('#update-btn').on('click', function() {
+			console.log('Update button clicked');
+		});
+
+		$('#jstree').on('click', 'a[href="crud"]', function() {
+			window.location.href = 'crud';
+		});
+
+		var currentDate = new Date().toLocaleDateString('vi-VN', {
+			year : 'numeric',
+			month : 'long',
+			day : 'numeric'
+		});
+		$('#current-date').text(currentDate);
+	</script>
+</body>
+</html>

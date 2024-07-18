@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImplProfileDetail implements UserServiceProfileDetail{
+public class UserServiceImplProfileDetail implements UserServiceProfileDetail {
 
 	@Autowired
 	UserRepositoryProfileDetail userRepo;
@@ -28,8 +28,8 @@ public class UserServiceImplProfileDetail implements UserServiceProfileDetail{
 	public UserRepositoryProfileDetail getRepo() {
 		return userRepo;
 	}
-	
 
+	@Override
 	@Transactional
 	public void updateUserProfileDetail(String uuid, String profileImagePrivacy, String basicInfoPrivacy,
 			String contactInfoPrivacy, String staffInfoPrivacy, String studentInfoPrivacy, String socialInfoPrivacy,
@@ -43,10 +43,9 @@ public class UserServiceImplProfileDetail implements UserServiceProfileDetail{
 		userRepo.updateUserProfileDetail(uuid, profileImagePrivacy, basicInfoPrivacy, contactInfoPrivacy,
 				staffInfoPrivacy, studentInfoPrivacy, socialInfoPrivacy, personalInfoPrivacy, showBirthYear,
 				viewConnectionsPrivacy, viewOnlineStatusPrivacy, viewStatusUpdatesPrivacy, viewPicturesPrivacy,
-				sendMessagesPrivacy,  viewKudosRatingPrivacy,  emailNotificationsAdds,
-				 emailNotificationsConnectionRequest,  emailNotificationsNewMessage,
-				 emailNotificationsReplyMessage,  emailNotificationsAddWorksite,
-				 twitterIntegrationStatusUpdate,  useGravatar,  showKudosRating,  showPictures,
-				 showOnlineStatus);
+				sendMessagesPrivacy, viewKudosRatingPrivacy, emailNotificationsAdds,
+				emailNotificationsConnectionRequest, emailNotificationsNewMessage, emailNotificationsReplyMessage,
+				emailNotificationsAddWorksite, twitterIntegrationStatusUpdate, useGravatar, showKudosRating,
+				showPictures, showOnlineStatus);
 	}
 }
