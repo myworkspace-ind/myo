@@ -1,0 +1,17 @@
+[
+	{
+		"description": "test_ks11",
+		"dueDate": "2024-07-11",
+		"itype": "1",
+		"weight": "10",
+		"numberResult": "10",
+		"numberTarget": "50",
+		"yesNoResult": "false",
+		"yesNoTarget": "false",
+		"percentageResult": "0",
+		"percentageTarget": "100",
+		"standard": "None",
+		"startvalue": "0"
+	}
+
+]
