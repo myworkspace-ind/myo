@@ -11,7 +11,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Service
 public class OkrBackend implements IOkrBackend {
@@ -21,7 +24,7 @@ public class OkrBackend implements IOkrBackend {
 
 	@Value("${okr.authEndpoint:/auth")
 	private String authEndpoint;
-	
+
 	@Value("${okr.authEndpoint:/login")
 	private String loginEndpoint;
 
@@ -42,58 +45,49 @@ public class OkrBackend implements IOkrBackend {
 	}
 
 	private String getAuthToken() {
-        // Create Gson instance
-        Gson gson = new Gson();
+		// Create Gson instance
+		Gson gson = new Gson();
 
-        // Create body request with username and password
-        JsonObject bodyJson = new JsonObject();
-        bodyJson.addProperty("username", username);
-        bodyJson.addProperty("password", password);
-        String body = gson.toJson(bodyJson);
+		// Create body request with username and password
+		JsonObject bodyJson = new JsonObject();
+		bodyJson.addProperty("username", username);
+		bodyJson.addProperty("password", password);
+		String body = gson.toJson(bodyJson);
 
-        // Create HttpHeaders for the request
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        System.out.println("Debug1" + okrAuthToken);
-        // Create HttpEntity with headers and body
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        System.out.println("Debug2");
-        // Send POST request to endpoint to get token
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<JsonResponse> response;
-        try {
-            // Define a custom response type that matches your JSON structure
-        	System.out.println("Debug3");
-            response = restTemplate.exchange(okrBaseURL + loginEndpoint, HttpMethod.POST, entity, JsonResponse.class);
-            System.out.println("Debug4");
-        } catch (HttpClientErrorException e) {
-            // Handle HTTP errors (e.g., 4xx, 5xx)
-            System.err.println("HTTP error occurred: " + e.getStatusCode() + " - " + e.getStatusText());
-            return null; // Or handle the error as appropriate for your application
-        } catch (Exception e) {
-            // Handle other exceptions
-            System.err.println("Error occurred: " + e.getMessage());
-            return null; // Or handle the error as appropriate for your application
-        }
+		// Create HttpHeaders for the request
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		// Create HttpEntity with headers and body
+		HttpEntity<String> entity = new HttpEntity<>(body, headers);
+		// Send POST request to endpoint to get token
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<JsonResponse> response;
+		try {
+			response = restTemplate.exchange(okrBaseURL + loginEndpoint, HttpMethod.POST, entity, JsonResponse.class);
+		} catch (HttpClientErrorException e) {
+			System.err.println("HTTP error occurred: " + e.getStatusCode() + " - " + e.getStatusText());
+			return null;
+		} catch (Exception e) {
+			// Handle other exceptions
+			System.err.println("Error occurred: " + e.getMessage());
+			return null;
+		}
 
-        // Check the response status
-        if (response.getStatusCode().is2xxSuccessful()) {
-            JsonResponse jsonResponse = response.getBody();
-            System.out.println("Debug5");
-            // Check if the token is present
-            if (jsonResponse != null && jsonResponse.getToken() != null) {
-                String token = jsonResponse.getToken();
-                System.out.println("Success get token: " + token);
-                return token;
-            } else {
-                System.err.println("Response does not contain token field or 'token' is null");
-                return null; // Or handle the missing token as appropriate
-            }
-        } else {
-            System.err.println("Request failed with status code: " + response.getStatusCode());
-            return null; // Or handle the HTTP status code as appropriate
-        }
-    }
+		if (response.getStatusCode().is2xxSuccessful()) {
+			JsonResponse jsonResponse = response.getBody();
+			if (jsonResponse != null && jsonResponse.getToken() != null) {
+				String token = jsonResponse.getToken();
+				System.out.println("Success get token: " + token);
+				return token;
+			} else {
+				System.err.println("Response does not contain token field or 'token' is null");
+				return null; 
+			}
+		} else {
+			System.err.println("Request failed with status code: " + response.getStatusCode());
+			return null; 
+		}
+	}
 
 	public void loadData() {
 		try {
@@ -117,7 +111,7 @@ public class OkrBackend implements IOkrBackend {
 
 			// Kiểm tra mã trạng thái
 			// if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-			//System.out.println("Unauthorized: Refreshing token and retrying...");
+			// System.out.println("Unauthorized: Refreshing token and retrying...");
 			getAuthToken(); // Lấy token mới
 			headers.set("Authorization", "Bearer " + okrAuthToken); // Cập nhật headers với token mới
 			entity = new HttpEntity<>(headers);
@@ -134,33 +128,34 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public String getPeriod() {
 		try {
-			// Lấy token mới nếu chưa có hoặc đã hết hạn
 			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
 				System.out.println("Loading token...");
-				//okrAuthToken = getAuthToken();
+				// okrAuthToken = getAuthToken();
 				System.out.println("Loaded token..." + getAuthToken());
 			}
 			System.out.println(okrAuthToken);
 			String serverUrl = okrBaseURL + "/period";
 			HttpHeaders headers = new HttpHeaders();
-			System.out.println("Token1" + okrAuthToken);
 			headers.set("Authorization", "Bearer " + okrAuthToken);
-			System.out.println("Token2");
 			HttpEntity<String> entity = new HttpEntity<>(headers);
-			
-			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-			System.out.println("Token3");
-			// if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-			System.out.println("Unauthorized: Refreshing token and retrying...");
-			getAuthToken(); // Lấy token mới
-			headers.set("Authorization", "Bearer " + okrAuthToken); // Cập nhật headers với token mới
-			entity = new HttpEntity<>(headers);
-			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class); // Thử lại yêu cầu với
-																								// token mới
-			// }
 
-			// Get and process response
-			String responseJson = response.getBody();
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			entity = new HttpEntity<>(headers);
+			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			String responseJson = response.getBody(); 
+
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(responseJson);
+            JsonObject responseObject = jsonElement.getAsJsonObject();
+            JsonArray dataArray = responseObject.getAsJsonArray("data");
+
+			if (dataArray != null && dataArray.size() > 0) {
+				JsonObject firstPeriod = dataArray.get(0).getAsJsonObject();
+				String periodId = firstPeriod.get("periodId").getAsString();
+				System.out.println("Period ID: " + periodId);
+			}
+
 			System.out.print(responseJson);
 			return responseJson;
 		} catch (Exception e) {
@@ -169,25 +164,25 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
-	
+
 	class JsonResponse {
-	    private String token;
-	    private String messages;
+		private String token;
+		private String messages;
 
-	    public String getToken() {
-	        return token;
-	    }
+		public String getToken() {
+			return token;
+		}
 
-	    public void setToken(String token) {
-	        this.token = token;
-	    }
+		public void setToken(String token) {
+			this.token = token;
+		}
 
-	    public String getMessages() {
-	        return messages;
-	    }
+		public String getMessages() {
+			return messages;
+		}
 
-	    public void setMessages(String messages) {
-	        this.messages = messages;
-	    }
+		public void setMessages(String messages) {
+			this.messages = messages;
+		}
 	}
 }
