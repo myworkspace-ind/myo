@@ -59,11 +59,19 @@ public class CrudController extends BaseController {
     
     @GetMapping(value = "/period/loaddata")
 	@ResponseBody
-    public String getInfo() {
+    public String getInfoPeriod() {
     	// Get and process response
     	System.out.print(serviceOkrBackend.getPeriod());
     	return serviceOkrBackend.getPeriod();
     }    
+    
+    @GetMapping(value = "/organization/loaddata")
+	@ResponseBody
+    public String getInfoOrganization() {
+    	// Get and process response
+    	System.out.print(serviceOkrBackend.getOrganization());
+    	return serviceOkrBackend.getOrganization();
+    } 
 //	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
 //	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
 //		log.debug("Start CRUD object " + objName);

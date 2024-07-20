@@ -38,6 +38,9 @@ public class OkrBackend implements IOkrBackend {
 	private String okrAuthToken;
 
 	private final RestTemplate restTemplate = new RestTemplate();
+	
+	private static String parentPeriodId;
+	private static String childPeriodId;
 
 	public static void main(String[] args) {
 		OkrBackend okrBackend = new OkrBackend();
@@ -150,10 +153,63 @@ public class OkrBackend implements IOkrBackend {
             JsonObject responseObject = jsonElement.getAsJsonObject();
             JsonArray dataArray = responseObject.getAsJsonArray("data");
 
+            if (dataArray != null && dataArray.size() > 0) {
+                for (JsonElement dataElement : dataArray) {
+                    JsonObject dataObject = dataElement.getAsJsonObject();
+                    parentPeriodId = dataObject.get("periodId").getAsString();
+                    System.out.println("Period ID (Parent): " + parentPeriodId);
+
+                    // Check if the data object has a "childs" array
+                    if (dataObject.has("childs")) {
+                        JsonArray childs = dataObject.getAsJsonArray("childs");
+                        for (JsonElement childElement : childs) {
+                            JsonObject childObject = childElement.getAsJsonObject();
+                            childPeriodId = childObject.get("periodId").getAsString();
+                            System.out.println("Period ID (Child): " + childPeriodId);
+                        }
+                    }
+                }
+            }
+
+			System.out.print(responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public String getOrganization() {
+		try {
+			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
+				System.out.println("Loading token...");
+				// okrAuthToken = getAuthToken();
+				System.out.println("Loaded token..." + getAuthToken());
+			}
+			System.out.println(okrAuthToken);
+			String serverUrl = okrBaseURL + "/organization";
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			System.out.println("Fine1");
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			entity = new HttpEntity<>(headers);
+			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			System.out.println("Fine2");
+			String responseJson = response.getBody(); 
+			System.out.println("Fine3");
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(responseJson);
+            JsonObject responseObject = jsonElement.getAsJsonObject();
+            JsonArray dataArray = responseObject.getAsJsonArray("data");
+
 			if (dataArray != null && dataArray.size() > 0) {
-				JsonObject firstPeriod = dataArray.get(0).getAsJsonObject();
-				String periodId = firstPeriod.get("periodId").getAsString();
-				System.out.println("Period ID: " + periodId);
+				JsonObject firstOrganization = dataArray.get(0).getAsJsonObject();
+				String organizationId = firstOrganization.get("orgId").getAsString();
+				System.out.println("Organization ID: " + organizationId);
 			}
 
 			System.out.print(responseJson);
