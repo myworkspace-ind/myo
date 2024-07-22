@@ -57,6 +57,7 @@
 			<artifactId>myo-controller</artifactId>
 			<version>${module.version}</version>
 		</dependency>
+		
 		<!--         <dependency> -->
 		<!--             <groupId>org.sakaiproject.myo</groupId> -->
 		<!--             <artifactId>myo-impl</artifactId> -->

@@ -4,7 +4,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sakaiproject.myo</groupId>
 	<artifactId>myo</artifactId>
-	<version>23.0</version>
 	<packaging>pom</packaging>
 	<name>sakai-spring-maven-archetype</name>
 	<description>Archetype to generate a project with sakai and spring</description>
@@ -89,14 +88,15 @@
 
   <modules>
     <module>api</module>
-	<module>common</module>
+    <module>common</module>
+    <module>email</module>
     <module>impl</module>
     <module>jpa</module>
     <module>biz</module>
     <module>pack</module>
-	<module>controller</module>
-	<module>tool</module>
-	<module>web</module>
+    <module>controller</module>
+    <module>tool</module>
+    <module>web</module>
   </modules>
   
 </project>
