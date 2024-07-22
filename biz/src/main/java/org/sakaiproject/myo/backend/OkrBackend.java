@@ -189,7 +189,7 @@ public class OkrBackend implements IOkrBackend {
 				System.out.println("Loaded token..." + getAuthToken());
 			}
 			System.out.println(okrAuthToken);
-			String serverUrl = okrBaseURL + "/organization";
+			String serverUrl = okrBaseURL + "/userprofile";
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -204,13 +204,43 @@ public class OkrBackend implements IOkrBackend {
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(responseJson);
             JsonObject responseObject = jsonElement.getAsJsonObject();
-            JsonArray dataArray = responseObject.getAsJsonArray("data");
-
-			if (dataArray != null && dataArray.size() > 0) {
-				JsonObject firstOrganization = dataArray.get(0).getAsJsonObject();
-				String organizationId = firstOrganization.get("orgId").getAsString();
-				System.out.println("Organization ID: " + organizationId);
-			}
+//            JsonArray dataArray = responseObject.getAsJsonArray("data");
+            System.out.println("Fine4");
+            if (responseObject.has("data")) {
+                JsonElement dataElement = responseObject.get("data");
+                
+                if (dataElement.isJsonObject()) {
+                    // Handle case where "data" is an object
+                    JsonObject dataObject = dataElement.getAsJsonObject();
+                    
+                    if (dataObject.has("defaultOrgId")) {
+                        String organizationId = dataObject.get("defaultOrgId").getAsString();
+                        System.out.println("Organization ID: " + organizationId);
+                    } else {
+                        System.out.println("Error: 'defaultOrgId' not found in 'data' object.");
+                    }
+                } else if (dataElement.isJsonArray()) {
+                    // Handle case where "data" is an array (assuming first element)
+                    JsonArray dataArray = dataElement.getAsJsonArray();
+                    
+                    if (dataArray.size() > 0) {
+                        JsonObject firstOrganization = dataArray.get(0).getAsJsonObject();
+                        
+                        if (firstOrganization.has("defaultOrgId")) {
+                            String organizationId = firstOrganization.get("defaultOrgId").getAsString();
+                            System.out.println("Organization ID: " + organizationId);
+                        } else {
+                            System.out.println("Error: 'defaultOrgId' not found in the first element of 'data' array.");
+                        }
+                    } else {
+                        System.out.println("Error: 'data' array is empty.");
+                    }
+                } else {
+                    System.out.println("Error: Unexpected type for 'data'.");
+                }
+            } else {
+                System.out.println("Error: 'data' field is missing.");
+            }
 
 			System.out.print(responseJson);
 			return responseJson;
