@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * Handles requests for the application home page.
  */
 @Controller
-@Slf4j
+//@Slf4j
 public class CrudController extends BaseController {
  
 	@Autowired
@@ -58,7 +58,7 @@ public class CrudController extends BaseController {
 	@ResponseBody
     public String getInfoPeriod() {
     	// Get and process response
-    	System.out.print(serviceOkrBackend.getPeriod());
+    	//System.out.print(serviceOkrBackend.getPeriod());
     	return serviceOkrBackend.getPeriod();
     }    
     
@@ -66,8 +66,16 @@ public class CrudController extends BaseController {
 	@ResponseBody
     public String getInfoOrganization() {
     	// Get and process response
-    	System.out.print(serviceOkrBackend.getOrganization());
+    	//System.out.print(serviceOkrBackend.getOrganization());
     	return serviceOkrBackend.getOrganization();
+    } 
+    
+    @GetMapping(value = "/objectives/loaddata")
+	@ResponseBody
+    public String getInfoObjectives() {
+    	// Get and process response
+    	//System.out.print(serviceOkrBackend.getObjectives());
+    	return serviceOkrBackend.getObjectives();
     } 
 //	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
 //	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {

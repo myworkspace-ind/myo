@@ -41,6 +41,7 @@ public class OkrBackend implements IOkrBackend {
 	
 	private static String parentPeriodId;
 	private static String childPeriodId;
+	private static String organizationId;
 
 	public static void main(String[] args) {
 		OkrBackend okrBackend = new OkrBackend();
@@ -214,7 +215,7 @@ public class OkrBackend implements IOkrBackend {
                     JsonObject dataObject = dataElement.getAsJsonObject();
                     
                     if (dataObject.has("defaultOrgId")) {
-                        String organizationId = dataObject.get("defaultOrgId").getAsString();
+                        organizationId = dataObject.get("defaultOrgId").getAsString();
                         System.out.println("Organization ID: " + organizationId);
                     } else {
                         System.out.println("Error: 'defaultOrgId' not found in 'data' object.");
@@ -227,7 +228,7 @@ public class OkrBackend implements IOkrBackend {
                         JsonObject firstOrganization = dataArray.get(0).getAsJsonObject();
                         
                         if (firstOrganization.has("defaultOrgId")) {
-                            String organizationId = firstOrganization.get("defaultOrgId").getAsString();
+                            organizationId = firstOrganization.get("defaultOrgId").getAsString();
                             System.out.println("Organization ID: " + organizationId);
                         } else {
                             System.out.println("Error: 'defaultOrgId' not found in the first element of 'data' array.");
@@ -242,6 +243,62 @@ public class OkrBackend implements IOkrBackend {
                 System.out.println("Error: 'data' field is missing.");
             }
 
+			System.out.println(responseJson);
+			System.out.println("OrgID: " + organizationId);
+			return organizationId;
+		} catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	
+	@Override
+	public String getObjectives() {
+		try {
+			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
+				System.out.println("Loading token...");
+				// okrAuthToken = getAuthToken();
+				System.out.println("Loaded token..." + getAuthToken());
+			}
+			System.out.println(okrAuthToken);
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/1074bb9e-f8e4-4e87-935b-a0f009ddbe4a";
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			System.out.println("Fined1");
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			entity = new HttpEntity<>(headers);
+			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			System.out.println("Fined2");
+			String responseJson = response.getBody(); 
+			System.out.println("Fined3");
+			
+//			JsonParser jsonParser = new JsonParser();
+//            JsonElement jsonElement = jsonParser.parse(responseJson);
+//            JsonObject responseObject = jsonElement.getAsJsonObject();
+//            JsonArray dataArray = responseObject.getAsJsonArray("data");
+//
+//            if (dataArray != null && dataArray.size() > 0) {
+//                for (JsonElement dataElement : dataArray) {
+//                    JsonObject dataObject = dataElement.getAsJsonObject();
+//                    parentPeriodId = dataObject.get("periodId").getAsString();
+//                    System.out.println("Period ID (Parent): " + parentPeriodId);
+//
+//                    // Check if the data object has a "childs" array
+//                    if (dataObject.has("childs")) {
+//                        JsonArray childs = dataObject.getAsJsonArray("childs");
+//                        for (JsonElement childElement : childs) {
+//                            JsonObject childObject = childElement.getAsJsonObject();
+//                            childPeriodId = childObject.get("periodId").getAsString();
+//                            System.out.println("Period ID (Child): " + childPeriodId);
+//                        }
+//                    }
+//                }
+//            }
+
 			System.out.print(responseJson);
 			return responseJson;
 		} catch (Exception e) {
@@ -250,7 +307,8 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
-
+	
+	
 	class JsonResponse {
 		private String token;
 		private String messages;

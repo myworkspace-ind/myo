@@ -5,6 +5,7 @@ public interface IOkrBackend {
 //	String getOrg();
 	String getPeriod();
 	String getOrganization();
+	String getObjectives();
 
 //	String getPeriod();
 //	String getOrganization();
