@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var datalayout = [];
 		objectives.forEach(function(objective, index) {
 			objective.keyResults.forEach(function(keyResult) {
-				var unit = getUnitFromIType(keyResult.itype); 
+				var unit = getUnitFromIType(keyResult.itype);
 				datalayout.push({
 					No: index + 1,
 					Objectives: objective.description,
@@ -127,7 +127,69 @@ document.addEventListener('DOMContentLoaded', function() {
 		hotlayout.updateSettings({
 			data: datalayout
 		});
+	};
+
+	function updateOkrDashboardFromUrl(url) {
+		fetch(url)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(jsonResponse => {
+				var data = jsonResponse.data;
+				var objectives = data.objectives;
+
+				var contentContainer = document.querySelector('.content');
+				contentContainer.innerHTML = '';
+
+				objectives.forEach(function(objective) {
+					var card = document.createElement('div');
+					card.classList.add('card');
+
+					var cardBody = document.createElement('div');
+					cardBody.classList.add('card-body');
+
+					var htmlContent = `
+                    <h5 class="card-title">${objective.description}</h5>
+                    <p class="card-text">Weight: ${objective.weight}%, Progress: ${objective.progress.toFixed(2)}%</p>
+                    <p class="card-text">Status: ${objective.status}</p>
+                `;
+					cardBody.innerHTML = htmlContent;
+
+					objective.keyResults.forEach(function(keyResult) {
+						var keyResultCard = document.createElement('div');
+						keyResultCard.classList.add('card');
+						keyResultCard.classList.add('mt-3');
+
+						var keyResultCardBody = document.createElement('div');
+						keyResultCardBody.classList.add('card-body');
+
+						var keyResultHtmlContent = `
+                        <h6 class="card-title">${keyResult.description}</h6>
+                        <p class="card-text">Progress: ${keyResult.progress.toFixed(2)}%, Target: ${keyResult.target}%</p>
+                        <p class="card-text">Due Date: ${keyResult.dueDate}</p>
+                    `;
+						keyResultCardBody.innerHTML = keyResultHtmlContent;
+
+						keyResultCard.appendChild(keyResultCardBody);
+						cardBody.appendChild(keyResultCard);
+					});
+
+					card.appendChild(cardBody);
+					contentContainer.appendChild(card);
+				});
+			})
+			.catch(error => {
+				console.error('Error fetching data:', error);
+			});
 	}
+
+	var apiUrl = 'objectives/loaddata';
+	updateOkrDashboardFromUrl(apiUrl);
+
+
 
 
 });
