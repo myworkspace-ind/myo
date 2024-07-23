@@ -1,49 +1,58 @@
 document.addEventListener('DOMContentLoaded', function() {
-	$('#jstree').jstree();
+    var container = document.getElementById('okr-table');
+    var hot;
 
-	fetch('/myo-web/crud/loaddata')
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok ' + response.statusText);
-			}
-			return response.json();
-		})
-		.then(data => {
-			const table = document.createElement('table');
-			table.classList.add('table', 'table-striped');
+    $('#jstree').jstree();
 
-			const thead = document.createElement('thead');
-			const headers = ['description', 'dueDate', 'itype', 'weight'];
-			const headerRow = document.createElement('tr');
+    var hotSettings = {
+        data: [],
+        colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
+        columns: [
+            { data: 'No' },
+            { data: 'name' },
+            { data: 'startDate' },
+            { data: 'endDate' },
+            { data: 'currentPeriod' }
+        ],
+        stretchH: 'all',
+        autoWrapRow: true,
+        height: 400,
+        readOnly: true,
+        licenseKey: 'non-commercial-and-evaluation'
+    };
 
-			headers.forEach(header => {
-				const th = document.createElement('th');
-				th.textContent = header;
-				headerRow.appendChild(th);
-			});
+    hot = new Handsontable(container, hotSettings);
 
-			thead.appendChild(headerRow);
-			table.appendChild(thead);
+    fetch('period/loaddata')
+        .then(response => response.json())
+        .then(jsonData => {
+            var data = [];
+            var counter = 1;
 
-			const tbody = document.createElement('tbody');
+            if (jsonData.data && Array.isArray(jsonData.data)) {
+                for (var i = 0; i < jsonData.data.length; i++) {
+                    var item = jsonData.data[i];
+                    if (item.childs && Array.isArray(item.childs)) {
+                        for (var j = 0; j < item.childs.length; j++) {
+                            var childItem = item.childs[j];
+                            var childData = {
+                                No: counter++,
+                                name: childItem.name,
+                                startDate: childItem.startDate,
+                                endDate: childItem.endDate,
+                                currentPeriod: childItem.currentPeriod
+                            };
+                            data.push(childData);
+                        }
+                    }
+                }
+            } else {
+                console.error('Unexpected data structure in the JSON data');
+            }
 
-			data.data.forEach(row => {
-				const tr = document.createElement('tr');
-				const filteredRow = row.filter((cell, index) => {
-					const columnHeader = data.colHeaders[index];
-					return headers.includes(columnHeader);
-				});
-
-				filteredRow.forEach(cell => {
-					const td = document.createElement('td');
-					td.textContent = cell;
-					tr.appendChild(td);
-				});
-				tbody.appendChild(tr);
-			});
-
-			table.appendChild(tbody);
-			document.getElementById('okr-table').appendChild(table);
-		})
-		.catch(error => console.error('Error fetching OKR data:', error));
+            hot.loadData(data);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 });
