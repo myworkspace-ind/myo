@@ -41,10 +41,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-
-
-
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -57,14 +53,16 @@ public class NewOKRController extends BaseController {
 	@Value("${okr.colHeaders}")
 	private String[] okrColHeaders;
 
-	private int[] okrColWidths = {200, 300, 150, 150, 400};
+	@Value("${okr.colWidths}")
+	private int[] okrColWidths;
 
 	@Autowired
 	UserService userService;
 
 	@Autowired
 	OrgService orgService;
-/**
+
+	/**
 	 * This method is called when binding the HTTP parameter to bean (or model).
 	 * 
 	 * @param binder
@@ -87,7 +85,8 @@ public class NewOKRController extends BaseController {
 	 * Simply selects the home view to render by returning its name.
 	 * 
 	 * @return
-	 */	@GetMapping(value = "newokr")
+	 */
+	@GetMapping(value = "newokr")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("newokr");
 		return mav;

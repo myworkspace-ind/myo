@@ -74,7 +74,7 @@ body {
 		<div class="row">
 			<div class="col">Description</div>
 			<div class="col">
-				<h6>Chương trình quản lý ORK cho doanh nghiệp</h6>
+				<h6>Chuong tr�nh qu?n l� ORK cho doanh nghi?p</h6>
 			</div>
 			<div class="col">
 				<div class="row">
@@ -243,9 +243,9 @@ body {
 							</div>
 						</div>
 						<div class="tab-pane" id="okr-layout">
-							<div class="card">
-								<p style="margin: 2%">OKR Layout</p>
-								<div class="card-body">
+							<div class="card" style="padding: 2%">
+								<p>OKR Layout</p>
+								<!-- 		<div class="card-body">
 									<div class="mb-3">
 										<h5>Strengthen Master Angular</h5>
 										<p>Improve Angular skills and knowledge</p>
@@ -288,6 +288,43 @@ body {
 										<i class="bi bi-upload"></i> Submit
 									</button>
 								</div>
+								
+ -->
+								<div class="row">
+									<div class="col-9">
+										<div class="btn-group" style="width: 30%">
+											<button class="btn btn-sm" type="button">Quý 1/2023</button>
+											<button type="button"
+												class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+												data-bs-toggle="dropdown" aria-expanded="false">
+												<span class="visually-hidden">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+											</ul>
+										</div>
+									</div>
+									<div class="col-3">
+										<div class="form-group form-check">
+											<input type="checkbox" class="form-check-input"
+												id="draft-local-save"> <label
+												class="form-check-label" for="draft-local-save">Draft
+												local save</label>
+										</div>
+									</div>
+								</div>
+
+								</br>
+								<div id="okr-layouttable"></div>
+								</br>
+								<div class="d-flex justify-content-end">
+									<button type="button" class="btn mr-2 border MKSOLokrlayout">Draft
+										Save</button>
+									<button type="button" class="btn border MKSOLokrlayout">Submit</button>
+								</div>
+
 							</div>
 						</div>
 						<div class="tab-pane" id="okr-dashboard">
@@ -303,7 +340,7 @@ body {
 													style="width: 10%">Add OKR</button>
 											</div>
 											<div class="card">
-												<div class="card-body">
+												<div class="card-body" id="MKSOLokrdashboard">
 													<h5 class="card-title">Strengthen Master Angular</h5>
 													<p class="card-text">Improve Angular skill and
 														knowledge</p>

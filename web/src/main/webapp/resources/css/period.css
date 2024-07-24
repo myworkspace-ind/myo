@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+#periods-title {
+	text-align: center;
+	color: #333; /* Example text color */
+	font-size: 3em; /* Adjust the font size for impact */
+	text-transform: uppercase; /* Example text transformation */
+	letter-spacing: 2px; /* Example letter spacing */
+	margin-bottom: 20px; /* Example spacing from the next element */
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+	/* Example text shadow for emphasis */
+}
+
+#periods-table {
+	width: 700px; margin-left : auto;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#new-period {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 46%;
+}

@@ -54,7 +54,7 @@ public class PeriodController extends BaseController {
 	@Value("${productList.colHeaders:Year,Name,Start date,End date,Note}")
 	private String[] productListColHeaders;
 
-	@Value("${productList.colWidths:80,250,200,200,80}")
+	@Value("${productList.colWidths:80,100,150,150,100}")
 	private int[] productListColWidths;
 
 	@GetMapping(value = "/period")

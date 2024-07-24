@@ -1,4 +1,4 @@
-	package org.sakaiproject.myo.repository;
+package org.sakaiproject.myo.repository;
 
 import java.util.UUID;
 
