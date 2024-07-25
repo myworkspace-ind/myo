@@ -72,7 +72,6 @@ public class OkrBackend implements IOkrBackend {
 		        }
 			}
 //		    } else {
-//		        // Xử lý mã trạng thái 404
 //		    	System.out.println("Check error");
 //		        Map<String, String> responseBody = response.getBody();
 //		        if (responseBody != null && responseBody.containsKey("message")) {
@@ -306,9 +305,6 @@ public class OkrBackend implements IOkrBackend {
 		try {
 			System.out.println(okrAuthToken);
 			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
-//			System.out.println("OrgID: " + getOrganization());
-//			System.out.println("CurrentPeriodID: "+ getCurrentPeriodId());
-//			System.out.println("Server URL: " + serverUrl);
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -318,29 +314,6 @@ public class OkrBackend implements IOkrBackend {
 			entity = new HttpEntity<>(headers);
 			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
 			String responseJson = response.getBody(); 
-			
-//			JsonParser jsonParser = new JsonParser();
-//            JsonElement jsonElement = jsonParser.parse(responseJson);
-//            JsonObject responseObject = jsonElement.getAsJsonObject();
-//            JsonArray dataArray = responseObject.getAsJsonArray("data");
-//
-//            if (dataArray != null && dataArray.size() > 0) {
-//                for (JsonElement dataElement : dataArray) {
-//                    JsonObject dataObject = dataElement.getAsJsonObject();
-//                    parentPeriodId = dataObject.get("periodId").getAsString();
-//                    System.out.println("Period ID (Parent): " + parentPeriodId);
-//
-//                    // Check if the data object has a "childs" array
-//                    if (dataObject.has("childs")) {
-//                        JsonArray childs = dataObject.getAsJsonArray("childs");
-//                        for (JsonElement childElement : childs) {
-//                            JsonObject childObject = childElement.getAsJsonObject();
-//                            childPeriodId = childObject.get("periodId").getAsString();
-//                            System.out.println("Period ID (Child): " + childPeriodId);
-//                        }
-//                    }
-//                }
-//            }
 			System.out.print(responseJson);
 			return responseJson;
 		} catch (Exception e) {
