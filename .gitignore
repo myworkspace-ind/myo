@@ -28,6 +28,7 @@ replay_pid*
 .factorypath
 .classpath
 target
+/target/
 release
 
 bin/

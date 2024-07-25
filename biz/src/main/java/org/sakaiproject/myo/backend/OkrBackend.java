@@ -1,13 +1,21 @@
 package org.sakaiproject.myo.backend;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sakaiproject.myo.IOkrBackend;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -28,13 +36,6 @@ public class OkrBackend implements IOkrBackend {
 	@Value("${okr.authEndpoint:/login")
 	private String loginEndpoint;
 
-	@Value("${okr.username:admin@myworkspace.vn}")
-	private String username;
-
-	@Value("${okr.password:admin}")
-	private String password;
-
-	@Value("${okr.token:eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBteXdvcmtzcGFjZS52biIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcyMTI5NjYxOCwiZXhwIjoxNzIyMTYwNjE4fQ.y1RYJuQ4FzmdFbzgXzJDT9_XKF1AdrNjz5q9ibwfpLmaX6fVmCjCHr6UraR47eQRm5fE5gF3xEkzK6HlRCq4Yg}")
 	private String okrAuthToken;
 
 	private final RestTemplate restTemplate = new RestTemplate();
@@ -47,58 +48,59 @@ public class OkrBackend implements IOkrBackend {
 		OkrBackend okrBackend = new OkrBackend();
 		okrBackend.loadData();
 	}
-
-	private String getAuthToken() {
-		// Create Gson instance
-		Gson gson = new Gson();
-
-		// Create body request with username and password
-		JsonObject bodyJson = new JsonObject();
-		bodyJson.addProperty("username", username);
-		bodyJson.addProperty("password", password);
-		String body = gson.toJson(bodyJson);
-
-		// Create HttpHeaders for the request
+	
+	public String getAuthToken(String username, String password) throws Exception {
+		String serverUrl = okrBaseURL + "/auth";
+		Map<String, String> requestBody = new HashMap<>();
+		requestBody.put("username", username);
+		requestBody.put("password", password);
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
-		// Create HttpEntity with headers and body
-		HttpEntity<String> entity = new HttpEntity<>(body, headers);
-		// Send POST request to endpoint to get token
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<JsonResponse> response;
+		
+		HttpEntity<Map<String,String>> requestEntity = new HttpEntity<>(requestBody, headers);
+		
+		ResponseEntity<Map> response;
 		try {
-			response = restTemplate.exchange(okrBaseURL + loginEndpoint, HttpMethod.POST, entity, JsonResponse.class);
-		} catch (HttpClientErrorException e) {
-			System.err.println("HTTP error occurred: " + e.getStatusCode() + " - " + e.getStatusText());
-			return null;
-		} catch (Exception e) {
-			// Handle other exceptions
-			System.err.println("Error occurred: " + e.getMessage());
-			return null;
-		}
-
-		if (response.getStatusCode().is2xxSuccessful()) {
-			JsonResponse jsonResponse = response.getBody();
-			if (jsonResponse != null && jsonResponse.getToken() != null) {
-				String token = jsonResponse.getToken();
-				System.out.println("Success get token: " + token);
-				return token;
-			} else {
-				System.err.println("Response does not contain token field or 'token' is null");
-				return null; 
+			response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, Map.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+		        Map<String, String> responseBody = response.getBody();
+		        if (responseBody != null && responseBody.containsKey("token")) {
+		            okrAuthToken = responseBody.get("token");
+		            System.out.println("okrAuthToken: " + okrAuthToken);
+		            return okrAuthToken;
+		        }
 			}
-		} else {
-			System.err.println("Request failed with status code: " + response.getStatusCode());
-			return null; 
+//		    } else {
+//		        // Xử lý mã trạng thái 404
+//		    	System.out.println("Check error");
+//		        Map<String, String> responseBody = response.getBody();
+//		        if (responseBody != null && responseBody.containsKey("message")) {
+//		            String errorMessage = responseBody.get("message");
+//		            System.out.println("Error message: " + errorMessage);
+//		            return "";
+//		        }
+//		    }
+		} catch (HttpClientErrorException e) {
+			// TODO: handle exception
+			String errorMessage = e.getResponseBodyAsString();
+			// System.out.println("Catch: " + errorMessage);
+
+			JsonParser jsonParser = new JsonParser();
+	        JsonObject jsonObject = jsonParser.parse(errorMessage).getAsJsonObject();
+	        if (jsonObject.has("message")) {
+	            String message = jsonObject.get("message").getAsString();
+	            // System.out.println("error: " + message);
+	            throw new Exception(message);
+	        }
+	        throw new Exception(errorMessage);
 		}
+	    return null;
 	}
+	
 
 	public void loadData() {
 		try {
-			// Lấy token mới nếu chưa có hoặc đã hết hạn
-			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
-				getAuthToken();
-			}
 
 			// Tạo HttpHeaders và thêm token xác thực
 			HttpHeaders headers = new HttpHeaders();
@@ -116,7 +118,7 @@ public class OkrBackend implements IOkrBackend {
 			// Kiểm tra mã trạng thái
 			// if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 			// System.out.println("Unauthorized: Refreshing token and retrying...");
-			getAuthToken(); // Lấy token mới
+			// getAuthToken(); // Lấy token mới
 			headers.set("Authorization", "Bearer " + okrAuthToken); // Cập nhật headers với token mới
 			entity = new HttpEntity<>(headers);
 			response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class); // Thử lại yêu cầu với token
@@ -132,11 +134,6 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public String getPeriod() {
 		try {
-			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
-				System.out.println("Loading token...");
-				// okrAuthToken = getAuthToken();
-				System.out.println("Loaded token..." + getAuthToken());
-			}
 			System.out.println(okrAuthToken);
 			String serverUrl = okrBaseURL + "/period";
 			HttpHeaders headers = new HttpHeaders();
@@ -148,7 +145,7 @@ public class OkrBackend implements IOkrBackend {
 			entity = new HttpEntity<>(headers);
 			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
 			String responseJson = response.getBody(); 
-
+			
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(responseJson);
             JsonObject responseObject = jsonElement.getAsJsonObject();
@@ -184,11 +181,6 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public String getOrganization() {
 		try {
-			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
-				System.out.println("Loading token...");
-				// okrAuthToken = getAuthToken();
-				System.out.println("Loaded token..." + getAuthToken());
-			}
 			System.out.println(okrAuthToken);
 			String serverUrl = okrBaseURL + "/userprofile";
 			HttpHeaders headers = new HttpHeaders();
@@ -253,15 +245,9 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
-	
 	@Override
 	public String getObjectives() {
 		try {
-			if (okrAuthToken == null || okrAuthToken.isEmpty()) {
-				System.out.println("Loading token...");
-				// okrAuthToken = getAuthToken();
-				System.out.println("Loaded token..." + getAuthToken());
-			}
 			System.out.println(okrAuthToken);
 			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/1074bb9e-f8e4-4e87-935b-a0f009ddbe4a";
 			HttpHeaders headers = new HttpHeaders();
@@ -272,9 +258,7 @@ public class OkrBackend implements IOkrBackend {
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			entity = new HttpEntity<>(headers);
 			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-			System.out.println("Fined2");
 			String responseJson = response.getBody(); 
-			System.out.println("Fined3");
 			
 //			JsonParser jsonParser = new JsonParser();
 //            JsonElement jsonElement = jsonParser.parse(responseJson);
@@ -308,25 +292,12 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 	
+	 public String getOkrAuthToken() {
+	        return okrAuthToken;
+	    }
 	
-	class JsonResponse {
-		private String token;
-		private String messages;
-
-		public String getToken() {
-			return token;
-		}
-
-		public void setToken(String token) {
-			this.token = token;
-		}
-
-		public String getMessages() {
-			return messages;
-		}
-
-		public void setMessages(String messages) {
-			this.messages = messages;
-		}
+	public void setOkrAuthToken(String token) {
+		this.okrAuthToken = token;
 	}
+
 }
