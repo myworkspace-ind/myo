@@ -131,6 +131,7 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
+	
 	@Override
 	public String getPeriod() {
 		try {
@@ -177,6 +178,60 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
+	
+	public String getCurrentPeriodId() {
+		try {
+	        System.out.println(okrAuthToken);
+	        String serverUrl = okrBaseURL + "/period";
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.set("Authorization", "Bearer " + okrAuthToken);
+	        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	        ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+	        String responseJson = response.getBody(); 
+	        
+	        JsonParser jsonParser = new JsonParser();
+	        JsonElement jsonElement = jsonParser.parse(responseJson);
+	        JsonObject responseObject = jsonElement.getAsJsonObject();
+	        JsonArray dataArray = responseObject.getAsJsonArray("data");
+
+	        if (dataArray != null && dataArray.size() > 0) {
+	            for (JsonElement dataElement : dataArray) {
+	                JsonObject dataObject = dataElement.getAsJsonObject();
+	                
+	                // Check if the data object has a "childs" array
+	                if (dataObject.has("childs")) {
+	                    JsonArray childs = dataObject.getAsJsonArray("childs");
+	                    for (JsonElement childElement : childs) {
+	                        JsonObject childObject = childElement.getAsJsonObject();
+	                        if (childObject.get("currentPeriod").getAsBoolean()) {
+	                            String childPeriodId = childObject.get("periodId").getAsString();
+	                            System.out.println("Current Period ID (Child): " + childPeriodId);
+	                            return childPeriodId;
+	                        }
+	                    }
+	                }
+	                else {
+	                    // Check if the current period is true in the parent period
+	                    if (dataObject.get("currentPeriod").getAsBoolean()) {
+	                        String periodId = dataObject.get("periodId").getAsString();
+	                        System.out.println("Current Period ID: " + periodId);
+	                        return periodId;
+	                    }
+	                }
+	            }
+	        }
+
+	        System.out.print(responseJson);
+	        return null;
+	    } catch (Exception e) {
+	        System.out.println("An error occurred: " + e.getMessage());
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+
+	
 	
 	@Override
 	public String getOrganization() {
@@ -245,11 +300,15 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
+	
 	@Override
 	public String getObjectives() {
 		try {
 			System.out.println(okrAuthToken);
-			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/1074bb9e-f8e4-4e87-935b-a0f009ddbe4a";
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+//			System.out.println("OrgID: " + getOrganization());
+//			System.out.println("CurrentPeriodID: "+ getCurrentPeriodId());
+//			System.out.println("Server URL: " + serverUrl);
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -282,7 +341,6 @@ public class OkrBackend implements IOkrBackend {
 //                    }
 //                }
 //            }
-
 			System.out.print(responseJson);
 			return responseJson;
 		} catch (Exception e) {
@@ -292,9 +350,11 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 	
-	 public String getOkrAuthToken() {
+	
+	public String getOkrAuthToken() {
 	        return okrAuthToken;
 	    }
+	
 	
 	public void setOkrAuthToken(String token) {
 		this.okrAuthToken = token;
