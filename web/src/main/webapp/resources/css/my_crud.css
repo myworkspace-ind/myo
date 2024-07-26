@@ -7,3 +7,8 @@ body {
 .MKSOLCRUDTabmenu {
 	color: black !important;
 }
+
+.MKSOLokrlayout{
+	border:thick;
+	border-color: black;
+}
