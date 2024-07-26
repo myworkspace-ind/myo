@@ -86,6 +86,33 @@
 			<artifactId>spring-data-jpa</artifactId>
 			<!--            <version>${spring.data.jpa.version}</version>-->
 		</dependency>
+		
+		<!-- Email dependency -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-email</artifactId>
+		    <version>1.5</version>
+		</dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+<!--            <version>${spring.data.commons.version}</version>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+<!--            <version>${spring.data.jpa.version}</version>-->
+        </dependency>
 		<!-- Gson -->
 		<!--         <dependency> -->
 		<!--             <groupId>com.google.code.gson</groupId> -->
