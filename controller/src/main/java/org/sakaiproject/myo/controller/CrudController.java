@@ -31,6 +31,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,8 +53,18 @@ public class CrudController extends BaseController {
     @GetMapping(value = "crud")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("crud");
+
 		return mav;
 	}
+    
+    @PostMapping(value = "/objectives/uploaddata")
+	@ResponseBody
+    public String postInfoObjectives(@RequestBody String data) {
+    	System.out.print(data);
+
+        return data;
+
+    }  
     
     @GetMapping(value = "/period/loaddata")
 	@ResponseBody
