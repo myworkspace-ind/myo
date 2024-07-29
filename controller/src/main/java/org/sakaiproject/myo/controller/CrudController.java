@@ -72,7 +72,7 @@ public class CrudController extends BaseController {
 	public String postInfoPeriod(@RequestBody String data) {
 		System.out.print(data);
 
-		return "redirect:/crud";
+		return data;
 
 	}
 
