@@ -1,0 +1,108 @@
+** Lưu ý:
+- itype:
+    + KeyResult: 1. Number, 2. Yes/No, 3. Percentage.
+    + OKR: 1. PersonalOkr, 2. OrganizationOkr 
+- user_role: USER, ADMIN, SUPER_ADMIN, MANAGER, DELEGATOR
+- Tổng weight của KeyResult trong 1 OKR không > 100.
+- 
+- Đối với FE, cần lấy token với POST /auth (truyền raw json)
+    {
+        "username": <admin@myworkspace.vn>,
+        "password": <password của admin>
+    } sau đó gắn vào header mỗi lần request tới server như sau: Authorization: Bearer <token> 
+- Nên để status DRAFT khi mock data cho Okr và Objective.
+
+1. Create OKR API. 
+    - POST /personalOkr/advanced
+    - Trước khi tạo một OKR cần get 2 params: organizationId + periodId
+        + organizationId: GET /profile (data.defaultOrgId)
+        + periodId: Get /period (data.periodId - Lấy Period đầu tiên để test)
+        
+    - Schemas:
+{
+    "status": string [DRAFT/SUBMITTED/REJECTED/...] ,
+    "progress": float,
+    "grade": float,
+    "organizationId": uuid,
+    "periodId": uuid,
+    "objectives": [
+        {
+            "description": string,
+            "status": string [DRAFT/SUBMITTED/REJECTED/...],
+            "weight": float,
+            "comment": string,
+            "keyResults": [
+                {
+                    "description": string,
+                    "dueDate": date(yyyy-mm-dd),
+                    "itype": int [1,2,3],
+                    "weight": float,
+                    "numberResult": int,
+                    "numberTarget": int,
+                    "yesNoResult": bool,
+                    "yesNoTarget": bool,
+                    "percentageResult": float (min 0),
+                    "percentageTarget": float (max 100),
+                    "standard": string [None/Small/Big],
+                    "startvalue": float
+                }
+            ]
+        }
+    ]
+}
+
+2. GET OKR API.
+    - GET /okr/auth/all/{organizationId}/{periodId}
+    - Response body:
+
+{
+    "data": {
+        "okrId": uuid,
+        "status": string,
+        "progress": float,
+        "grade": float,
+        "editable": bool,
+        "countObjectives": int,
+        "draft": {
+            "visible": bool,
+            "actions": [
+                Enum("SUBMIT")
+            ]
+        },
+        "objectives": [
+            {
+                "objectiveId": uuid,
+                "description": string,
+                "progress": float,
+                "weight": float,
+                "finalScore": float,
+                "status": enum(string),
+                "comment": string,
+                "linkKeyresultId": null,
+                "linkKeyObjectiveId": null,
+                "keyResults": [
+                    {
+                        "keyResultId": uuid ,
+                        "objectiveId": uuid,
+                        "description": string,
+                        "comment": null,
+                        "calScore": float,
+                        "finalScore": float,
+                        "graded": bool,
+                        "dueDate": date(yyyy-mm-dd),
+                        "completedDate": null,
+                        "krLinkeds": null,
+                        "linkToKr": null,
+                        "itype": enum(1,2,3),
+                        "progress": float,
+                        "weight": float,
+                        "index": 0,
+                        "result": bool,
+                        "target": bool
+                    }
+                ]
+            }
+        ],
+    }
+    "message": "Succeed"  
+}

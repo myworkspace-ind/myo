@@ -1,0 +1,117 @@
+{
+  "status": "DRAFT",
+  "progress": 0.69,
+  "grade": 0.69,
+  "organizationId": "81ecd170-c682-4925-ad33-dd763415d9e2",
+  "periodId": "af3fcf0d-3b40-48bc-9f99-ea95147b9b35",
+  "objectives": [
+    {
+      "description": "objective1",
+      "status": "DRAFT",
+      "weight": 25,
+      "comment": "comment1",
+      "keyResults": [
+        {
+          "description": "test_ks11",
+          "dueDate": "2024-07-11",
+          "itype": 1,
+          "weight": 10,
+          "numberResult": 10,
+          "numberTarget": 50,
+          "yesNoResult": false,
+          "yesNoTarget": false,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        },
+        {
+          "description": "test_ks12",
+          "dueDate": "2024-07-11",
+          "itype": 1,
+          "weight": 15,
+          "numberResult": 15,
+          "numberTarget": 55,
+          "yesNoResult": false,
+          "yesNoTarget": false,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        },
+        {
+          "description": "test_ks13",
+          "dueDate": "2024-07-11",
+          "itype": 1,
+          "weight": 20,
+          "numberResult": 20,
+          "numberTarget": 50,
+          "yesNoResult": false,
+          "yesNoTarget": false,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        }
+      ]
+    },
+    {
+      "description": "objective2",
+      "status": "DRAFT",
+      "weight": 30,
+      "comment": "comment1",
+      "keyResults": [
+        {
+          "description": "test_ks2",
+          "dueDate": "2024-07-11",
+          "itype": 2,
+          "weight": 20,
+          "numberResult": 20,
+          "numberTarget": 60,
+          "yesNoResult": false,
+          "yesNoTarget": true,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        }
+      ]
+    },
+    {
+      "description": "objective3",
+      "status": "DRAFT",
+      "weight": 15,
+      "comment": "comment1",
+      "keyResults": [
+        {
+          "description": "test_ks31",
+          "dueDate": "2024-07-11",
+          "itype": 3,
+          "weight": 25,
+          "numberResult": 30,
+          "numberTarget": 80,
+          "yesNoResult": false,
+          "yesNoTarget": false,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        },
+        {
+          "description": "test_ks32",
+          "dueDate": "2024-07-11",
+          "itype": 1,
+          "weight": 10,
+          "numberResult": 30,
+          "numberTarget": 70,
+          "yesNoResult": false,
+          "yesNoTarget": false,
+          "percentageResult": 0,
+          "percentageTarget": 100,
+          "standard": "None",
+          "startvalue": 0
+        }
+      ]
+    }
+  ]
+}

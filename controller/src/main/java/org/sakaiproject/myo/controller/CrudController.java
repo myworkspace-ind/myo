@@ -77,25 +77,4 @@ public class CrudController extends BaseController {
     	//System.out.print(serviceOkrBackend.getObjectives());
     	return serviceOkrBackend.getObjectives();
     } 
-//	@RequestMapping(value = {"/crud/{objName}"}, method = RequestMethod.GET)
-//	public ModelAndView crud(@PathVariable("objName") String objName, HttpServletRequest request, HttpSession httpSession) {
-//		log.debug("Start CRUD object " + objName);
-//
-//		ModelAndView mav = new ModelAndView("crud");
-//
-//		initSession(request, httpSession);
-//
-//		mav.addObject("currentSiteId", getCurrentSiteId());
-//		mav.addObject("userDisplayName", getCurrentUserDisplayName());
-//
-//		List<OkrUser> allUsers = userService.findAll();
-//		int len = (allUsers != null) ? allUsers.size(): 0;
-//		log.info("Number of users: " + len);
-//
-//		mav.addObject("users", allUsers);
-//		
-//		mav.addObject("orgs", orgService.findAll());
-//
-//		return mav;
-//	}
 }
