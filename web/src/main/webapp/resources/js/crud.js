@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 	var container = document.getElementById('okr-table');
 	var hot;
+	var currentData = [];
 
 	$('#jstree').jstree();
 
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		data: [],
 		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
 		columns: [
-			{ data: 'No' },
+			{ data: 'No', readOnly: true },
 			{ data: 'name' },
 			{ data: 'startDate' },
 			{ data: 'endDate' },
@@ -17,7 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		stretchH: 'all',
 		autoWrapRow: true,
 		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation'
+		licenseKey: 'non-commercial-and-evaluation',
+		afterChange: function(changes, source) {
+			if (source === 'loadData') return;
+
+			currentData = hot.getData();
+		}
 	};
 
 	hot = new Handsontable(container, hotSettings);
@@ -50,10 +56,35 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 
 			hot.loadData(data);
+			currentData = data;
 		})
 		.catch(error => {
 			console.error('Error fetching data:', error);
 		});
+
+	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
+		if (currentData.length === 0) {
+			console.warn('No data to update');
+			return;
+		}
+
+		fetch('period/uploaddata', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(currentData)
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log('Data successfully updated:', result);
+			})
+			.catch(error => {
+				console.error('Error updating data:', error);
+			});
+	});
+
+
 
 
 	var url = 'objectives/loaddata';
