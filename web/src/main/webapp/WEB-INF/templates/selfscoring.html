@@ -214,29 +214,95 @@ body {
 		}
 
 		function submitData() {
-			var url = 'objectives/uploaddata';
-			var data = hot.getData();
+		    var url = 'objectives/uploaddata';
+		    var data = hot.getData();
+		    var mergeCells = hot.getSettings().mergeCells;
 
-			data = data.map(row => {
-				row[0] = row[1];
-				row[1] = '';
-				return row;
-			});
+		    var formattedData = [];
+		    var rowMap = new Map();
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', url, true);
-			xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						console.log('Data successfully submitted.', JSON.stringify(data));
-					} else {
-						console.error('Failed to submit data. Status:', xhr.status);
-					}
-				}
-			};
-			xhr.send(JSON.stringify(data));
+		    function getRowEntry(rowIndex) {
+		        if (!rowMap.has(rowIndex)) {
+		            rowMap.set(rowIndex, {
+		                No: '',
+		                Objectives: '',
+		                Weight: '',
+		                'Key results': '',
+		                Unit: '',
+		                'Start value': '',
+		                Target: '',
+		                'Self-score': ''
+		            });
+		        }
+		        return rowMap.get(rowIndex);
+		    }
+
+		    data.forEach((row, index) => {
+		        var rowEntry = getRowEntry(index);
+		        rowEntry.No = row[0];
+		        rowEntry.Objectives = row[1];
+		        rowEntry.Weight = row[2];
+		        rowEntry['Key results'] = row[3];
+		        rowEntry.Unit = row[4];
+		        rowEntry['Start value'] = row[5];
+		        rowEntry.Target = row[6];
+		        rowEntry['Self-score'] = row[7];
+		    });
+
+		    mergeCells.forEach(merge => {
+		        const { row, col, rowspan, colspan } = merge;
+		        const topLeftCellValue = data[row][col];
+
+		        for (let r = row; r < row + rowspan; r++) {
+		            for (let c = col; c < col + colspan; c++) {
+		                var rowEntry = getRowEntry(r);
+		                switch (c) {
+		                    case 0:
+		                        rowEntry.No = topLeftCellValue;
+		                        break;
+		                    case 1:
+		                        rowEntry.Objectives = topLeftCellValue;
+		                        break;
+		                    case 2:
+		                        rowEntry.Weight = topLeftCellValue;
+		                        break;
+		                    case 3:
+		                        rowEntry['Key results'] = topLeftCellValue;
+		                        break;
+		                    case 4:
+		                        rowEntry.Unit = topLeftCellValue;
+		                        break;
+		                    case 5:
+		                        rowEntry['Start value'] = topLeftCellValue;
+		                        break;
+		                    case 6:
+		                        rowEntry.Target = topLeftCellValue;
+		                        break;
+		                    case 7:
+		                        rowEntry['Self-score'] = topLeftCellValue;
+		                        break;
+		                }
+		            }
+		        }
+		    });
+
+		    formattedData = Array.from(rowMap.values());
+
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('POST', url, true);
+		    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+		    xhr.onreadystatechange = function() {
+		        if (xhr.readyState === XMLHttpRequest.DONE) {
+		            if (xhr.status === 200) {
+		                console.log('Data successfully submitted.', JSON.stringify(formattedData));
+		            } else {
+		                console.error('Failed to submit data. Status:', xhr.status);
+		            }
+		        }
+		    };
+		    xhr.send(JSON.stringify(formattedData));
 		}
+
 
 		function addRow() {
 			var newRow = {
