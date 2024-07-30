@@ -19,6 +19,7 @@
 
 package org.sakaiproject.myo.controller;
 
+import java.io.Console;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,40 +48,58 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 //@Slf4j
 public class CrudController extends BaseController {
- 
+
 	@Autowired
 	IOkrBackend serviceOkrBackend;
-	
-    @GetMapping(value = "crud")
+
+	@GetMapping(value = "crud")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("crud");
+
 		return mav;
 	}
-    
-    @GetMapping(value = "/period/loaddata")
+
+	@PostMapping(value = "/objectives/uploaddata")
 	@ResponseBody
-    public String getInfoPeriod() {
-    	// Get and process response
-    	//System.out.print(serviceOkrBackend.getPeriod());
-    	System.out.print(serviceOkrBackend.getCurrentPeriodId());
-    	return serviceOkrBackend.getPeriod();
-    }    
-    
-    @GetMapping(value = "/organization/loaddata")
+	public String postInfoObjectives(@RequestBody String data) {
+		System.out.print(data);
+
+		return data;
+
+	}
+
+	@PostMapping(value = "/period/uploaddata")
 	@ResponseBody
-    public String getInfoOrganization() {
-    	// Get and process response
-    	//System.out.print(serviceOkrBackend.getOrganization());
-    	return serviceOkrBackend.getOrganization();
-    } 
-    
-    @GetMapping(value = "/objectives/loaddata")
+	public String postInfoPeriod(@RequestBody String data) {
+		System.out.print(data);
+
+		return data;
+
+	}
+
+	@GetMapping(value = "/period/loaddata")
 	@ResponseBody
-    public String getInfoObjectives() {
-    	// Get and process response
-    	//System.out.print(serviceOkrBackend.getObjectives());
-    	return serviceOkrBackend.getObjectives();
-    } 
+	public String getInfoPeriod() {
+		// Get and process response
+		// System.out.print(serviceOkrBackend.getPeriod());
+		return serviceOkrBackend.getPeriod();
+	}
+
+	@GetMapping(value = "/organization/loaddata")
+	@ResponseBody
+	public String getInfoOrganization() {
+		// Get and process response
+		// System.out.print(serviceOkrBackend.getOrganization());
+		return serviceOkrBackend.getOrganization();
+	}
+
+	@GetMapping(value = "/objectives/loaddata")
+	@ResponseBody
+	public String getInfoObjectives() {
+		// Get and process response
+		// System.out.print(serviceOkrBackend.getObjectives());
+		return serviceOkrBackend.getObjectives();
+	}
     
     @PostMapping("/objectives/uploaddata")
     public ResponseEntity<String> submitOkr(@RequestBody String jsonData) {

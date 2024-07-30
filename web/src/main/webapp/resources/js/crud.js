@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 	var container = document.getElementById('okr-table');
 	var hot;
+	var currentData = [];
 
 	$('#jstree').jstree();
 
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		data: [],
 		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
 		columns: [
-			{ data: 'No' },
+			{ data: 'No', readOnly: true },
 			{ data: 'name' },
 			{ data: 'startDate' },
 			{ data: 'endDate' },
@@ -17,10 +18,44 @@ document.addEventListener('DOMContentLoaded', function() {
 		stretchH: 'all',
 		autoWrapRow: true,
 		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation'
+		licenseKey: 'non-commercial-and-evaluation',
+		afterChange: function(changes, source) {
+			if (source === 'loadData') return;
+
+			currentData = hot.getData();
+		}
 	};
 
 	hot = new Handsontable(container, hotSettings);
+	function addRow() {
+		var newRow = {
+			No: hot.countRows() + 1,  
+			name: '',
+			startDate: '',
+			endDate: '',
+			currentPeriod: ''
+		};
+
+		hot.alter('insert_row_below', hot.countRows(), 1); 
+		var rowIndex = hot.countRows() - 1;
+
+		hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
+		hot.setDataAtRowProp(rowIndex, 'name', newRow.name);
+		hot.setDataAtRowProp(rowIndex, 'startDate', newRow.startDate);
+		hot.setDataAtRowProp(rowIndex, 'endDate', newRow.endDate);
+		hot.setDataAtRowProp(rowIndex, 'currentPeriod', newRow.currentPeriod);
+
+		hot.updateSettings({
+			cells: function(row, col) {
+				var cellProperties = {};
+				if (row === rowIndex) {
+					cellProperties.readOnly = false;
+				}
+				return cellProperties;
+			}
+		});
+	}
+
 
 	fetch('period/loaddata')
 		.then(response => response.json())
@@ -50,11 +85,39 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 
 			hot.loadData(data);
+			currentData = data;
 		})
 		.catch(error => {
 			console.error('Error fetching data:', error);
 		});
 
+	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
+		if (currentData.length === 0) {
+			console.warn('No data to update');
+			return;
+		}
+
+		fetch('period/uploaddata', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(currentData)
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log('Data successfully updated:', result);
+				console.log(currentData);
+			})
+			.catch(error => {
+				console.error('Error updating data:', error);
+			});
+	});
+
+
+	document.getElementById('MKSOLAddRow').addEventListener('click', function() {
+		addRow();
+	});
 
 	var url = 'objectives/loaddata';
 	var xhr = new XMLHttpRequest();
