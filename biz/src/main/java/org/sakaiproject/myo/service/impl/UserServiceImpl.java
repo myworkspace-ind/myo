@@ -1,6 +1,7 @@
 package org.sakaiproject.myo.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.sakaiproject.myo.entity.OkrUser;
 import org.sakaiproject.myo.repository.UserRepository;
@@ -23,5 +24,14 @@ public class UserServiceImpl implements UserService {
 	public UserRepository getRepo() {
 		return userRepo;
 	}
-
+	
+	@Override
+    public String findManagerEmailByUserId(UUID userId) {
+        return userRepo.findManagerEmailByUserId(userId);
+    }
+	
+	@Override
+	public UUID findManagerIdByUserId(UUID userId) {
+		return userRepo.findManagerIdByUserId(userId);
+	}
 }
