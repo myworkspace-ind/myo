@@ -100,11 +100,4 @@ public class CrudController extends BaseController {
 		// System.out.print(serviceOkrBackend.getObjectives());
 		return serviceOkrBackend.getObjectives();
 	}
-    
-    @PostMapping("/objectives/uploaddata")
-    public ResponseEntity<String> submitOkr(@RequestBody String jsonData) {
-    	//System.out.print(serviceOkrBackend.getOrganization());
-    	System.out.print(serviceOkrBackend.getOrganization());
-        return serviceOkrBackend.postOkr(jsonData);
-    }
 }
