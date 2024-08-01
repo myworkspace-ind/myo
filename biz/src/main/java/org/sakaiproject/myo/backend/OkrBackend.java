@@ -298,10 +298,18 @@ public class OkrBackend implements IOkrBackend {
 
 	
 	@Override
-	public String getObjectives() {
+	public String getObjectives(String periodId, String organizationId) {
 		try {
 			System.out.println(okrAuthToken);
-			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+			if(organizationId == null || organizationId.isEmpty()) {
+				organizationId = getOrganization();
+			}
+			if(periodId == null || periodId.isEmpty()) {
+				periodId = getCurrentPeriodId();
+			}
+			
+//			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			HttpEntity<String> entity = new HttpEntity<>(headers);

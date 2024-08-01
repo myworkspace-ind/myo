@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -95,9 +96,13 @@ public class CrudController extends BaseController {
 
 	@GetMapping(value = "/objectives/loaddata")
 	@ResponseBody
-	public String getInfoObjectives() {
+	public String getInfoObjectives(
+			@RequestParam(value = "periodId", required = false) String periodId,
+			@RequestParam(value = "organizationId", required = false) String organizationId) {
 		// Get and process response
 		// System.out.print(serviceOkrBackend.getObjectives());
-		return serviceOkrBackend.getObjectives();
+		// return serviceOkrBackend.getObjectives();
+		return serviceOkrBackend.getObjectives(periodId, organizationId);
+		
 	}
 }
