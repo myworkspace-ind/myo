@@ -27,6 +27,8 @@ replay_pid*
 .settings
 .factorypath
 .classpath
+.property
+.class
 target
 /target/
 release
