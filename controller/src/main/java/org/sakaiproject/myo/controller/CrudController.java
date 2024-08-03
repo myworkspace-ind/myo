@@ -59,23 +59,23 @@ public class CrudController extends BaseController {
 		return mav;
 	}
 
-	@PostMapping(value = "/objectives/uploaddata")
-	@ResponseBody
-	public String postInfoObjectives(@RequestBody String data) {
-		System.out.print(data);
+//	@PostMapping(value = "/objectives/uploaddata")
+//	@ResponseBody
+//	public String postInfoObjectives(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
-		return data;
-
-	}
-
-	@PostMapping(value = "/period/uploaddata")
-	@ResponseBody
-	public String postInfoPeriod(@RequestBody String data) {
-		System.out.print(data);
-
-		return data;
-
-	}
+//	@PostMapping(value = "/period/uploaddata")
+//	@ResponseBody
+//	public String postInfoPeriod(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
 	@GetMapping(value = "/period/loaddata")
 	@ResponseBody
@@ -102,9 +102,12 @@ public class CrudController extends BaseController {
 	}
     
     @PostMapping("/objectives/uploaddata")
-    public ResponseEntity<String> submitOkr(@RequestBody String jsonData) {
-    	//System.out.print(serviceOkrBackend.getOrganization());
-    	System.out.print(serviceOkrBackend.getOrganization());
+    public ResponseEntity<String> createOkr(@RequestBody String jsonData) {
         return serviceOkrBackend.postOkr(jsonData);
+    }
+    
+    @PostMapping("/period/uploaddata")
+    public ResponseEntity<String> createPeriod(@RequestBody String jsonData) {
+        return serviceOkrBackend.postPeriod(jsonData);
     }
 }

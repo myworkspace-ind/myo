@@ -29,14 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	hot = new Handsontable(container, hotSettings);
 	function addRow() {
 		var newRow = {
-			No: hot.countRows() + 1,  
+			No: hot.countRows() + 1,
 			name: '',
 			startDate: '',
 			endDate: '',
 			currentPeriod: ''
 		};
 
-		hot.alter('insert_row_below', hot.countRows(), 1); 
+		hot.alter('insert_row_below', hot.countRows(), 1);
 		var rowIndex = hot.countRows() - 1;
 
 		hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
@@ -252,6 +252,108 @@ document.addEventListener('DOMContentLoaded', function() {
 	var apiUrl = 'objectives/loaddata';
 	updateOkrDashboardFromUrl(apiUrl);
 
+	async function transformData(originalData) {
+		const UNKNOWN_CONSTANT = "None";
+
+		// Example API call to fetch organizationId and periodId
+		const fetchIds = async () => {
+			try {
+				const response = await fetch('your_api_url');
+				const data = await response.json();
+				return {
+					organizationId: data.organizationId,
+					periodId: data.periodId
+				};
+			} catch (error) {
+				console.error('Error fetching IDs:', error);
+				// Return default or fallback values if API call fails
+				return {
+					organizationId: "81ecd170-c682-4925-ad33-dd763415d9e2",
+					periodId: "af3fcf0d-3b40-48bc-9f99-ea95147b9b35"
+				};
+			}
+		};
+
+		const { organizationId, periodId } = await fetchIds();
+
+		// Initialize the target structure
+		let transformedData = {
+			status: "DRAFT",
+			progress: 0.69,
+			grade: 0.69,
+			organizationId: organizationId,
+			periodId: periodId,
+			objectives: []
+		};
+
+		// Create a map to store objectives by their description for efficient lookup
+		let objectivesMap = new Map();
+
+		// Loop through each item in the original data
+		originalData.forEach(item => {
+			let [
+				itype,
+				objectiveDescription,
+				weight,
+				keyResultDescription,
+				type,
+				result1,
+				result2,
+				result3
+			] = item;
+
+			// Check if the objective is already in the objectives map
+			if (!objectivesMap.has(objectiveDescription)) {
+				// If not, create a new objective
+				let objective = {
+					description: objectiveDescription,
+					status: "DRAFT",
+					weight: weight,
+					comment: "comment1",
+					keyResults: []
+				};
+				objectivesMap.set(objectiveDescription, objective);
+				transformedData.objectives.push(objective);
+			}
+
+			// Retrieve the objective from the map
+			let objective = objectivesMap.get(objectiveDescription);
+
+			// Determine the itype and populate key results accordingly
+			let keyResult = {
+				description: keyResultDescription,
+				dueDate: "2024-07-11", // Assuming a fixed due date for all key results
+				itype: itype,
+				weight: weight * 5, // Example calculation for weight, adjust as needed
+				numberResult: type === "Number" ? result1 : UNKNOWN_CONSTANT,
+				numberTarget: type === "Number" ? result2 : UNKNOWN_CONSTANT,
+				yesNoResult: type === "Yes/No" ? result1 : false,
+				yesNoTarget: type === "Yes/No" ? result2 : false,
+				percentageResult: type === "Percentage" ? result1 : UNKNOWN_CONSTANT,
+				percentageTarget: type === "Percentage" ? result2 : UNKNOWN_CONSTANT,
+				standard: UNKNOWN_CONSTANT,
+				startvalue: result3
+			};
+
+			// Push the key result into the objective's keyResults array
+			objective.keyResults.push(keyResult);
+		});
+
+		return transformedData;
+	}
+
+	// Example usage with the provided JSON data
+	const originalJsonData = [
+		[1, "objective3", 15, "test_ks32", "Number", 0, 70, 0],
+		[1, "objective3", 15, "test_ks31", "Percentage", 0, 100, 0],
+		[2, "objective2", 30, "test_ks2", "Yes/No", null, true, 10],
+		[3, "objective1", 25, "test_ks11", "Number", 0, 50, 9],
+		[3, "objective1", 25, "test_ks13", "Number", 0, 50, 11],
+		[3, "objective1", 25, "test_ks12", "Number", 0, 55, 0]
+	];
+
+	const transformedData = transformData(originalJsonData);
+	console.log(JSON.stringify(transformedData, null, 2));
 
 
 
