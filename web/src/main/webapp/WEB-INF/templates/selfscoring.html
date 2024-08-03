@@ -16,34 +16,29 @@
 body {
 	margin-top: 7%;
 }
-
 .handsontable td, .handsontable th {
 	padding: 0.5rem !important;
+	text-align: center;
+	vertical-align: middle;
 }
-
 .handsontable {
 	width: 100%;
 }
-
 .text-primary {
 	color: #007bff !important;
 }
-
 .font-weight-bold {
 	font-weight: bold !important;
 }
-
 #update-btn {
 	background-color: black;
 	color: white;
 }
-
 #jstree {
 	height: 100%;
 	border-right: 1px solid #ccc;
 	padding: 20px;
 }
-
 #MKSOLnhanvienbadge {
 	color: white;
 	background-color: gray;
@@ -63,17 +58,14 @@ body {
 									<ul>
 										<li><a href="selfscoring">Self-scoring</a></li>
 										<li><a href="#">Upload OKR</a></li>
-									</ul>
-								</li>
+									</ul></li>
 								<li><a href="#">Review OKR</a></li>
-							</ul>
-						</li>
+							</ul></li>
 						<li><a href="#">Configuration</a>
 							<ul>
 								<li><a href="#">Periods</a></li>
 								<li><a href="#">Units</a></li>
-							</ul>
-						</li>
+							</ul></li>
 					</ul>
 				</div>
 			</div>
@@ -103,119 +95,225 @@ body {
 	<script>
 		var container = document.getElementById('okrs-table');
 		var hot = new Handsontable(container, {
-			data: [],
-			colHeaders: ['No', 'Objectives', 'Weigth', 'Key results', 'Unit', 'Start value', 'Target', 'Self-score'],
-			columns: [
-				{ data: 'No', readOnly: true },
-				{ data: 'Objectives', readOnly: true },
-				{ data: 'Weigth', readOnly: true },
-				{ data: 'Key results', readOnly: true },
-				{ data: 'Unit', readOnly: true },
-				{ data: 'Start value', readOnly: true },
-				{ data: 'Target', readOnly: true },
-				{ 
-					data: 'Self-score',
-					type: 'numeric',
-					validator: function(value, callback) {
-						if (value === null || value === '') {
-							callback(true);
-						} else if (isNaN(value)) {
-							callback(false);
-						} else {
-							callback(true);
-						}
-					},
-					allowInvalid: false
-				}
+			data : [],
+			colHeaders : [ 'No', 'Objectives', 'Weight', 'Key results', 'Unit', 'Start value', 'Target', 'Self-score' ],
+			columns : [ 
+				{ data : 'No', readOnly : true }, 
+				{ data : 'Objectives', readOnly : true }, 
+				{ data : 'Weight', readOnly : true }, 
+				{ data : 'Key results', readOnly : true }, 
+				{ data : 'Unit', readOnly : true }, 
+				{ data : 'Start value', readOnly : true }, 
+				{ data : 'Target', readOnly : true }, 
+				{ data : 'Self-score', type : 'numeric', validator : function(value, callback) {
+					if (value === null || value === '') {
+						callback(true);
+					} else if (isNaN(value)) {
+						callback(false);
+					} else {
+						callback(true);
+					}
+				}, allowInvalid : false }
 			],
-			stretchH: 'all',
-			autoWrapRow: true,
-			height: 'auto',
-			licenseKey: 'non-commercial-and-evaluation',
-			mergeCells: [] 
+			stretchH : 'all',
+			autoWrapRow : true,
+			height : 'auto',
+			licenseKey : 'non-commercial-and-evaluation',
+			mergeCells : []
 		});
 
 		function fetchData() {
-			var url = 'objectives/loaddata';
-			var xhr = new XMLHttpRequest();
-			xhr.open('GET', url, true);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						var jsonResponse = JSON.parse(xhr.responseText);
-						var objectives = jsonResponse.data.objectives;
+		    var url = 'objectives/loaddata';
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('GET', url, true);
+		    xhr.onreadystatechange = function() {
+		        if (xhr.readyState === XMLHttpRequest.DONE) {
+		            if (xhr.status === 200) {
+		                var jsonResponse = JSON.parse(xhr.responseText);
+		                var objectives = jsonResponse.data.objectives;
 
-						var datalayout = [];
-						objectives.forEach(function(objective, index) {
-							objective.keyResults.forEach(function(keyResult) {
-								var unit;
-								switch (keyResult.itype) {
-									case 1:
-										unit = 'Number';
-										break;
-									case 2:
-										unit = 'Yes/No';
-										break;
-									case 3:
-										unit = 'Percentage';
-										break;
-									default:
-										unit = '';
-										break;
-								}
+		                objectives.sort((a, b) => {
+		                    if (a.description < b.description) return -1;
+		                    if (a.description > b.description) return 1;
+		                    if (a.keyResults[0].description < b.keyResults[0].description) return -1;
+		                    if (a.keyResults[0].description > b.keyResults[0].description) return 1;
+		                    return 0;
+		                });
 
-								datalayout.push({
-									No: index + 1,
-									Objectives: objective.description,
-									Weigth: objective.weight,
-									"Key results": keyResult.description,
-									Unit: unit,
-									"Start value": keyResult.startvalue,
-									Target: keyResult.target,
-									"Self-score": keyResult.finalScore
-								});
-							});
-						});
+		                var datalayout = [];
+		                var mergeRanges = [];
+		                var objectiveCounter = 1;
 
-						hot.loadData(datalayout);
+		                objectives.forEach(function(objective) {
+		                    var firstRow = datalayout.length;
 
-					} else {
-						console.error('Failed to fetch data. Status:', xhr.status);
-					}
-				}
-			};
-			xhr.send();
+		                    objective.keyResults.forEach(function(keyResult, krIndex) {
+		                        var unit;
+		                        switch (keyResult.itype) {
+		                            case 1:
+		                                unit = 'Number';
+		                                break;
+		                            case 2:
+		                                unit = 'Yes/No';
+		                                break;
+		                            case 3:
+		                                unit = 'Percentage';
+		                                break;
+		                            default:
+		                                unit = '';
+		                                break;
+		                        }
+
+		                        datalayout.push({
+		                            No: krIndex === 0 ? objectiveCounter : '',
+		                            Objectives: objective.description,
+		                            Weight: objective.weight,
+		                            "Key results": keyResult.description,
+		                            Unit: unit,
+		                            "Start value": keyResult.startvalue,
+		                            Target: keyResult.target,
+		                            "Self-score": keyResult.finalScore
+		                        });
+		                    });
+
+		                    objectiveCounter++;
+
+		                    if (objective.keyResults.length > 1) {
+		                        mergeRanges.push({
+		                            row: firstRow,
+		                            col: 0,
+		                            rowspan: objective.keyResults.length,
+		                            colspan: 1
+		                        });
+		                        mergeRanges.push({
+		                            row: firstRow,
+		                            col: 1,
+		                            rowspan: objective.keyResults.length,
+		                            colspan: 1
+		                        });
+		                        mergeRanges.push({
+		                            row: firstRow,
+		                            col: 2,
+		                            rowspan: objective.keyResults.length,
+		                            colspan: 1
+		                        });
+		                    }
+		                });
+
+		                hot.loadData(datalayout);
+		                hot.updateSettings({
+		                    mergeCells: mergeRanges
+		                });
+
+		            } else {
+		                console.error('Failed to fetch data. Status:', xhr.status);
+		            }
+		        }
+		    };
+		    xhr.send();
 		}
 
 		function submitData() {
-			var url = 'objectives/uploaddata';
-			var data = hot.getData();
+		    var url = 'objectives/uploaddata';
+		    var data = hot.getData();
+		    var mergeCells = hot.getSettings().mergeCells;
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', url, true);
-			xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						console.log('Data successfully submitted.');
-					} else {
-						console.error('Failed to submit data. Status:', xhr.status);
-					}
-				}
-			};
-			xhr.send(JSON.stringify(data));
+		    var formattedData = [];
+		    var rowMap = new Map();
+
+		    function getRowEntry(rowIndex) {
+		        if (!rowMap.has(rowIndex)) {
+		            rowMap.set(rowIndex, {
+		                No: '',
+		                Objectives: '',
+		                Weight: '',
+		                'Key results': '',
+		                Unit: '',
+		                'Start value': '',
+		                Target: '',
+		                'Self-score': ''
+		            });
+		        }
+		        return rowMap.get(rowIndex);
+		    }
+
+		    data.forEach((row, index) => {
+		        var rowEntry = getRowEntry(index);
+		        rowEntry.No = row[0];
+		        rowEntry.Objectives = row[1];
+		        rowEntry.Weight = row[2];
+		        rowEntry['Key results'] = row[3];
+		        rowEntry.Unit = row[4];
+		        rowEntry['Start value'] = row[5];
+		        rowEntry.Target = row[6];
+		        rowEntry['Self-score'] = row[7];
+		    });
+
+		    mergeCells.forEach(merge => {
+		        const { row, col, rowspan, colspan } = merge;
+		        const topLeftCellValue = data[row][col];
+
+		        for (let r = row; r < row + rowspan; r++) {
+		            for (let c = col; c < col + colspan; c++) {
+		                var rowEntry = getRowEntry(r);
+		                switch (c) {
+		                    case 0:
+		                        rowEntry.No = topLeftCellValue;
+		                        break;
+		                    case 1:
+		                        rowEntry.Objectives = topLeftCellValue;
+		                        break;
+		                    case 2:
+		                        rowEntry.Weight = topLeftCellValue;
+		                        break;
+		                    case 3:
+		                        rowEntry['Key results'] = topLeftCellValue;
+		                        break;
+		                    case 4:
+		                        rowEntry.Unit = topLeftCellValue;
+		                        break;
+		                    case 5:
+		                        rowEntry['Start value'] = topLeftCellValue;
+		                        break;
+		                    case 6:
+		                        rowEntry.Target = topLeftCellValue;
+		                        break;
+		                    case 7:
+		                        rowEntry['Self-score'] = topLeftCellValue;
+		                        break;
+		                }
+		            }
+		        }
+		    });
+
+		    formattedData = Array.from(rowMap.values());
+
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('POST', url, true);
+		    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+		    xhr.onreadystatechange = function() {
+		        if (xhr.readyState === XMLHttpRequest.DONE) {
+		            if (xhr.status === 200) {
+		                console.log('Data successfully submitted.', JSON.stringify(formattedData));
+		            } else {
+		                console.error('Failed to submit data. Status:', xhr.status);
+		            }
+		        }
+		    };
+		    xhr.send(JSON.stringify(formattedData));
 		}
+
 
 		function addRow() {
 			var newRow = {
-				No: hot.countRows() + 1,
-				Objectives: '',
-				Weigth: '',
-				"Key results": '',
-				Unit: '',
-				"Start value": '',
-				Target: '',
-				"Self-score": ''
+				No : hot.countRows() + 1,
+				Objectives : '',
+				Weigth : '',
+				"Key results" : '',
+				Unit : '',
+				"Start value" : '',
+				Target : '',
+				"Self-score" : ''
 			};
 
 			hot.alter('insert_row_below', hot.countRows(), 1);
@@ -232,7 +330,7 @@ body {
 			hot.setDataAtRowProp(rowIndex, 'Self-score', newRow["Self-score"]);
 
 			hot.updateSettings({
-				cells: function(row, col, prop) {
+				cells : function(row, col, prop) {
 					var cellProperties = {};
 					if (row === rowIndex) {
 						cellProperties.readOnly = false;
@@ -245,10 +343,10 @@ body {
 		fetchData();
 
 		$('#jstree').jstree({
-			'core': {
-				'themes': {
-					'name': 'default',
-					'responsive': true
+			'core' : {
+				'themes' : {
+					'name' : 'default',
+					'responsive' : true
 				}
 			}
 		});
@@ -260,7 +358,7 @@ body {
 		$('#full-mode').on('change', function() {
 			var newWidth = $(this).is(':checked') ? 200 : 150;
 			hot.updateSettings({
-				colWidths: newWidth
+				colWidths : newWidth
 			});
 		});
 
@@ -277,9 +375,9 @@ body {
 		});
 
 		var currentDate = new Date().toLocaleDateString('vi-VN', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
+			year : 'numeric',
+			month : 'long',
+			day : 'numeric'
 		});
 		$('#current-date').text(currentDate);
 	</script>
