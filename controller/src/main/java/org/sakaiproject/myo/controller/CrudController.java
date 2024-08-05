@@ -40,6 +40,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -103,7 +106,35 @@ public class CrudController extends BaseController {
     
     @PostMapping("/objectives/uploaddata")
     public ResponseEntity<String> createOkr(@RequestBody String jsonData) {
-        return serviceOkrBackend.postOkr(jsonData);
+    	System.out.println("post--0");
+    	JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+    	System.out.println("post0");
+        // Add default values for attributes that may be missing
+        if (!jsonObject.has("status")) {
+            jsonObject.addProperty("status", "DRAFT");
+        }
+        if (!jsonObject.has("progress")) {
+            jsonObject.addProperty("progress", 0.0);
+        }
+        if (!jsonObject.has("grade")) {
+            jsonObject.addProperty("grade", 0.0);
+        }
+        if (!jsonObject.has("organizationId")) {
+            jsonObject.addProperty("organizationId", serviceOkrBackend.getOrganization());
+        }
+        if (!jsonObject.has("periodId")) {
+            jsonObject.addProperty("periodId", serviceOkrBackend.getCurrentPeriodId());
+        }
+
+        // Convert modified JSON object back to string
+        String modifiedJsonData = jsonObject.toString();
+        
+        System.out.println("post");
+        System.out.println(jsonObject);
+        System.out.println(modifiedJsonData);
+
+        // Pass modifiedJsonData to serviceOkrBackend for further processing
+        return serviceOkrBackend.postOkr(modifiedJsonData);
     }
     
     @PostMapping("/period/uploaddata")

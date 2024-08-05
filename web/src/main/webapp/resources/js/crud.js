@@ -1,566 +1,461 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    $('#jstree').jstree();
-    var container = document.getElementById('okr-table');
-    var hot;
-    var currentData = [];
+	$('#jstree').jstree();
+	var container = document.getElementById('okr-table');
+	var hot;
+	var currentData = [];
 
-    var hotSettings = {
-        data: [],
-        colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
-        columns: [
-            { data: 'No', readOnly: true },
-            { data: 'name' },
-            { data: 'startDate' },
-            { data: 'endDate' },
-            { data: 'currentPeriod' }
-        ],
-        stretchH: 'all',
-        autoWrapRow: true,
-        height: 'auto',
-        licenseKey: 'non-commercial-and-evaluation',
-        afterChange: function(changes, source) {
-            if (source === 'loadData') return;
-            currentData = hot.getData();
-        }
-    };
+	var hotSettings = {
+		data: [],
+		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
+		columns: [
+			{ data: 'No', readOnly: true },
+			{ data: 'name' },
+			{ data: 'startDate' },
+			{ data: 'endDate' },
+			{ data: 'currentPeriod' }
+		],
+		stretchH: 'all',
+		autoWrapRow: true,
+		height: 'auto',
+		licenseKey: 'non-commercial-and-evaluation',
+		afterChange: function(changes, source) {
+			if (source === 'loadData') return;
+			currentData = hot.getData();
+		}
+	};
 
-    hot = new Handsontable(container, hotSettings);
-    
-    function addRow() {
-        var newRow = {
-            No: hot.countRows() + 1,
-            name: '',
-            startDate: '',
-            endDate: '',
-            currentPeriod: ''
-        };
+	hot = new Handsontable(container, hotSettings);
 
-        hot.alter('insert_row_below', hot.countRows(), 1);
-        var rowIndex = hot.countRows() - 1;
+	function addRow() {
+		var newRow = {
+			No: hot.countRows() + 1,
+			name: '',
+			startDate: '',
+			endDate: '',
+			currentPeriod: ''
+		};
 
-        hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
-        hot.setDataAtRowProp(rowIndex, 'name', newRow.name);
-        hot.setDataAtRowProp(rowIndex, 'startDate', newRow.startDate);
-        hot.setDataAtRowProp(rowIndex, 'endDate', newRow.endDate);
-        hot.setDataAtRowProp(rowIndex, 'currentPeriod', newRow.currentPeriod);
+		hot.alter('insert_row_below', hot.countRows(), 1);
+		var rowIndex = hot.countRows() - 1;
 
-        hot.updateSettings({
-            cells: function(row, col) {
-                var cellProperties = {};
-                if (row === rowIndex) {
-                    cellProperties.readOnly = false;
-                }
-                return cellProperties;
-            }
-        });
-    }
+		hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
+		hot.setDataAtRowProp(rowIndex, 'name', newRow.name);
+		hot.setDataAtRowProp(rowIndex, 'startDate', newRow.startDate);
+		hot.setDataAtRowProp(rowIndex, 'endDate', newRow.endDate);
+		hot.setDataAtRowProp(rowIndex, 'currentPeriod', newRow.currentPeriod);
 
-    fetch('period/loaddata')
-        .then(response => response.json())
-        .then(jsonData => {
-            var data = [];
-            var counter = 1;
+		hot.updateSettings({
+			cells: function(row, col) {
+				var cellProperties = {};
+				if (row === rowIndex) {
+					cellProperties.readOnly = false;
+				}
+				return cellProperties;
+			}
+		});
+	}
 
-            if (jsonData.data && Array.isArray(jsonData.data)) {
-                for (var i = 0; i < jsonData.data.length; i++) {
-                    var item = jsonData.data[i];
-                    if (item.childs && Array.isArray(item.childs)) {
-                        for (var j = 0; j < item.childs.length; j++) {
-                            var childItem = item.childs[j];
-                            var childData = {
-                                No: counter++,
-                                name: childItem.name,
-                                startDate: childItem.startDate,
-                                endDate: childItem.endDate,
-                                currentPeriod: childItem.currentPeriod
-                            };
-                            data.push(childData);
-                        }
-                    }
-                }
-            } else {
-                console.error('Unexpected data structure in the JSON data');
-            }
+	fetch('period/loaddata')
+		.then(response => response.json())
+		.then(jsonData => {
+			var data = [];
+			var counter = 1;
 
-            hot.loadData(data);
-            currentData = data;
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
+			if (jsonData.data && Array.isArray(jsonData.data)) {
+				for (var i = 0; i < jsonData.data.length; i++) {
+					var item = jsonData.data[i];
+					if (item.childs && Array.isArray(item.childs)) {
+						for (var j = 0; j < item.childs.length; j++) {
+							var childItem = item.childs[j];
+							var childData = {
+								No: counter++,
+								name: childItem.name,
+								startDate: childItem.startDate,
+								endDate: childItem.endDate,
+								currentPeriod: childItem.currentPeriod
+							};
+							data.push(childData);
+						}
+					}
+				}
+			} else {
+				console.error('Unexpected data structure in the JSON data');
+			}
 
-    document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
-        if (currentData.length === 0) {
-            console.warn('No data to update');
-            return;
-        }
+			hot.loadData(data);
+			currentData = data;
+		})
+		.catch(error => {
+			console.error('Error fetching data:', error);
+		});
 
-        fetch('period/uploaddata', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(currentData)
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Data successfully updated:', result);
-                console.log(currentData);
-            })
-            .catch(error => {
-                console.error('Error updating data:', error);
-            });
-    });
+	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
+		if (currentData.length === 0) {
+			console.warn('No data to update');
+			return;
+		}
 
-    document.getElementById('MKSOLAddRow').addEventListener('click', function() {
-        addRow();
-    });
+		fetch('period/uploaddata', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(currentData)
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log('Data successfully updated:', result);
+				console.log(currentData);
+			})
+			.catch(error => {
+				console.error('Error updating data:', error);
+			});
+	});
 
-    var containerLayout = document.getElementById('okr-layouttable');
-    var hotLayout = new Handsontable(containerLayout, {
-        data: [],
-        colHeaders: ['No', 'Objectives', 'Weight', 'Key results', 'Unit', 'Start value', 'Target', 'Delete'],
-        columns: [
-            { data: 'No' },
-            { data: 'Objectives' },
-            { data: 'Weight' },
-            { data: 'Key results' },
-            { data: 'Unit' },
-            { data: 'Start value' },
-            { data: 'Target' },
-            {
-                data: 'Delete',
-                renderer: function (instance, TD, row, col, prop, value, cellProperties) {
-                    var button = document.createElement('button');
-                    button.innerHTML = 'Delete';
-                    
-                    button.style.border = '1px solid white';
-                    button.style.backgroundColor = 'white';
-                    button.style.boxShadow = 'none';
-                    button.style.padding = '5px 10px';
-                    button.style.cursor = 'pointer';
-                    button.style.borderRadius = '3px';
+	document.getElementById('MKSOLAddRow').addEventListener('click', function() {
+		addRow();
+	});
 
-                    button.onclick = function () {
-                        var selectedRow = row;
-                        hotLayout.alter('remove_row', selectedRow, 1);
-                        adjustMergeCells(selectedRow);
-                    };
+	var containerLayout = document.getElementById('okr-layouttable');
+	var hotLayout = new Handsontable(containerLayout, {
+		data: [],
+		colHeaders: ['No', 'Objectives', 'Weight', 'Key results', 'Unit', 'Start value', 'Target', 'Delete'],
+		columns: [
+			{ data: 'No' },
+			{ data: 'Objectives' },
+			{ data: 'Weight' },
+			{ data: 'Key results' },
+			{ data: 'Unit' },
+			{ data: 'Start value' },
+			{ data: 'Target' },
+			{
+				data: 'Delete',
+				renderer: function(instance, TD, row, col, prop, value, cellProperties) {
+					var button = document.createElement('button');
+					button.innerHTML = 'Delete';
 
-                    Handsontable.dom.empty(TD);
-                    TD.appendChild(button);
-                }
-            }
-        ],
-        stretchH: 'all',
-        autoWrapRow: true,
-        height: 'auto',
-        licenseKey: 'non-commercial-and-evaluation',
-        mergeCells: []
-    });
+					button.style.border = '1px solid white';
+					button.style.backgroundColor = 'white';
+					button.style.boxShadow = 'none';
+					button.style.padding = '5px 10px';
+					button.style.cursor = 'pointer';
+					button.style.borderRadius = '3px';
 
-    function fetchDataLayout() {
-        var urlLayout = 'objectives/loaddata';
-        var xhrLayout = new XMLHttpRequest();
-        xhrLayout.open('GET', urlLayout, true);
-        xhrLayout.onreadystatechange = function() {
-            if (xhrLayout.readyState === XMLHttpRequest.DONE) {
-                if (xhrLayout.status === 200) {
-                    var jsonResponseLayout = JSON.parse(xhrLayout.responseText);
-                    var objectivesLayout = jsonResponseLayout.data.objectives;
+					button.onclick = function() {
+						var selectedRow = row;
+						hotLayout.alter('remove_row', selectedRow, 1);
+						adjustMergeCells(selectedRow);
+					};
 
-                    objectivesLayout.sort((a, b) => {
-                        if (a.description < b.description) return -1;
-                        if (a.description > b.description) return 1;
-                        if (a.keyResults[0].description < b.keyResults[0].description) return -1;
-                        if (a.keyResults[0].description > b.keyResults[0].description) return 1;
-                        return 0;
-                    });
+					Handsontable.dom.empty(TD);
+					TD.appendChild(button);
+				}
+			}
+		],
+		stretchH: 'all',
+		autoWrapRow: true,
+		height: 'auto',
+		licenseKey: 'non-commercial-and-evaluation',
+		mergeCells: []
+	});
 
-                    var dataLayout = [];
-                    var mergeRangesLayout = [];
-                    var objectiveCounterLayout = 1;
+	function fetchDataLayout() {
+		var urlLayout = 'objectives/loaddata';
+		var xhrLayout = new XMLHttpRequest();
+		xhrLayout.open('GET', urlLayout, true);
+		xhrLayout.onreadystatechange = function() {
+			if (xhrLayout.readyState === XMLHttpRequest.DONE) {
+				if (xhrLayout.status === 200) {
+					var jsonResponseLayout = JSON.parse(xhrLayout.responseText);
+					var objectivesLayout = jsonResponseLayout.data.objectives;
 
-                    objectivesLayout.forEach(function(objective) {
-                        var firstRowLayout = dataLayout.length;
+					objectivesLayout.sort((a, b) => {
+						if (a.description < b.description) return -1;
+						if (a.description > b.description) return 1;
+						if (a.keyResults[0].description < b.keyResults[0].description) return -1;
+						if (a.keyResults[0].description > b.keyResults[0].description) return 1;
+						return 0;
+					});
 
-                        objective.keyResults.forEach(function(keyResult, krIndex) {
-                            var unitLayout;
-                            switch (keyResult.itype) {
-                                case 1:
-                                    unitLayout = 'Number';
-                                    break;
-                                case 2:
-                                    unitLayout = 'Yes/No';
-                                    break;
-                                case 3:
-                                    unitLayout = 'Percentage';
-                                    break;
-                                default:
-                                    unitLayout = '';
-                                    break;
-                            }
+					var dataLayout = [];
+					var mergeRangesLayout = [];
+					var objectiveCounterLayout = 1;
 
-                            dataLayout.push({
-                                No: krIndex === 0 ? objectiveCounterLayout : '',
-                                Objectives: objective.description,
-                                Weight: objective.weight,
-                                "Key results": keyResult.description,
-                                Unit: unitLayout,
-                                "Start value": keyResult.startvalue,
-                                Target: keyResult.target,
-                                Delete: ''
-                            });
-                        });
+					objectivesLayout.forEach(function(objective) {
+						var firstRowLayout = dataLayout.length;
 
-                        objectiveCounterLayout++;
+						objective.keyResults.forEach(function(keyResult, krIndex) {
+							var unitLayout;
+							switch (keyResult.itype) {
+								case 1:
+									unitLayout = 'Number';
+									break;
+								case 2:
+									unitLayout = 'Yes/No';
+									break;
+								case 3:
+									unitLayout = 'Percentage';
+									break;
+								default:
+									unitLayout = '';
+									break;
+							}
 
-                        if (objective.keyResults.length > 1) {
-                            mergeRangesLayout.push({
-                                row: firstRowLayout,
-                                col: 0,
-                                rowspan: objective.keyResults.length,
-                                colspan: 1
-                            });
-                            mergeRangesLayout.push({
-                                row: firstRowLayout,
-                                col: 1,
-                                rowspan: objective.keyResults.length,
-                                colspan: 1
-                            });
-                            mergeRangesLayout.push({
-                                row: firstRowLayout,
-                                col: 2,
-                                rowspan: objective.keyResults.length,
-                                colspan: 1
-                            });
-                        }
-                    });
+							dataLayout.push({
+								No: krIndex === 0 ? objectiveCounterLayout : '',
+								Objectives: objective.description,
+								Weight: objective.weight,
+								"Key results": keyResult.description,
+								Unit: unitLayout,
+								"Start value": keyResult.startvalue,
+								Target: keyResult.target,
+								Delete: ''
+							});
+						});
 
-                    hotLayout.loadData(dataLayout);
-                    hotLayout.updateSettings({
-                        mergeCells: mergeRangesLayout
-                    });
+						objectiveCounterLayout++;
 
-                } else {
-                    console.error('Failed to fetch data. Status:', xhrLayout.status);
-                }
-            }
-        };
-        xhrLayout.send();
-    }
+						if (objective.keyResults.length > 1) {
+							mergeRangesLayout.push({
+								row: firstRowLayout,
+								col: 0,
+								rowspan: objective.keyResults.length,
+								colspan: 1
+							});
+							mergeRangesLayout.push({
+								row: firstRowLayout,
+								col: 1,
+								rowspan: objective.keyResults.length,
+								colspan: 1
+							});
+							mergeRangesLayout.push({
+								row: firstRowLayout,
+								col: 2,
+								rowspan: objective.keyResults.length,
+								colspan: 1
+							});
+						}
+					});
 
-    function adjustMergeCells(rowToRemove) {
-        var mergeCells = hotLayout.getSettings().mergeCells;
+					hotLayout.loadData(dataLayout);
+					hotLayout.updateSettings({
+						mergeCells: mergeRangesLayout
+					});
 
-        mergeCells.forEach((merge) => {
-            if (rowToRemove >= merge.row && rowToRemove < merge.row + merge.rowspan) {
-                if (rowToRemove === merge.row) {
-                    merge.rowspan--;
-                } else if (rowToRemove === merge.row + merge.rowspan - 1) {
-                    merge.rowspan--;
-                }
-            }
-        });
+				} else {
+					console.error('Failed to fetch data. Status:', xhrLayout.status);
+				}
+			}
+		};
+		xhrLayout.send();
+	}
 
-        hotLayout.updateSettings({
-            mergeCells: mergeCells
-        });
-    }
+	function adjustMergeCells(rowToRemove) {
+		var mergeCells = hotLayout.getSettings().mergeCells;
 
-    function submitDataLayout() {
-        var urlLayout = 'objectives/uploaddata';
-        var dataLayout = hotLayout.getData();
-        var mergeCellsLayout = hotLayout.getSettings().mergeCells;
+		mergeCells.forEach((merge) => {
+			if (rowToRemove >= merge.row && rowToRemove < merge.row + merge.rowspan) {
+				if (rowToRemove === merge.row) {
+					merge.rowspan--;
+				} else if (rowToRemove === merge.row + merge.rowspan - 1) {
+					merge.rowspan--;
+				}
+			}
+		});
 
-        var formattedDataLayout = [];
-        var rowMapLayout = new Map();
+		hotLayout.updateSettings({
+			mergeCells: mergeCells
+		});
+	}
 
-        function getRowEntryLayout(rowIndex) {
-            if (!rowMapLayout.has(rowIndex)) {
-                rowMapLayout.set(rowIndex, {
-                    No: '',
-                    Objectives: '',
-                    Weight: '',
-                    'Key results': '',
-                    Unit: '',
-                    'Start value': '',
-                    Target: '',
-                    'Delete': ''
-                });
-            }
-            return rowMapLayout.get(rowIndex);
-        }
+	function submitDataLayout() {
+		var urlLayout = 'objectives/uploaddata';
+		var dataLayout = hotLayout.getData();
+		var mergeCellsLayout = hotLayout.getSettings().mergeCells;
 
-        dataLayout.forEach((row, index) => {
-            var rowEntryLayout = getRowEntryLayout(index);
-            rowEntryLayout.No = row[0];
-            rowEntryLayout.Objectives = row[1];
-            rowEntryLayout.Weight = row[2];
-            rowEntryLayout['Key results'] = row[3];
-            rowEntryLayout.Unit = row[4];
-            rowEntryLayout['Start value'] = row[5];
-            rowEntryLayout.Target = row[6];
-            rowEntryLayout['Delete'] = row[7];
-        });
+		var formattedDataLayout = [];
+		var rowMapLayout = new Map();
 
-        mergeCellsLayout.forEach(merge => {
-            const { row, col, rowspan, colspan } = merge;
-            const topLeftCellValue = dataLayout[row][col];
+		function getRowEntryLayout(rowIndex) {
+			if (!rowMapLayout.has(rowIndex)) {
+				rowMapLayout.set(rowIndex, {
+					No: '',
+					Objectives: '',
+					Weight: '',
+					'Key results': '',
+					Unit: '',
+					'Start value': '',
+					Target: '',
+					'Delete': ''
+				});
+			}
+			return rowMapLayout.get(rowIndex);
+		}
 
-            for (let r = row; r < row + rowspan; r++) {
-                for (let c = col; c < col + colspan; c++) {
-                    var rowEntryLayout = getRowEntryLayout(r);
-                    switch (c) {
-                        case 0:
-                            rowEntryLayout.No = topLeftCellValue;
-                            break;
-                        case 1:
-                            rowEntryLayout.Objectives = topLeftCellValue;
-                            break;
-                        case 2:
-                            rowEntryLayout.Weight = topLeftCellValue;
-                            break;
-                        case 3:
-                            rowEntryLayout['Key results'] = topLeftCellValue;
-                            break;
-                        case 4:
-                            rowEntryLayout.Unit = topLeftCellValue;
-                            break;
-                        case 5:
-                            rowEntryLayout['Start value'] = topLeftCellValue;
-                            break;
-                        case 6:
-                            rowEntryLayout.Target = topLeftCellValue;
-                            break;
-                        case 7:
-                            rowEntryLayout['Delete'] = topLeftCellValue;
-                            break;
-                    }
-                }
-            }
-        });
+		dataLayout.forEach((row, index) => {
+			var rowEntryLayout = getRowEntryLayout(index);
+			rowEntryLayout.No = row[0];
+			rowEntryLayout.Objectives = row[1];
+			rowEntryLayout.Weight = row[2];
+			rowEntryLayout['Key results'] = row[3];
+			rowEntryLayout.Unit = row[4];
+			rowEntryLayout['Start value'] = row[5];
+			rowEntryLayout.Target = row[6];
+			rowEntryLayout['Delete'] = row[7];
+		});
 
-        formattedDataLayout = Array.from(rowMapLayout.values());
+		mergeCellsLayout.forEach(merge => {
+			const { row, col, rowspan, colspan } = merge;
+			const topLeftCellValue = dataLayout[row][col];
 
-        var xhrLayout = new XMLHttpRequest();
-        xhrLayout.open('POST', urlLayout, true);
-        xhrLayout.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        xhrLayout.onreadystatechange = function() {
-            if (xhrLayout.readyState === XMLHttpRequest.DONE) {
-                if (xhrLayout.status === 200) {
-                    console.log('Data successfully submitted.', JSON.stringify(formattedDataLayout));
-                } else {
-                    console.error('Failed to submit data. Status:', xhrLayout.status);
-                }
-            }
-        };
-        xhrLayout.send(JSON.stringify(formattedDataLayout));
-    }
+			for (let r = row; r < row + rowspan; r++) {
+				for (let c = col; c < col + colspan; c++) {
+					var rowEntryLayout = getRowEntryLayout(r);
+					switch (c) {
+						case 0:
+							rowEntryLayout.No = topLeftCellValue;
+							break;
+						case 1:
+							rowEntryLayout.Objectives = topLeftCellValue;
+							break;
+						case 2:
+							rowEntryLayout.Weight = topLeftCellValue;
+							break;
+						case 3:
+							rowEntryLayout['Key results'] = topLeftCellValue;
+							break;
+						case 4:
+							rowEntryLayout.Unit = topLeftCellValue;
+							break;
+						case 5:
+							rowEntryLayout['Start value'] = topLeftCellValue;
+							break;
+						case 6:
+							rowEntryLayout.Target = topLeftCellValue;
+							break;
+						case 7:
+							rowEntryLayout['Delete'] = topLeftCellValue;
+							break;
+					}
+				}
+			}
+		});
 
-    function addRowLayout() {
-        var newRowLayout = {
-            No: hotLayout.countRows() + 1,
-            Objectives: '',
-            Weight: '',
-            "Key results": '',
-            Unit: '',
-            "Start value": '',
-            Target: '',
-            Delete: ''
-        };
+		formattedDataLayout = Array.from(rowMapLayout.values());
 
-        hotLayout.alter('insert_row_below', hotLayout.countRows(), 1);
+		var xhrLayout = new XMLHttpRequest();
+		xhrLayout.open('POST', urlLayout, true);
+		xhrLayout.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+		xhrLayout.onreadystatechange = function() {
+			if (xhrLayout.readyState === XMLHttpRequest.DONE) {
+				if (xhrLayout.status === 200) {
+					console.log('Data successfully submitted.', JSON.stringify(formattedDataLayout));
+				} else {
+					console.error('Failed to submit data. Status:', xhrLayout.status);
+				}
+			}
+		};
+		xhrLayout.send(JSON.stringify(formattedDataLayout));
+	}
 
-        var rowIndexLayout = hotLayout.countRows() - 1;
+	function addRowLayout() {
+		var newRowLayout = {
+			No: hotLayout.countRows() + 1,
+			Objectives: '',
+			Weight: '',
+			"Key results": '',
+			Unit: '',
+			"Start value": '',
+			Target: '',
+			Delete: ''
+		};
 
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'No', newRowLayout.No);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Objectives', newRowLayout.Objectives);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Weight', newRowLayout.Weight);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Key results', newRowLayout["Key results"]);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Unit', newRowLayout.Unit);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Start value', newRowLayout["Start value"]);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Target', newRowLayout.Target);
-        hotLayout.setDataAtRowProp(rowIndexLayout, 'Delete', newRowLayout["Delete"]);
+		hotLayout.alter('insert_row_below', hotLayout.countRows(), 1);
 
-        hotLayout.updateSettings({
-            cells: function(row, col, prop) {
-                var cellProperties = {};
-                if (row === rowIndexLayout) {
-                    cellProperties.readOnly = false;
-                }
-                return cellProperties;
-            }
-        });
-    }
+		var rowIndexLayout = hotLayout.countRows() - 1;
 
-    fetchDataLayout();
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'No', newRowLayout.No);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Objectives', newRowLayout.Objectives);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Weight', newRowLayout.Weight);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Key results', newRowLayout["Key results"]);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Unit', newRowLayout.Unit);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Start value', newRowLayout["Start value"]);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Target', newRowLayout.Target);
+		hotLayout.setDataAtRowProp(rowIndexLayout, 'Delete', newRowLayout["Delete"]);
 
-    function updateOkrDashboardFromUrl(url) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(jsonResponse => {
-                var data = jsonResponse.data;
-                var objectives = data.objectives;
+		hotLayout.updateSettings({
+			cells: function(row, col, prop) {
+				var cellProperties = {};
+				if (row === rowIndexLayout) {
+					cellProperties.readOnly = false;
+				}
+				return cellProperties;
+			}
+		});
+	}
 
-                var contentContainer = document.querySelector('.content');
-                contentContainer.innerHTML = '';
+	fetchDataLayout();
 
-                objectives.forEach(function(objective) {
-                    var card = document.createElement('div');
-                    card.classList.add('card');
+	function updateOkrDashboardFromUrl(url) {
+		fetch(url)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(jsonResponse => {
+				var data = jsonResponse.data;
+				var objectives = data.objectives;
 
-                    var cardBody = document.createElement('div');
-                    cardBody.classList.add('card-body');
+				var contentContainer = document.querySelector('.content');
+				contentContainer.innerHTML = '';
 
-                    var htmlContent = `
+				objectives.forEach(function(objective) {
+					var card = document.createElement('div');
+					card.classList.add('card');
+
+					var cardBody = document.createElement('div');
+					cardBody.classList.add('card-body');
+
+					var htmlContent = `
                         <h5 class="card-title">${objective.description}</h5>
                         <p class="card-text">Weight: ${objective.weight}%, Progress: ${objective.progress.toFixed(2)}%</p>
                         <p class="card-text">Status: ${objective.status}</p>
                     `;
-                    cardBody.innerHTML = htmlContent;
+					cardBody.innerHTML = htmlContent;
 
-                    objective.keyResults.forEach(function(keyResult) {
-                        var keyResultCard = document.createElement('div');
-                        keyResultCard.classList.add('card');
-                        keyResultCard.classList.add('mt-3');
+					objective.keyResults.forEach(function(keyResult) {
+						var keyResultCard = document.createElement('div');
+						keyResultCard.classList.add('card');
+						keyResultCard.classList.add('mt-3');
 
-                        var keyResultCardBody = document.createElement('div');
-                        keyResultCardBody.classList.add('card-body');
+						var keyResultCardBody = document.createElement('div');
+						keyResultCardBody.classList.add('card-body');
 
-                        var keyResultHtmlContent = `
+						var keyResultHtmlContent = `
                             <h6 class="card-title">${keyResult.description}</h6>
                             <p class="card-text">Progress: ${keyResult.progress.toFixed(2)}%, Target: ${keyResult.target}%</p>
                             <p class="card-text">Due Date: ${keyResult.dueDate}</p>
                         `;
-                        keyResultCardBody.innerHTML = keyResultHtmlContent;
+						keyResultCardBody.innerHTML = keyResultHtmlContent;
 
-                        keyResultCard.appendChild(keyResultCardBody);
-                        cardBody.appendChild(keyResultCard);
-                    });
-card.appendChild(cardBody);
-                    contentContainer.appendChild(card);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }
-
-	async function transformData(originalData) {
-		const UNKNOWN_CONSTANT = "None";
-
-		// Example API call to fetch organizationId and periodId
-		const fetchIds = async () => {
-			try {
-				const response = await fetch('your_api_url');
-				const data = await response.json();
-				return {
-					organizationId: data.organizationId,
-					periodId: data.periodId
-				};
-			} catch (error) {
-				console.error('Error fetching IDs:', error);
-				// Return default or fallback values if API call fails
-				return {
-					organizationId: "81ecd170-c682-4925-ad33-dd763415d9e2",
-					periodId: "af3fcf0d-3b40-48bc-9f99-ea95147b9b35"
-				};
-			}
-		};
-
-		const { organizationId, periodId } = await fetchIds();
-
-		// Initialize the target structure
-		let transformedData = {
-			status: "DRAFT",
-			progress: 0.69,
-			grade: 0.69,
-			organizationId: organizationId,
-			periodId: periodId,
-			objectives: []
-		};
-
-		// Create a map to store objectives by their description for efficient lookup
-		let objectivesMap = new Map();
-
-		// Loop through each item in the original data
-		originalData.forEach(item => {
-			let [
-				itype,
-				objectiveDescription,
-				weight,
-				keyResultDescription,
-				type,
-				result1,
-				result2,
-				result3
-			] = item;
-
-			// Check if the objective is already in the objectives map
-			if (!objectivesMap.has(objectiveDescription)) {
-				// If not, create a new objective
-				let objective = {
-					description: objectiveDescription,
-					status: "DRAFT",
-					weight: weight,
-					comment: "comment1",
-					keyResults: []
-				};
-				objectivesMap.set(objectiveDescription, objective);
-				transformedData.objectives.push(objective);
-			}
-
-			// Retrieve the objective from the map
-			let objective = objectivesMap.get(objectiveDescription);
-
-			// Determine the itype and populate key results accordingly
-			let keyResult = {
-				description: keyResultDescription,
-				dueDate: "2024-07-11", // Assuming a fixed due date for all key results
-				itype: itype,
-				weight: weight * 5, // Example calculation for weight, adjust as needed
-				numberResult: type === "Number" ? result1 : UNKNOWN_CONSTANT,
-				numberTarget: type === "Number" ? result2 : UNKNOWN_CONSTANT,
-				yesNoResult: type === "Yes/No" ? result1 : false,
-				yesNoTarget: type === "Yes/No" ? result2 : false,
-				percentageResult: type === "Percentage" ? result1 : UNKNOWN_CONSTANT,
-				percentageTarget: type === "Percentage" ? result2 : UNKNOWN_CONSTANT,
-				standard: UNKNOWN_CONSTANT,
-				startvalue: result3
-			};
-
-			// Push the key result into the objective's keyResults array
-			objective.keyResults.push(keyResult);
-		});
-
-		return transformedData;
+						keyResultCard.appendChild(keyResultCardBody);
+						cardBody.appendChild(keyResultCard);
+					});
+					card.appendChild(cardBody);
+					contentContainer.appendChild(card);
+				});
+			})
+			.catch(error => {
+				console.error('Error fetching data:', error);
+			});
 	}
 
-	// Example usage with the provided JSON data
-	const originalJsonData = [
-		[1, "objective3", 15, "test_ks32", "Number", 0, 70, 0],
-		[1, "objective3", 15, "test_ks31", "Percentage", 0, 100, 0],
-		[2, "objective2", 30, "test_ks2", "Yes/No", null, true, 10],
-		[3, "objective1", 25, "test_ks11", "Number", 0, 50, 9],
-		[3, "objective1", 25, "test_ks13", "Number", 0, 50, 11],
-		[3, "objective1", 25, "test_ks12", "Number", 0, 55, 0]
-	];
+	
 
-	const transformedData = transformData(originalJsonData);
-	console.log(JSON.stringify(transformedData, null, 2));
-
-
-
-});                    
-
-    var apiUrl = 'objectives/loaddata';
-    updateOkrDashboardFromUrl(apiUrl);
-
+	var apiUrl = 'objectives/loaddata';
+	updateOkrDashboardFromUrl(apiUrl);
+	submitDataLayout()
 });
