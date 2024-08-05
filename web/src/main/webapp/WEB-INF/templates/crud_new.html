@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKR Tracking</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+	integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+	integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script
+	src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	
+	
+
+<style>
+body {
+	background-color: white;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #ddd; 
+	padding: 12px;
+	text-align: left;
+}
+
+th {
+	background-color: #d0d0d0;
+	color: #333;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+	background-color: #fff;
+}
+
+.draggable {
+	cursor: move;
+}
+
+.edit-btn, .delete-btn {
+	cursor: pointer;
+	color: #333;
+	text-decoration: none;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+	color: #000;
+}
+
+.ui-state-highlight {
+	background: #e0e0e0;
+	border: 1px dashed #cccccc;
+}
+
+.cell-editable {
+	border: 1px solid #007bff;
+	background-color: #fff;
+}
+
+.non-editable {
+	cursor: default;
+}
+
+.btn-custom {
+	border-color: #333;
+	color: #333;
+}
+
+.btn-custom:hover {
+	background-color: #333;
+	color: #fff;
+}
+
+.column-name {
+	width: 20%;
+}
+
+.column-start-date {
+	width: 20%;
+}
+
+.column-end-date {
+	width: 20%;
+}
+
+.column-current-period {
+	width: 10%; 
+}
+
+.column-actions {
+	width: 20%;
+}
+
+table.dataTable {
+	border-collapse: collapse; 
+}
+
+table.dataTable th, table.dataTable td {
+	border: 1px solid #ddd;
+}
+</style>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-3" id="sidebar">
+				<div class="card">
+					<div class="card-body">
+						<div id="jstree">
+							<ul>
+								<li><a href="#">My OKR</a>
+									<ul>
+										<li><a href="crud">Create OKR</a>
+											<ul>
+												<li><a href="selfscoring">Self-scoring</a></li>
+												<li><a href="#">Upload OKR</a></li>
+											</ul></li>
+										<li><a href="#">Review OKR</a></li>
+									</ul></li>
+								<li><a href="#">Configuration</a>
+									<ul>
+										<li><a href="#">Periods</a></li>
+										<li><a href="#">Units</a></li>
+									</ul></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-9">
+				<div class="card">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item"><a
+								class="nav-link active MKSOLCRUDTabmenu" href="#okr-tracking"
+								data-bs-toggle="tab">OKR Tracking</a></li>
+							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
+								href="#okr-layout" data-bs-toggle="tab">OKR Layout</a></li>
+							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
+								href="#okr-dashboard" data-bs-toggle="tab">OKR Dashboard</a></li>
+						</ul>
+					</div>
+					<div class="card-body tab-content">
+						<div class="tab-pane active" id="okr-tracking">
+							<div class="card p-3">
+								<div
+									class="mb-3 d-flex justify-content-between align-items-center">
+									<p class="m-0">OKR Tracking</p>
+									<button class="btn float-end btn-outline-dark btn-sm"
+										id="MKSOLAddRow">
+										<i class="fas fa-plus"></i> Add Row
+									</button>
+									<button type="button" class="btn btn-outline-dark btn-sm"
+										style="width: 15%; margin-right: 2%" id="MKSOLUpdateperiod">
+										<i class="fas fa-save"></i> Update period
+									</button>
+								</div>
+								<table id="okr-table" class="table table-bordered">
+									<thead>
+										<tr>
+											<th class="column-number">No</th>
+											<th class="column-name">Name</th>
+											<th class="column-start-date">Start Date</th>
+											<th class="column-end-date">End Date</th>
+											<th class="column-current-period">Current Period</th>
+											<th class="column-actions">Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="tab-pane" id="okr-layout">
+							<div class="card" style="padding: 2%">
+								<p>OKR Layout</p>
+								<div class="row">
+									<div class="col-9">
+										<div class="btn-group" style="width: 30%">
+											<button class="btn btn-sm" type="button">Quý 1/2023</button>
+											<button type="button"
+												class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+												data-bs-toggle="dropdown" aria-expanded="false">
+												<span class="visually-hidden">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+												<li><a class="dropdown-item" href="#">Quý 1/2023</a></li>
+											</ul>
+										</div>
+									</div>
+									<div class="col-3">
+										<div class="form-group form-check">
+											<input type="checkbox" class="form-check-input"
+												id="draft-local-save"> <label
+												class="form-check-label" for="draft-local-save">Draft
+												local save</label>
+										</div>
+									</div>
+								</div>
+								</br>
+								<table id="okr-layouttable" class="table table-bordered">
+									<thead>
+										<tr>
+											<th class="column-number">No</th>
+											<th class="column-objectives">Objectives</th>
+											<th class="column-weight">Weight</th>
+											<th class="column-key-results">Key results</th>
+											<th class="column-unit">Unit</th>
+											<th class="column-start-value">Start value</th>
+											<th class="column-target">Target</th>
+											<th class="column-actions">Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+
+								</br>
+								<div class="d-flex justify-content-end">
+									<button type="button" class="btn mr-2 border MKSOLokrlayout"
+										id="add-row-layout">Add Row</button>
+									<button type="button" class="btn border MKSOLokrlayout"
+										id="submit-layout">Submit</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="okr-dashboard">
+							<div class="card p-3">
+								<div class="content">
+									<div class="row">
+										<div class="col">
+											<div
+												class="mb-3 d-flex justify-content-between align-items-center">
+												<p class="m-0">OKR Dashboard</p>
+												<button type="button" class="btn btn-outline-dark btn-sm"
+													style="width: 10%">
+													<i class="fas fa-plus"></i> Add OKR
+												</button>
+											</div>
+											<div class="card">
+												<div class="card-body" id="MKSOLokrdashboard">
+													<h5 class="card-title">Strengthen Master Angular</h5>
+													<p class="card-text">Improve Angular skill and
+														knowledge</p>
+													<p class="card-text">Weight: 40%, Target: 90%, Current:
+														75%</p>
+													<p class="card-text">Target: June 30, 2023</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row my-3">
+										<div class="col">
+											<button class="btn btn-light" id="self-scoring">
+												<i class="fa fa-pencil-square-o"></i> Self-scoring
+											</button>
+											<button class="btn btn-dark" id="upload-okr">
+												<i class="fa fa-upload"></i> Upload OKR
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+$(document).ready(function() {
+    $('#jstree').jstree({
+        'core': {
+            'themes': {
+                'name': 'default',
+                'responsive': true
+            }
+        }
+    });
+
+    $('#jstree').on('click', 'a[href="crud"]', function() {
+        window.location.href = 'crud';
+    });
+
+    $('#jstree').on('click', 'a[href="selfscoring"]', function() {
+        window.location.href = 'selfscoring';
+    });
+
+    var trackingTable = $('#okr-table').DataTable({
+        "paging": true,
+        "searching": false,
+        "info": false,
+        "ordering": false
+    });
+
+    var layoutTable = $('#okr-layouttable').DataTable({
+        "paging": true,
+        "searching": false,
+        "info": false,
+        "ordering": false
+    });
+
+    function addRow() {
+        console.log('addRow function called');
+        var newRowIndex = $('#okr-table tbody tr').length + 1;
+        var newRow = `
+            <tr class="draggable">
+                <td>${newRowIndex}</td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td class="non-editable">
+                    <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                </td>
+            </tr>
+        `;
+        trackingTable.row.add($(newRow)).draw();
+        updateRowNumbers();
+    }
+
+    function addRowLayout() {
+        console.log('addRowLayout function called');
+        var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
+        var newRow = `
+            <tr>
+                <td>${newRowIndex}</td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td>
+                    <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                </td>
+            </tr>
+        `;
+        layoutTable.row.add($(newRow)).draw();
+        updateRowNumbersLayout();
+    }
+
+    function fetchData() {
+        fetch('period/loaddata')
+            .then(response => response.json())
+            .then(jsonData => {
+                var data = [];
+                var counter = 1;
+
+                if (jsonData.data && Array.isArray(jsonData.data)) {
+                    jsonData.data.forEach(item => {
+                        if (item.childs && Array.isArray(item.childs)) {
+                            item.childs.forEach(childItem => {
+                                var childData = {
+                                    No: counter++,
+                                    name: childItem.name,
+                                    startDate: childItem.startDate,
+                                    endDate: childItem.endDate,
+                                    currentPeriod: childItem.currentPeriod
+                                };
+                                data.push(childData);
+                            });
+                        }
+                    });
+                } else {
+                    console.error('Unexpected data structure in the JSON data');
+                }
+
+                trackingTable.clear();
+                data.forEach(row => {
+                    var rowHtml = `
+                        <tr class="draggable">
+                            <td>${row.No}</td>
+                            <td>${row.name}</td>
+                            <td>${row.startDate}</td>
+                            <td>${row.endDate}</td>
+                            <td>${row.currentPeriod}</td>
+                            <td class="non-editable">
+                                <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
+                                <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                            </td>
+                        </tr>
+                    `;
+                    trackingTable.row.add($(rowHtml)).draw();
+                });
+                updateRowNumbers();
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    function updateData() {
+        var tableData = [];
+        $('#okr-table tbody tr').each(function() {
+            var row = $(this);
+            var rowData = {
+                No: row.find('td').eq(0).text(),
+                name: row.find('td').eq(1).text(),
+                startDate: row.find('td').eq(2).text(),
+                endDate: row.find('td').eq(3).text(),
+                currentPeriod: row.find('td').eq(4).text()
+            };
+            tableData.push(rowData);
+        });
+
+        if (tableData.length === 0) {
+            console.warn('No data to update');
+            return;
+        }
+
+        fetch('period/uploaddata', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tableData)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Data successfully updated:', result);
+            console.log(tableData);
+        })
+        .catch(error => {
+            console.error('Error updating data:', error);
+        });
+    }
+
+    function updateRowNumbers() {
+        $('#okr-table tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+
+    function updateRowNumbersLayout() {
+        $('#okr-layouttable tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+
+    function enableCellEdit(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'true').addClass('cell-editable');
+        });
+        $(row).find('.edit-btn').html('<i class="fas fa-save"></i> Save');
+        $("#okr-table, #okr-layouttable").sortable("disable");
+    }
+
+    function disableCellEdit(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
+        });
+        $(row).find('.edit-btn').html('<i class="fas fa-edit"></i> Edit');
+        $("#okr-table, #okr-layouttable").sortable("enable");
+    }
+
+    function fetchDataLayout() {
+        fetch('objectives/loaddata')
+            .then(response => response.json())
+            .then(jsonData => {
+                if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
+                    var data = [];
+                    var counter = 1;
+
+                    jsonData.data.objectives.forEach(item => {
+                        if (item.keyResults && Array.isArray(item.keyResults)) {
+                            item.keyResults.forEach(keyResult => {
+                                let unitType;
+                                switch (keyResult.itype) {
+                                    case 1:
+                                        unitType = 'Number';
+                                        break;
+                                    case 2:
+                                        unitType = 'Yes/No';
+                                        break;
+                                    case 3:
+                                        unitType = 'Percentage';
+                                        break;
+                                    default:
+                                        unitType = 'N/A';
+                                        break;
+                                }
+
+                                var childData = [
+                                    counter++, 
+                                    item.description, 
+                                    item.weight, 
+                                    keyResult.description, 
+                                    unitType, 
+                                    keyResult.startvalue, 
+                                    keyResult.target, 
+                                    '<span class="edit-btn"><i class="fas fa-edit"></i> Edit</span> <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>'
+                                ];
+                                data.push(childData);
+                            });
+                        }
+                    });
+
+                    layoutTable.clear();
+                    layoutTable.rows.add(data).draw();
+                    updateRowNumbersLayout();
+                } else {
+                    console.error('Unexpected data structure or no objectives:', jsonData);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching layout data:', error);
+            });
+    }
+
+    $('#okr-table tbody').sortable({
+        items: 'tr.draggable',
+        cursor: 'move',
+        placeholder: 'ui-state-highlight',
+        start: function(event, ui) {
+            ui.placeholder.height(ui.item.height());
+        },
+        stop: function(event, ui) {
+            updateRowNumbers();
+        }
+    });
+
+    $('#okr-layouttable tbody').sortable({
+        items: 'tr',
+        cursor: 'move',
+        placeholder: 'ui-state-highlight',
+        start: function(event, ui) {
+            ui.placeholder.height(ui.item.height());
+        },
+        stop: function(event, ui) {
+            updateRowNumbersLayout();
+        }
+    });
+
+    $('#okr-table').on('click', '.edit-btn', function() {
+        var row = $(this).closest('tr');
+        if ($(this).find('i').hasClass('fa-edit')) {
+            enableCellEdit(row);
+        } else if ($(this).find('i').hasClass('fa-save')) {
+            disableCellEdit(row);
+            updateData();
+        }
+    });
+
+    $('#okr-table').on('click', '.delete-btn', function() {
+        var row = $(this).closest('tr');
+        trackingTable.row(row).remove().draw();
+        updateRowNumbers();
+    });
+
+    $('#okr-table').on('dblclick', 'td', function() {
+        var cell = $(this);
+        if (!cell.hasClass('non-editable')) {
+            cell.attr('contenteditable', 'true').focus();
+        }
+    });
+
+    $('#okr-layouttable').on('dblclick', 'td', function() {
+        var cell = $(this);
+        if (!cell.hasClass('non-editable')) {
+            cell.attr('contenteditable', 'true').focus();
+        }
+    });
+
+    fetchData();
+    fetchDataLayout();
+});
+</script>
+
+
+
+</body>
+</html>
