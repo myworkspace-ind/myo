@@ -32,143 +32,155 @@
 	src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-	
-	
+
+
 <style>
 body {
-    background-color: #ffffff;
-    color: #333333;
+	background-color: #ffffff;
+	color: #333333;
 }
 
 .table {
-    border-collapse: collapse;
-    width: 100%;
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.875rem;
 }
 
 .table th, .table td {
-    border: 1px solid #cccccc;
-    padding: 12px;
-    text-align: left;
+	border: 1px solid #cccccc;
+	padding: 12px;
+	text-align: left;
 }
 
 .table th {
-    background-color: #f2f2f2;
-    color: #333333;
+	background-color: #f2f2f2;
+	color: #333333;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f9f9f9;
+	background-color: #f9f9f9;
 }
 
 .table tr:nth-child(odd) {
-    background-color: #ffffff;
+	background-color: #ffffff;
 }
 
 .draggable {
-    cursor: move;
+	cursor: move;
 }
 
 .edit-btn, .delete-btn {
-    cursor: pointer;
-    color: #333333;
-    text-decoration: none;
+	cursor: pointer;
+	color: #333333;
+	text-decoration: none;
 }
 
 .edit-btn:hover, .delete-btn:hover {
-    color: #000000;
+	color: #000000;
 }
 
 .ui-state-highlight {
-    background: #e0e0e0;
-    border: 1px dashed #cccccc;
+	background: #e0e0e0;
+	border: 1px dashed #cccccc;
 }
 
 .cell-editable {
-    border: 1px solid #007bff;
-    background-color: #ffffff;
+	border: 1px solid #007bff;
+	background-color: #ffffff;
 }
 
 .non-editable {
-    cursor: default;
+	cursor: default;
 }
 
 .btn-custom {
-    border-color: #333333;
-    color: #333333;
+	border-color: #333333;
+	color: #333333;
 }
 
 .btn-custom:hover {
-    background-color: #333333;
-    color: #ffffff;
+	background-color: #333333;
+	color: #ffffff;
 }
 
 .column-name {
-    width: 20%;
+	width: 20%;
 }
 
 .column-start-date {
-    width: 20%;
+	width: 20%;
 }
 
 .column-end-date {
-    width: 20%;
+	width: 20%;
 }
 
 .column-current-period {
-    width: 10%;
+	width: 10%;
 }
 
 .column-actions {
-    width: 20%;
+	width: 20%;
 }
 
 .card-header {
-    background-color: #f1f1f1;
+	background-color: #f1f1f1;
 }
 
 .card-body {
-    background-color: #ffffff;
+	background-color: #ffffff;
 }
 
 .nav-tabs .nav-link {
-    color: #333333;
+	color: #333333;
 }
 
 .nav-tabs .nav-link.active {
-    color: #ffffff;
-    background-color: #333333;
+	color: #ffffff;
+	background-color: #333333;
 }
 
 .btn-outline-dark {
-    color: #333333;
-    border-color: #333333;
+	color: #333333;
+	border-color: #333333;
 }
 
 .btn-outline-dark:hover {
-    background-color: #333333;
-    color: #ffffff;
+	background-color: #333333;
+	color: #ffffff;
 }
 
 .dropdown-menu {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
 }
 
 .dropdown-item {
-    color: #333333;
+	color: #333333;
 }
 
 .dropdown-item:hover {
-    background-color: #f2f2f2;
+	background-color: #f2f2f2;
 }
 
 .form-check-label {
-    color: #333333;
+	color: #333333;
 }
 
 .form-check-input {
-    cursor: pointer;
+	cursor: pointer;
 }
+#okr-dashboard-content .card {
+    margin-bottom: 1rem;
+}
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 2%;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    margin-bottom: 2%;
+}
+
 </style>
 
 </head>
@@ -187,7 +199,7 @@ body {
 												<li><a href="selfscoring">Self-scoring</a></li>
 												<li><a href="#">Upload OKR</a></li>
 											</ul></li>
-										<li><a href="#">Review OKR</a></li>
+										<li><a href="reviewokr">Review OKR</a></li>
 									</ul></li>
 								<li><a href="#">Configuration</a>
 									<ul>
@@ -312,15 +324,7 @@ body {
 													<i class="fas fa-plus"></i> Add OKR
 												</button>
 											</div>
-											<div class="card">
-												<div class="card-body" id="MKSOLokrdashboard">
-													<h5 class="card-title">Strengthen Master Angular</h5>
-													<p class="card-text">Improve Angular skill and
-														knowledge</p>
-													<p class="card-text">Weight: 40%, Target: 90%, Current:
-														75%</p>
-													<p class="card-text">Target: June 30, 2023</p>
-												</div>
+											<div id="okr-dashboard-content">
 											</div>
 										</div>
 									</div>
@@ -337,13 +341,14 @@ body {
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-<script>
+	<script>
 $(document).ready(function() {
     $('#jstree').jstree({
         'core': {
@@ -361,19 +366,24 @@ $(document).ready(function() {
     $('#jstree').on('click', 'a[href="selfscoring"]', function() {
         window.location.href = 'selfscoring';
     });
+    $('#jstree').on('click', 'a[href="reviewokr"]', function() {
+        window.location.href = 'reviewokr';
+    });
 
     var trackingTable = $('#okr-table').DataTable({
         "paging": true,
         "searching": false,
         "info": false,
-        "ordering": false
+        "ordering": false,
+        "searching": true
     });
 
     var layoutTable = $('#okr-layouttable').DataTable({
         "paging": true,
         "searching": false,
         "info": false,
-        "ordering": false
+        "ordering": false,
+        "searching": true
     });
 
     function addRow() {
@@ -646,6 +656,58 @@ $(document).ready(function() {
 
     fetchData();
     fetchDataLayout();
+    
+    
+    
+    function fetchDataDashboard() {
+        fetch('objectives/loaddata')
+            .then(response => response.json())
+            .then(jsonData => {
+                const dashboardContent = $('#okr-dashboard-content');
+                dashboardContent.empty(); 
+
+                if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
+                    jsonData.data.objectives.forEach(objective => {
+                        const objectiveHtml = `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${objective.description}</h5>
+                                    <p class="card-text">Weight: ${objective.weight}%</p>
+                                    <div class="mb-2">
+                                        <p class="card-text">Key Results:</p>
+                                        <ul>
+                                            ${objective.keyResults.map(kr => `
+                                                <li>${kr.description} - Target: ${kr.target} (${getUnitType(kr.itype)})</li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                    <p class="card-text">Start Value: ${objective.keyResults.map(kr => kr.startvalue).join(', ')}</p>
+                                    <p class="card-text">Target: ${objective.keyResults.map(kr => kr.target).join(', ')}</p>
+                                </div>
+                            </div>
+                        `;
+                        dashboardContent.append(objectiveHtml);
+                    });
+                } else {
+                    dashboardContent.append('<p>No objectives available.</p>');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching dashboard data:', error);
+            });
+    }
+
+    function getUnitType(itype) {
+        switch (itype) {
+            case 1: return 'Number';
+            case 2: return 'Yes/No';
+            case 3: return 'Percentage';
+            default: return 'N/A';
+        }
+    }
+
+
+    fetchDataDashboard();
 });
 </script>
 
