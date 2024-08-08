@@ -91,22 +91,38 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 
 	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
+		console.log("hi");
 		if (currentData.length === 0) {
 			console.warn('No data to update');
 			return;
 		}
+		const formattedData = currentData.map(item => {
+			console.log('Mapping item:', item);  // Log each item to verify structure
+			return {
+				name: item[1] || "defaultName",  // item[1] is the name
+				startDate: item[2] || "defaultStartDate",  // item[2] is the startDate
+				endDate: item[3] || "defaultEndDate",  // item[3] is the endDate
+				parentId: null,  // Always set to null
+				setAsRoot: true,  // Always set to true
+				currentPeriod: item[4] === true || item[4] === "true"  // Convert item[4] to boolean
+			};
+		});
+		const lastItem = formattedData[formattedData.length - 1];
+		console.log(JSON.stringify(formattedData));
+		console.log(JSON.stringify(lastItem));
 
 		fetch('period/uploaddata', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(currentData)
+
+			body: JSON.stringify(lastItem),
 		})
 			.then(response => response.json())
 			.then(result => {
 				console.log('Data successfully updated:', result);
-				console.log(currentData);
+				console.log(lastItem);
 			})
 			.catch(error => {
 				console.error('Error updating data:', error);
@@ -453,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 	}
 
-	
+
 
 	var apiUrl = 'objectives/loaddata';
 	updateOkrDashboardFromUrl(apiUrl);

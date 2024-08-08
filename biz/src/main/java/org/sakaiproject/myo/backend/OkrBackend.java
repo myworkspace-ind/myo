@@ -358,9 +358,9 @@ public class OkrBackend implements IOkrBackend {
             headers.set("Authorization", "Bearer " + okrAuthToken);
 
             HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
-            System.out.println("post2");
+            System.out.println("postperiod2");
             ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, String.class);
-            System.out.println("post3");
+            System.out.println("postperiod3");
             if (response.getStatusCode() == HttpStatus.OK) {
                 // Handle successful response
                 return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
