@@ -8,4 +8,5 @@ public interface IOkrBackend {
 	String getOrganization();
 	String getObjectives(String periodId, String organizationId);
 	public ResponseEntity<String> postOkr(String jsonData);
+	public ResponseEntity<String> postPeriod(String jsonData);
 }

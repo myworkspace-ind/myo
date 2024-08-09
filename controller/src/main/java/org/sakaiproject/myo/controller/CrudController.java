@@ -36,10 +36,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,28 +57,28 @@ public class CrudController extends BaseController {
 
 	@GetMapping(value = "crud")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("crud");
+		ModelAndView mav = new ModelAndView("crud_new");
 
 		return mav;
 	}
 
-	@PostMapping(value = "/objectives/uploaddata")
-	@ResponseBody
-	public String postInfoObjectives(@RequestBody String data) {
-		System.out.print(data);
+//	@PostMapping(value = "/objectives/uploaddata")
+//	@ResponseBody
+//	public String postInfoObjectives(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
-		return data;
-
-	}
-
-	@PostMapping(value = "/period/uploaddata")
-	@ResponseBody
-	public String postInfoPeriod(@RequestBody String data) {
-		System.out.print(data);
-
-		return data;
-
-	}
+//	@PostMapping(value = "/period/uploaddata")
+//	@ResponseBody
+//	public String postInfoPeriod(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
 	@GetMapping(value = "/period/loaddata")
 	@ResponseBody
@@ -96,13 +98,47 @@ public class CrudController extends BaseController {
 
 	@GetMapping(value = "/objectives/loaddata")
 	@ResponseBody
-	public String getInfoObjectives(
-			@RequestParam(value = "periodId", required = false) String periodId,
-			@RequestParam(value = "organizationId", required = false) String organizationId) {
+	public String getInfoObjectives() {
 		// Get and process response
 		// System.out.print(serviceOkrBackend.getObjectives());
-		// return serviceOkrBackend.getObjectives();
-		return serviceOkrBackend.getObjectives(periodId, organizationId);
-		
+		return serviceOkrBackend.getObjectives();
 	}
+    
+    @PostMapping("/objectives/uploaddata")
+    public ResponseEntity<String> createOkr(@RequestBody String jsonData) {
+    	System.out.println("post--0");
+    	JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+    	System.out.println("post0");
+        // Add default values for attributes that may be missing
+        if (!jsonObject.has("status")) {
+            jsonObject.addProperty("status", "DRAFT");
+        }
+        if (!jsonObject.has("progress")) {
+            jsonObject.addProperty("progress", 0.0);
+        }
+        if (!jsonObject.has("grade")) {
+            jsonObject.addProperty("grade", 0.0);
+        }
+        if (!jsonObject.has("organizationId")) {
+            jsonObject.addProperty("organizationId", serviceOkrBackend.getOrganization());
+        }
+        if (!jsonObject.has("periodId")) {
+            jsonObject.addProperty("periodId", serviceOkrBackend.getCurrentPeriodId());
+        }
+
+        // Convert modified JSON object back to string
+        String modifiedJsonData = jsonObject.toString();
+        
+        System.out.println("post");
+        System.out.println(jsonObject);
+        System.out.println(modifiedJsonData);
+
+        // Pass modifiedJsonData to serviceOkrBackend for further processing
+        return serviceOkrBackend.postOkr(modifiedJsonData);
+    }
+    
+    @PostMapping("/period/uploaddata")
+    public ResponseEntity<String> createPeriod(@RequestBody String jsonData) {
+        return serviceOkrBackend.postPeriod(jsonData);
+    }
 }
