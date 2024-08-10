@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var hotSettings = {
 		data: [],
-		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
+		colHeaders: ['No', 'Period', 'Start date', 'End date', 'Current period'],
 		columns: [
 			{ data: 'No', readOnly: true },
 			{ data: 'name' },
@@ -61,49 +61,60 @@ document.addEventListener('DOMContentLoaded', function() {
 		.then(jsonData => {
 			var data = [];
 			var counter = 1;
-
 			if (jsonData.data && Array.isArray(jsonData.data)) {
 				for (var i = 0; i < jsonData.data.length; i++) {
 					var item = jsonData.data[i];
+					var itemData = {
+						No: counter++,
+						name: item.name,
+						startDate: item.startDate,
+						endDate: item.endDate,
+						currentPeriod: item.currentPeriod
+					};
 					if (item.childs && Array.isArray(item.childs)) {
 						for (var j = 0; j < item.childs.length; j++) {
-							var childItem = item.childs[j];
-							var childData = {
-								No: counter++,
-								name: childItem.name,
-								startDate: childItem.startDate,
-								endDate: childItem.endDate,
-								currentPeriod: childItem.currentPeriod
-							};
-							data.push(childData);
-						}
-					}
-				}
-			} else {
-				console.error('Unexpected data structure in the JSON data');
-			}
+							for (var j = 0; j < item.childs.length; j++) {
+								var childItem = item.childs[j];
+								var childData = {
+									No: counter++,
+									name: childItem.name,
+									startDate: childItem.startDate,
+									endDate: childItem.endDate,
+									currentPeriod: childItem.currentPeriod
+								};
+								data.push(childData);
+								console.log(childData);
+							}
 
-			hot.loadData(data);
-			currentData = data;
+						}
+						data.push(itemData);
+						console.log(itemData);
+						console.log("json data length: " + jsonData.data.length);
+					} else {
+						console.error('Unexpected data structure in the JSON data');
+					}
+					hot.loadData(data);
+					currentData = data;
+				}
+			}
 		})
 		.catch(error => {
 			console.error('Error fetching data:', error);
 		});
 
 	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
-		console.log("hi");
 		if (currentData.length === 0) {
 			console.warn('No data to update');
 			return;
 		}
 		const formattedData = currentData.map(item => {
-			console.log('Mapping item:', item);  // Log each item to verify structure
+			console.log('Mapping item:', item);
 			return {
-				name: item[1] || "defaultName",  // item[1] is the name
-				startDate: item[2] || "defaultStartDate",  // item[2] is the startDate
-				endDate: item[3] || "defaultEndDate",  // item[3] is the endDate
-				parentId: null,  // Always set to null
-				setAsRoot: true,  // Always set to true
+				name: item[1] || "defaultName",
+				startDate: item[2] || "defaultStartDate",
+				endDate: item[3] || "defaultEndDate",
+				parentId: null,
+				setAsRoot: true,
 				currentPeriod: item[4] === true || item[4] === "true"  // Convert item[4] to boolean
 			};
 		});
@@ -160,8 +171,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					button.onclick = function() {
 						var selectedRow = row;
+						var name = hotLayout.getDataAtRowProp(selectedRow, 'Objectives');
 						hotLayout.alter('remove_row', selectedRow, 1);
 						adjustMergeCells(selectedRow);
+						deleteRowFromDatabase(
+							name,
+							'objectives/deletedata',
+							function(data) {
+								console.log('Row successfully deleted: ', data);
+							},
+							function(error) {
+								console.error('Failed to delete row: ', error);
+							}
+						);
 					};
 
 					Handsontable.dom.empty(TD);
@@ -469,7 +491,35 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 	}
 
+	function deleteRowFromDatabase(name, url, onSuccess, onError) {
+	    var completeUrl = `${url}/${name}`;
+	    console.log('Request URL:', completeUrl); // Log the complete URL
 
+	    fetch(completeUrl, {
+	        method: 'DELETE', // Ensure the method is DELETE
+	        headers: {
+	            'Content-Type': 'application/json' // Optional
+	        }
+	    })
+	    .then(response => {
+	        if (!response.ok) {
+	            console.log('Response error:', response.status);
+	            throw new Error('Network response was not ok');
+	        }
+	        return response.text(); // Adjust based on expected response
+	    })
+	    .then(data => {
+	        if (onSuccess) {
+	            onSuccess(data); // Handle response data
+	        }
+	    })
+	    .catch((error) => {
+	        console.error('Error:', error);
+	        if (onError) {
+	            onError(error);
+	        }
+	    });
+	}
 
 	var apiUrl = 'objectives/loaddata';
 	updateOkrDashboardFromUrl(apiUrl);
