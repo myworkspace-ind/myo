@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('#jstree').jstree();
 	var container = document.getElementById('okr-table');
 	var hot;
+	const dropdownMenu = document.getElementById('period-dropdown');
 	var currentData = [];
 
 	var hotSettings = {
@@ -57,10 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	fetch('period/loaddata')
-		.then(response => response.json())
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
 		.then(jsonData => {
 			var data = [];
 			var counter = 1;
+
 			if (jsonData.data && Array.isArray(jsonData.data)) {
 				for (var i = 0; i < jsonData.data.length; i++) {
 					var item = jsonData.data[i];
@@ -71,31 +78,37 @@ document.addEventListener('DOMContentLoaded', function() {
 						endDate: item.endDate,
 						currentPeriod: item.currentPeriod
 					};
+					data.push(itemData);
+
 					if (item.childs && Array.isArray(item.childs)) {
 						for (var j = 0; j < item.childs.length; j++) {
-							for (var j = 0; j < item.childs.length; j++) {
-								var childItem = item.childs[j];
-								var childData = {
-									No: counter++,
-									name: childItem.name,
-									startDate: childItem.startDate,
-									endDate: childItem.endDate,
-									currentPeriod: childItem.currentPeriod
-								};
-								data.push(childData);
-								console.log(childData);
-							}
-
+							var childItem = item.childs[j];
+							var childData = {
+								No: counter++,
+								name: childItem.name,
+								startDate: childItem.startDate,
+								endDate: childItem.endDate,
+								currentPeriod: childItem.currentPeriod
+							};
+							data.push(childData);
 						}
-						data.push(itemData);
-						console.log(itemData);
-						console.log("json data length: " + jsonData.data.length);
-					} else {
-						console.error('Unexpected data structure in the JSON data');
 					}
-					hot.loadData(data);
-					currentData = data;
 				}
+
+				const testData = [
+					{ name: "Period 1" },
+					{ name: "Period 2" },
+					{ name: "Period 3" }
+				];
+				console.log("never gonna give you up");
+				dropdownMenu.innerHTML = testData.map(period =>
+					`<li><a class="dropdown-item" href="#">${period.name}</a></li>`
+				).join('');
+				// Assuming hot is a Handsontable instance and needs data
+				hot.loadData(data);
+				currentData = data;
+			} else {
+				console.error('Unexpected data structure in the JSON data');
 			}
 		})
 		.catch(error => {
@@ -492,33 +505,33 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function deleteRowFromDatabase(name, url, onSuccess, onError) {
-	    var completeUrl = `${url}/${name}`;
-	    console.log('Request URL:', completeUrl); // Log the complete URL
+		var completeUrl = `${url}/${name}`;
+		console.log('Request URL:', completeUrl); // Log the complete URL
 
-	    fetch(completeUrl, {
-	        method: 'DELETE', // Ensure the method is DELETE
-	        headers: {
-	            'Content-Type': 'application/json' // Optional
-	        }
-	    })
-	    .then(response => {
-	        if (!response.ok) {
-	            console.log('Response error:', response.status);
-	            throw new Error('Network response was not ok');
-	        }
-	        return response.text(); // Adjust based on expected response
-	    })
-	    .then(data => {
-	        if (onSuccess) {
-	            onSuccess(data); // Handle response data
-	        }
-	    })
-	    .catch((error) => {
-	        console.error('Error:', error);
-	        if (onError) {
-	            onError(error);
-	        }
-	    });
+		fetch(completeUrl, {
+			method: 'DELETE', // Ensure the method is DELETE
+			headers: {
+				'Content-Type': 'application/json' // Optional
+			}
+		})
+			.then(response => {
+				if (!response.ok) {
+					console.log('Response error:', response.status);
+					throw new Error('Network response was not ok');
+				}
+				return response.text(); // Adjust based on expected response
+			})
+			.then(data => {
+				if (onSuccess) {
+					onSuccess(data); // Handle response data
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+				if (onError) {
+					onError(error);
+				}
+			});
 	}
 
 	var apiUrl = 'objectives/loaddata';

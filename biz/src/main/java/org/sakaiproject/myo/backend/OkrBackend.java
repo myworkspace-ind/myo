@@ -132,7 +132,7 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public String getPeriod() {
 		try {
-			System.out.println("okrToken: " + okrAuthToken);
+			System.out.println("Load Period - OkrToken: " + okrAuthToken);
 			String serverUrl = okrBaseURL + "/period";
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
