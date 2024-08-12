@@ -59,7 +59,7 @@ public class CrudController extends BaseController {
 
 	@GetMapping(value = "crud")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("crud");
+		ModelAndView mav = new ModelAndView("crud_new");
 
 		return mav;
 	}
