@@ -297,19 +297,42 @@ public class OkrBackend implements IOkrBackend {
 	}
 
 	
+//	@Override
+//	public String getObjectives(String periodId, String organizationId) {
+//		try {
+//			System.out.println(okrAuthToken);
+//			if(organizationId == null || organizationId.isEmpty()) {
+//				organizationId = getOrganization();
+//			}
+//			if(periodId == null || periodId.isEmpty()) {
+//				periodId = getCurrentPeriodId();
+//			}
+//			
+////			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+//			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.set("Authorization", "Bearer " + okrAuthToken);
+//			HttpEntity<String> entity = new HttpEntity<>(headers);
+//			System.out.println("Fined1");
+//			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+//			headers.set("Authorization", "Bearer " + okrAuthToken);
+//			entity = new HttpEntity<>(headers);
+//			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+//			String responseJson = response.getBody(); 
+//			System.out.print(responseJson);
+//			return responseJson;
+//		} catch (Exception e) {
+//			System.out.println("An error occurred: " + e.getMessage());
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+	
 	@Override
-	public String getObjectives(String periodId, String organizationId) {
+	public String getObjectives() {
 		try {
 			System.out.println(okrAuthToken);
-			if(organizationId == null || organizationId.isEmpty()) {
-				organizationId = getOrganization();
-			}
-			if(periodId == null || periodId.isEmpty()) {
-				periodId = getCurrentPeriodId();
-			}
-			
-//			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
-			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -382,6 +405,7 @@ public class OkrBackend implements IOkrBackend {
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+	
 	
 	
 	public String getOkrAuthToken() {

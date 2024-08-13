@@ -114,6 +114,7 @@ body {
 						callback(true);
 					}
 				}, allowInvalid : false }
+				/* ,{ data : 'keyResultId', readOnly : true, hidden: true } */
 			],
 			stretchH : 'all',
 			autoWrapRow : true,
@@ -173,6 +174,7 @@ body {
 		                            "Start value": keyResult.startvalue,
 		                            Target: keyResult.target,
 		                            "Self-score": keyResult.finalScore
+		                            /* ,keyResultId: keyResult.keyResultId */
 		                        });
 		                    });
 
@@ -303,7 +305,32 @@ body {
 		    xhr.send(JSON.stringify(formattedData));
 		}
 
+		/* function submitData() {
+		    var url = 'keyResult/grade/';
+		    var data = hot.getData();
 
+		    data.forEach(row => {
+		        var keyResultId = row[8]; // Index for keyResultId
+		        var finalScore = row[7];  // Index for Self-score
+
+		        if (keyResultId) {
+		            var xhr = new XMLHttpRequest();
+		            xhr.open('PUT', url + keyResultId, true);
+		            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+		            xhr.onreadystatechange = function() {
+		                if (xhr.readyState === XMLHttpRequest.DONE) {
+		                    if (xhr.status === 200) {
+		                        console.log('Data successfully submitted for keyResultId:', keyResultId);
+		                    } else {
+		                        console.error('Failed to submit data for keyResultId:', keyResultId, 'Status:', xhr.status);
+		                    }
+		                }
+		            };
+		            xhr.send(JSON.stringify({ finalScore: finalScore }));
+		        }
+		    });
+		} */
+		
 		function addRow() {
 			var newRow = {
 				No : hot.countRows() + 1,
@@ -314,6 +341,7 @@ body {
 				"Start value" : '',
 				Target : '',
 				"Self-score" : ''
+				/* ,keyResultId: '' */
 			};
 
 			hot.alter('insert_row_below', hot.countRows(), 1);
