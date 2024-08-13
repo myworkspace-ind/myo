@@ -245,14 +245,11 @@ public class OkrBackend implements IOkrBackend {
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 			entity = new HttpEntity<>(headers);
 			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-			System.out.println("Fine2");
 			String responseJson = response.getBody(); 
-			System.out.println("Fine3");
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(responseJson);
             JsonObject responseObject = jsonElement.getAsJsonObject();
-//            JsonArray dataArray = responseObject.getAsJsonArray("data");
-            System.out.println("Fine4");
+
             if (responseObject.has("data")) {
                 JsonElement dataElement = responseObject.get("data");
                 
@@ -322,6 +319,33 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
+	
+	@Override
+	public ResponseEntity<String> postOkr(String jsonData) {
+        try {
+        	String serverUrl = okrBaseURL + "/personalOkr/advanced/";
+            HttpHeaders headers = new HttpHeaders();
+            System.out.println("post1");
+            headers.set("Content-Type", "application/json");
+            headers.set("Authorization", "Bearer " + okrAuthToken);
+
+            HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+            System.out.println("post2");
+            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, String.class);
+            System.out.println("post3");
+            if (response.getStatusCode() == HttpStatus.OK) {
+                // Handle successful response
+                return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+            } else {
+                // Handle non-200 response status
+                return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+            }
+        } catch (Exception e) {
+            // Handle exception
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	
 	public String getOkrAuthToken() {
