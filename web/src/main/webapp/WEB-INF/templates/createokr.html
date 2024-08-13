@@ -67,101 +67,53 @@
             <button type="button" class="btn btn-add-objective btn-sm" id="addObjective">Add Objectives</button>
         </div>
         <form id="okrForm">
-            <div class="form-group">
-                <label for="period">Period</label>
-                <select class="form-control" id="period" name="period" required>
-                    <option value="">Select Period</option>
-                    <option value="Q1 2024">Q1 2024</option>
-                    <option value="Q2 2024">Q2 2024</option>
-                    <option value="Q3 2024">Q3 2024</option>
-                    <option value="Q4 2024">Q4 2024</option>
-                </select>
-            </div>
+    <div class="form-group">
+        <label for="period">Period</label>
+        <select class="form-control" id="period" name="period" required>
+            <option value="">Select Period</option>
+            <option value="Q1 2024">Q1 2024</option>
+            <option value="Q2 2024">Q2 2024</option>
+            <option value="Q3 2024">Q3 2024</option>
+            <option value="Q4 2024">Q4 2024</option>
+        </select>
+    </div>
 
-            <div class="form-group">
-                <label for="objectives">Objectives</label>
-                <div id="objectivesContainer">
-                    <div class="objective">
-                        <input type="text" class="form-control mb-2" name="objectives[]" placeholder="Enter Objective" required>
-                        
-                        <div class="form-group">
-                            <label for="weight">Weight</label>
-                            <input type="number" class="form-control" name="weights[]" placeholder="Enter Weight" required>
-                        </div>
-                        
-                        <div class="btn-container">
-                            <button type="button" class="btn btn-add-key-result btn-sm add-key-result">Add Key Result</button>
-                            <button type="button" class="btn btn-remove-objective btn-sm remove-objective">Remove Objective</button>
-                        </div>
-                        <div class="key-results-container"></div>
-                    </div>
-                </div>
-            </div>
+    <div id="objectivesContainer">
+        <!-- Objectives will be dynamically added here -->
+    </div>
 
-            <div class="btn-container">
-                <button type="submit" class="btn btn-save">Save</button>
-            </div>
-        </form>
+    <div class="btn-container mt-3">
+        <button type="submit" class="btn btn-primary">Save OKRs</button>
+    </div>
+</form>
+
+<!-- Template for Objective -->
+<div id="objectiveTemplate" style="display: none;">
+    <div class="objective mt-3">
+        <input type="text" class="form-control mb-2 objective-description" placeholder="Enter Objective Description" required>
+        <input type="number" class="form-control mb-2 objective-weight" placeholder="Enter Objective Weight" required>
+        <div class="key-results-container">
+            <!-- Key Results will be dynamically added here -->
+        </div>
+        <button type="button" class="btn btn-success btn-add-key-result">Add Key Result</button>
+        <button type="button" class="btn btn-danger btn-remove-objective">Remove Objective</button>
+    </div>
+</div>
+
+<!-- Template for Key Result -->
+<div id="keyResultTemplate" style="display: none;">
+    <div class="key-result mt-3">
+        <input type="text" class="form-control mb-2 key-result-description" placeholder="Enter Key Result Description" required>
+        <input type="date" class="form-control mb-2 key-result-due-date" required>
+        <button type="button" class="btn btn-danger btn-remove-key-result">Remove Key Result</button>
+    </div>
+</div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $(document).on('click', '.add-key-result', function() {
-                var keyResultsContainer = $(this).closest('.objective').find('.key-results-container');
-                keyResultsContainer.append(`
-                    <div class="key-result-container">
-                        <div class="form-group">
-                            <input type="text" class="form-control mb-2" name="keyResults[]" placeholder="Enter Key Result" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="unit">Unit</label>
-                            <input type="text" class="form-control" name="units[]" placeholder="Enter Unit" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="startValue">Start Value</label>
-                            <input type="number" class="form-control" name="startValues[]" placeholder="Enter Start Value" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="target">Target</label>
-                            <input type="number" class="form-control" name="targets[]" placeholder="Enter Target" required>
-                        </div>
-                        <div class="btn-container">
-                            <button type="button" class="btn btn-remove-key-result btn-sm remove-key-result">Remove Key Result</button>
-                        </div>
-                    </div>
-                `);
-            });
-
-            $(document).on('click', '.remove-key-result', function() {
-                $(this).closest('.key-result-container').remove();
-            });
-
-            $('#addObjective').click(function() {
-                $('#objectivesContainer').append(`
-                    <div class="objective mt-3">
-                        <input type="text" class="form-control mb-2" name="objectives[]" placeholder="Enter Objective" required>
-                        
-                        <div class="form-group">
-                            <label for="weight">Weight</label>
-                            <input type="number" class="form-control" name="weights[]" placeholder="Enter Weight" required>
-                        </div>
-                        
-                        <div class="btn-container">
-                            <button type="button" class="btn btn-add-key-result btn-sm add-key-result">Add Key Result</button>
-                            <button type="button" class="btn btn-remove-objective btn-sm remove-objective">Remove Objective</button>
-                        </div>
-                        <div class="key-results-container"></div>
-                    </div>
-                `);
-            });
-
-            $(document).on('click', '.remove-objective', function() {
-                $(this).closest('.objective').remove();
-            });
-        });
-    </script>
+    <script src="resources/js/createokr.js"></script>
 </body>
 </html>

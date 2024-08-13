@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSession;
 
 import org.sakaiproject.myo.IOkrBackend;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -34,11 +35,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,23 +64,23 @@ public class CrudController extends BaseController {
 		return mav;
 	}
 
-	@PostMapping(value = "/objectives/uploaddata")
-	@ResponseBody
-	public String postInfoObjectives(@RequestBody String data) {
-		System.out.print(data);
+//	@PostMapping(value = "/objectives/uploaddata")
+//	@ResponseBody
+//	public String postInfoObjectives(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
-		return data;
-
-	}
-
-	@PostMapping(value = "/period/uploaddata")
-	@ResponseBody
-	public String postInfoPeriod(@RequestBody String data) {
-		System.out.print(data);
-
-		return data;
-
-	}
+//	@PostMapping(value = "/period/uploaddata")
+//	@ResponseBody
+//	public String postInfoPeriod(@RequestBody String data) {
+//		System.out.print(data);
+//
+//		return data;
+//
+//	}
 
 	@GetMapping(value = "/period/loaddata")
 	@ResponseBody
@@ -102,9 +107,59 @@ public class CrudController extends BaseController {
 	}
     
     @PostMapping("/objectives/uploaddata")
-    public ResponseEntity<String> submitOkr(@RequestBody String jsonData) {
-    	//System.out.print(serviceOkrBackend.getOrganization());
-    	System.out.print(serviceOkrBackend.getOrganization());
-        return serviceOkrBackend.postOkr(jsonData);
+    public ResponseEntity<String> createOkr(@RequestBody String jsonData) {
+    	System.out.println("post--0");
+    	JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+    	System.out.println("post0");
+        // Add default values for attributes that may be missing
+        if (!jsonObject.has("status")) {
+            jsonObject.addProperty("status", "DRAFT");
+        }
+        if (!jsonObject.has("progress")) {
+            jsonObject.addProperty("progress", 0.0);
+        }
+        if (!jsonObject.has("grade")) {
+            jsonObject.addProperty("grade", 0.0);
+        }
+        if (!jsonObject.has("organizationId")) {
+            jsonObject.addProperty("organizationId", serviceOkrBackend.getOrganization());
+        }
+        if (!jsonObject.has("periodId")) {
+            jsonObject.addProperty("periodId", serviceOkrBackend.getCurrentPeriodId());
+        }
+
+        // Convert modified JSON object back to string
+        String modifiedJsonData = jsonObject.toString();
+        
+        System.out.println("post");
+        System.out.println(jsonObject);
+        System.out.println(modifiedJsonData);
+
+        // Pass modifiedJsonData to serviceOkrBackend for further processing
+        return serviceOkrBackend.postOkr(modifiedJsonData);
+    }
+    
+    @PostMapping("/period/uploaddata")
+    public ResponseEntity<String> createPeriod(@RequestBody String jsonData) {
+        return serviceOkrBackend.postPeriod(jsonData);
+    }
+    
+    @DeleteMapping("/objectives/deletedata/{name}") // /objectives/deletedata/2
+    public ResponseEntity<Void> deleteObjective(@PathVariable String name) {
+        try {
+        	System.out.println("delete");
+            boolean isDeleted = serviceOkrBackend.deleteObjectives(name);
+            System.out.println("deleteeeee");
+            if (isDeleted) {
+                return ResponseEntity.ok().build();
+            } else {
+            	System.out.println("delete fails");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("delete failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

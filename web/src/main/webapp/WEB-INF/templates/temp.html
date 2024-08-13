@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temp</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+body {
+	background-color: #f4f4f4;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 12px;
+	text-align: left;
+}
+
+th {
+	background-color: #d0d0d0;
+	color: #333;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+	background-color: #fff;
+}
+
+.draggable {
+	cursor: move;
+}
+
+.edit-btn, .delete-btn {
+	cursor: pointer;
+	color: #333;
+	text-decoration: none;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+	color: #000;
+}
+
+.ui-state-highlight {
+	background: #e0e0e0;
+	border: 1px dashed #cccccc;
+}
+
+.cell-editable {
+	border: 1px solid #007bff;
+	background-color: #fff;
+}
+
+.non-editable {
+	cursor: default;
+}
+
+.btn-custom {
+	border-color: #333;
+	color: #333;
+}
+
+.btn-custom:hover {
+	background-color: #333;
+	color: #fff;
+}
+</style>
+</head>
+<body>
+	<div class="container mt-4">
+		<h2>Period</h2>
+		<table id="myTable" class="table table-bordered">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>Name</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Current Period</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Rows will be inserted dynamically here -->
+			</tbody>
+		</table>
+		<button id="addRow" class="btn btn-custom mt-3">
+			<i class="fas fa-plus"></i> Add Row
+		</button>
+		<button id="updateData" class="btn btn-custom mt-3">
+			<i class="fas fa-save"></i> Update Data
+		</button>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+	<script>
+	$(function() {
+	    var table = $('#myTable').DataTable({
+	        "paging": true,
+	        "searching": false,
+	        "info": false,
+	        "ordering": false
+	    });
+
+	    function addRow() {
+	        var newRowIndex = $('#myTable tbody tr').length + 1;
+	        var newRow = `
+	            <tr class="draggable">
+	                <td>${newRowIndex}</td>
+	                <td contenteditable="false" tabindex="0"></td>
+	                <td contenteditable="false" tabindex="0"></td>
+	                <td contenteditable="false" tabindex="0"></td>
+	                <td contenteditable="false" tabindex="0"></td>
+	                <td class="non-editable">
+	                    <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
+	                    <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+	                </td>
+	            </tr>
+	        `;
+	        table.row.add($(newRow)).draw();
+	        updateRowNumbers();
+	    }
+
+	    function fetchData() {
+	        fetch('period/loaddata')
+	            .then(response => response.json())
+	            .then(jsonData => {
+	                var data = [];
+	                var counter = 1;
+
+	                if (jsonData.data && Array.isArray(jsonData.data)) {
+	                    for (var i = 0; i < jsonData.data.length; i++) {
+	                        var item = jsonData.data[i];
+	                        if (item.childs && Array.isArray(item.childs)) {
+	                            for (var j = 0; j < item.childs.length; j++) {
+	                                var childItem = item.childs[j];
+	                                var childData = {
+	                                    No: counter++,
+	                                    name: childItem.name,
+	                                    startDate: childItem.startDate,
+	                                    endDate: childItem.endDate,
+	                                    currentPeriod: childItem.currentPeriod
+	                                };
+	                                data.push(childData);
+	                            }
+	                        }
+	                    }
+	                } else {
+	                    console.error('Unexpected data structure in the JSON data');
+	                }
+
+	                table.clear();
+	                data.forEach(row => {
+	                    var rowHtml = `
+	                        <tr class="draggable">
+	                            <td>${row.No}</td>
+	                            <td>${row.name}</td>
+	                            <td>${row.startDate}</td>
+	                            <td>${row.endDate}</td>
+	                            <td>${row.currentPeriod}</td>
+	                            <td class="non-editable">
+	                                <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
+	                                <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+	                            </td>
+	                        </tr>
+	                    `;
+	                    table.row.add($(rowHtml)).draw();
+	                });
+	                updateRowNumbers();
+	            })
+	            .catch(error => {
+	                console.error('Error fetching data:', error);
+	            });
+	    }
+
+	    function updateData() {
+	        var tableData = [];
+	        $('#myTable tbody tr').each(function() {
+	            var row = $(this);
+	            var rowData = {
+	                No: row.find('td').eq(0).text(),
+	                name: row.find('td').eq(1).text(),
+	                startDate: row.find('td').eq(2).text(),
+	                endDate: row.find('td').eq(3).text(),
+	                currentPeriod: row.find('td').eq(4).text()
+	            };
+	            tableData.push(rowData);
+	        });
+
+	        if (tableData.length === 0) {
+	            console.warn('No data to update');
+	            return;
+	        }
+
+	        fetch('period/uploaddata', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            },
+	            body: JSON.stringify(tableData)
+	        })
+	        .then(response => response.json())
+	        .then(result => {
+	            console.log('Data successfully updated:', result);
+	            console.log(tableData);
+	        })
+	        .catch(error => {
+	            console.error('Error updating data:', error);
+	        });
+	    }
+
+	    function updateRowNumbers() {
+	        $('#myTable tbody tr').each(function(index) {
+	            $(this).find('td').eq(0).text(index + 1);
+	        });
+	    }
+
+	    function enableCellEdit(row) {
+	        $(row).find('td').not('.non-editable').attr('contenteditable', 'true').addClass('cell-editable').attr('tabindex', '0').focus();
+	        $(row).find('.edit-btn').html('<i class="fas fa-save"></i> Save');
+	    }
+
+	    function disableCellEdit(row) {
+	        $(row).find('td').not('.non-editable').attr('contenteditable', 'false').removeClass('cell-editable');
+	        $(row).find('.edit-btn').html('<i class="fas fa-edit"></i> Edit');
+	    }
+
+	    $('#addRow').on('click', function() {
+	        addRow();
+	    });
+
+	    $('#updateData').on('click', function() {
+	        updateData();
+	    });
+
+	    $('#myTable').on('click', '.delete-btn', function() {
+	        var row = $(this).closest('tr');
+	        if (confirm('Are you sure you want to delete this row?')) {
+	            table.row(row).remove().draw();
+	            updateRowNumbers();
+	        }
+	    });
+
+	    $('#myTable').on('click', '.edit-btn', function() {
+	        var row = $(this).closest('tr');
+	        var isEditing = $(this).find('i').hasClass('fa-save');
+	        if (isEditing) {
+	            disableCellEdit(row);
+	        } else {
+	            enableCellEdit(row);
+	        }
+	    });
+
+	    $('#myTable').on('click', 'td[contenteditable="true"]', function() {
+	        $(this).focus();
+	    });
+
+	    $('#myTable').sortable({
+	        items: 'tr.draggable',
+	        placeholder: 'ui-state-highlight',
+	        cancel: 'th, .edit-btn, .delete-btn',
+	        update: function(event, ui) {
+	            updateRowNumbers();
+	        }
+	    }).disableSelection();
+
+	    fetchData();
+	});
+    </script>
+</body>
+</html>
