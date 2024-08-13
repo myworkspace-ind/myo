@@ -3,12 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('#jstree').jstree();
 	var container = document.getElementById('okr-table');
 	var hot;
-	const dropdownMenu = document.getElementById('period-dropdown');
 	var currentData = [];
 
 	var hotSettings = {
 		data: [],
-		colHeaders: ['No', 'Period', 'Start date', 'End date', 'Current period'],
+		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
 		columns: [
 			{ data: 'No', readOnly: true },
 			{ data: 'name' },
@@ -58,12 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	fetch('period/loaddata')
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			return response.json();
-		})
+		.then(response => response.json())
 		.then(jsonData => {
 			var data = [];
 			var counter = 1;
@@ -71,15 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (jsonData.data && Array.isArray(jsonData.data)) {
 				for (var i = 0; i < jsonData.data.length; i++) {
 					var item = jsonData.data[i];
-					var itemData = {
-						No: counter++,
-						name: item.name,
-						startDate: item.startDate,
-						endDate: item.endDate,
-						currentPeriod: item.currentPeriod
-					};
-					data.push(itemData);
-
 					if (item.childs && Array.isArray(item.childs)) {
 						for (var j = 0; j < item.childs.length; j++) {
 							var childItem = item.childs[j];
@@ -94,22 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 					}
 				}
-
-				const testData = [
-					{ name: "Period 1" },
-					{ name: "Period 2" },
-					{ name: "Period 3" }
-				];
-				console.log("never gonna give you up");
-				dropdownMenu.innerHTML = testData.map(period =>
-					`<li><a class="dropdown-item" href="#">${period.name}</a></li>`
-				).join('');
-				// Assuming hot is a Handsontable instance and needs data
-				hot.loadData(data);
-				currentData = data;
 			} else {
 				console.error('Unexpected data structure in the JSON data');
 			}
+
+			hot.loadData(data);
+			currentData = data;
 		})
 		.catch(error => {
 			console.error('Error fetching data:', error);
@@ -120,33 +95,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.warn('No data to update');
 			return;
 		}
-		const formattedData = currentData.map(item => {
-			console.log('Mapping item:', item);
-			return {
-				name: item[1] || "defaultName",
-				startDate: item[2] || "defaultStartDate",
-				endDate: item[3] || "defaultEndDate",
-				parentId: null,
-				setAsRoot: true,
-				currentPeriod: item[4] === true || item[4] === "true"  // Convert item[4] to boolean
-			};
-		});
-		const lastItem = formattedData[formattedData.length - 1];
-		console.log(JSON.stringify(formattedData));
-		console.log(JSON.stringify(lastItem));
 
 		fetch('period/uploaddata', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-
-			body: JSON.stringify(lastItem),
+			body: JSON.stringify(currentData)
 		})
 			.then(response => response.json())
 			.then(result => {
 				console.log('Data successfully updated:', result);
-				console.log(lastItem);
+				console.log(currentData);
 			})
 			.catch(error => {
 				console.error('Error updating data:', error);
@@ -184,19 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					button.onclick = function() {
 						var selectedRow = row;
-						var name = hotLayout.getDataAtRowProp(selectedRow, 'Objectives');
 						hotLayout.alter('remove_row', selectedRow, 1);
 						adjustMergeCells(selectedRow);
-						deleteRowFromDatabase(
-							name,
-							'objectives/deletedata',
-							function(data) {
-								console.log('Row successfully deleted: ', data);
-							},
-							function(error) {
-								console.error('Failed to delete row: ', error);
-							}
-						);
 					};
 
 					Handsontable.dom.empty(TD);
@@ -504,35 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 	}
 
-	function deleteRowFromDatabase(name, url, onSuccess, onError) {
-		var completeUrl = `${url}/${name}`;
-		console.log('Request URL:', completeUrl); // Log the complete URL
-
-		fetch(completeUrl, {
-			method: 'DELETE', // Ensure the method is DELETE
-			headers: {
-				'Content-Type': 'application/json' // Optional
-			}
-		})
-			.then(response => {
-				if (!response.ok) {
-					console.log('Response error:', response.status);
-					throw new Error('Network response was not ok');
-				}
-				return response.text(); // Adjust based on expected response
-			})
-			.then(data => {
-				if (onSuccess) {
-					onSuccess(data); // Handle response data
-				}
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-				if (onError) {
-					onError(error);
-				}
-			});
-	}
+	
 
 	var apiUrl = 'objectives/loaddata';
 	updateOkrDashboardFromUrl(apiUrl);

@@ -10,4 +10,5 @@ public interface IOkrBackend {
 	String getObjectives();
 	public ResponseEntity<String> postOkr(String jsonData);
 	public ResponseEntity<String> postPeriod(String jsonData);
+	public boolean deleteObjectives(String Id);
 }

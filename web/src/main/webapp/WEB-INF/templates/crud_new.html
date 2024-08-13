@@ -32,6 +32,8 @@
 	src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.13.6/js/dataTables.dateTime.min.js"></script>
 
 
 <style>
@@ -170,17 +172,18 @@ body {
 .form-check-input {
 	cursor: pointer;
 }
+
 #okr-dashboard-content .card {
-    margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
+
 .dataTables_wrapper .dataTables_filter {
-    margin-bottom: 2%;
+	margin-bottom: 2%;
 }
 
 .dataTables_wrapper .dataTables_paginate {
-    margin-bottom: 2%;
+	margin-bottom: 2%;
 }
-
 </style>
 
 </head>
@@ -324,8 +327,7 @@ body {
 													<i class="fas fa-plus"></i> Add OKR
 												</button>
 											</div>
-											<div id="okr-dashboard-content">
-											</div>
+											<div id="okr-dashboard-content"></div>
 										</div>
 									</div>
 									<div class="row my-3">
@@ -372,45 +374,47 @@ $(document).ready(function() {
 
     var trackingTable = $('#okr-table').DataTable({
         "paging": true,
-        "searching": false,
+        "searching": true,
         "info": false,
-        "ordering": false,
-        "searching": true
+        "ordering": true,
     });
 
     var layoutTable = $('#okr-layouttable').DataTable({
         "paging": true,
-        "searching": false,
+        "searching": true,
         "info": false,
-        "ordering": false,
-        "searching": true
+        "ordering": true,
     });
+    
+    var newRows = [];
+    var newLayoutRows = [];
+
 
     function addRow() {
-        console.log('addRow function called');
         var newRowIndex = $('#okr-table tbody tr').length + 1;
-        var newRow = `
-            <tr class="draggable">
+        var newRow = 
+            `<tr class="draggable new-row">
                 <td>${newRowIndex}</td>
                 <td contenteditable="false" tabindex="0"></td>
                 <td contenteditable="false" tabindex="0"></td>
                 <td contenteditable="false" tabindex="0"></td>
                 <td contenteditable="false" tabindex="0"></td>
                 <td class="non-editable">
-                    <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
-                    <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                    <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
                 </td>
-            </tr>
-        `;
-        trackingTable.row.add($(newRow)).draw();
+            </tr>`;
+        var row = $(newRow);
+        trackingTable.row.add(row).draw();
+        newRows.push(row);
         updateRowNumbers();
+        makeTableSortable('#okr-table');
     }
 
     function addRowLayout() {
-        console.log('addRowLayout function called');
         var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
-        var newRow = `
-            <tr>
+        var newRow = 
+            `<tr data-new="true">
                 <td>${newRowIndex}</td>
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
@@ -419,13 +423,40 @@ $(document).ready(function() {
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
                 <td>
-                    <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
-                    <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                    <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>
                 </td>
-            </tr>
-        `;
-        layoutTable.row.add($(newRow)).draw();
+            </tr>`;
+        var row = $(newRow);
+        layoutTable.row.add(row).draw();
+        newLayoutRows.push(row);
         updateRowNumbersLayout();
+        makeTableSortable('#okr-layouttable');
+    }
+
+    function flattenData(data) {
+        var result = [];
+        data.forEach(function(item) {
+            result.push({
+                No: result.length + 1,
+                name: item.name,
+                startDate: item.startDate,
+                endDate: item.endDate,
+                currentPeriod: item.currentPeriod
+            });
+            if (item.childs && Array.isArray(item.childs)) {
+                item.childs.forEach(function(child) {
+                    result.push({
+                        No: result.length + 1,
+                        name: child.name,
+                        startDate: child.startDate,
+                        endDate: child.endDate,
+                        currentPeriod: child.currentPeriod
+                    });
+                });
+            }
+        });
+        return result;
     }
 
     function fetchData() {
@@ -433,113 +464,34 @@ $(document).ready(function() {
             .then(response => response.json())
             .then(jsonData => {
                 var data = [];
-                var counter = 1;
-
                 if (jsonData.data && Array.isArray(jsonData.data)) {
-                    jsonData.data.forEach(item => {
-                        if (item.childs && Array.isArray(item.childs)) {
-                            item.childs.forEach(childItem => {
-                                var childData = {
-                                    No: counter++,
-                                    name: childItem.name,
-                                    startDate: childItem.startDate,
-                                    endDate: childItem.endDate,
-                                    currentPeriod: childItem.currentPeriod
-                                };
-                                data.push(childData);
-                            });
-                        }
-                    });
+                    data = flattenData(jsonData.data);
                 } else {
                     console.error('Unexpected data structure in the JSON data');
                 }
 
                 trackingTable.clear();
                 data.forEach(row => {
-                    var rowHtml = `
-                        <tr class="draggable">
+                    var rowHtml = 
+                        `<tr class="draggable">
                             <td>${row.No}</td>
                             <td>${row.name}</td>
                             <td>${row.startDate}</td>
                             <td>${row.endDate}</td>
                             <td>${row.currentPeriod}</td>
                             <td class="non-editable">
-                                <span class="edit-btn"><i class="fas fa-edit"></i> Edit</span>
-                                <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>
+                                <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
+                                <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
                             </td>
-                        </tr>
-                    `;
+                        </tr>`;
                     trackingTable.row.add($(rowHtml)).draw();
                 });
                 updateRowNumbers();
+                makeTableSortable('#okr-table');
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }
-
-    function updateData() {
-        var tableData = [];
-        $('#okr-table tbody tr').each(function() {
-            var row = $(this);
-            var rowData = {
-                No: row.find('td').eq(0).text(),
-                name: row.find('td').eq(1).text(),
-                startDate: row.find('td').eq(2).text(),
-                endDate: row.find('td').eq(3).text(),
-                currentPeriod: row.find('td').eq(4).text()
-            };
-            tableData.push(rowData);
-        });
-
-        if (tableData.length === 0) {
-            console.warn('No data to update');
-            return;
-        }
-
-        fetch('period/uploaddata', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tableData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Data successfully updated:', result);
-            console.log(tableData);
-        })
-        .catch(error => {
-            console.error('Error updating data:', error);
-        });
-    }
-
-    function updateRowNumbers() {
-        $('#okr-table tbody tr').each(function(index) {
-            $(this).find('td').eq(0).text(index + 1);
-        });
-    }
-
-    function updateRowNumbersLayout() {
-        $('#okr-layouttable tbody tr').each(function(index) {
-            $(this).find('td').eq(0).text(index + 1);
-        });
-    }
-
-    function enableCellEdit(row) {
-        $(row).find('td').not('.non-editable').each(function() {
-            $(this).attr('contenteditable', 'true').addClass('cell-editable');
-        });
-        $(row).find('.edit-btn').html('<i class="fas fa-save"></i> Save');
-        $("#okr-table, #okr-layouttable").sortable("disable");
-    }
-
-    function disableCellEdit(row) {
-        $(row).find('td').not('.non-editable').each(function() {
-            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
-        });
-        $(row).find('.edit-btn').html('<i class="fas fa-edit"></i> Edit');
-        $("#okr-table, #okr-layouttable").sortable("enable");
     }
 
     function fetchDataLayout() {
@@ -577,7 +529,7 @@ $(document).ready(function() {
                                     unitType, 
                                     keyResult.startvalue, 
                                     keyResult.target, 
-                                    '<span class="edit-btn"><i class="fas fa-edit"></i> Edit</span> <span class="delete-btn"><i class="fas fa-trash"></i> Delete</span>'
+                                    '<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>'
                                 ];
                                 data.push(childData);
                             });
@@ -587,8 +539,9 @@ $(document).ready(function() {
                     layoutTable.clear();
                     layoutTable.rows.add(data).draw();
                     updateRowNumbersLayout();
+                    makeTableSortable('#okr-layouttable');
                 } else {
-                    console.error('Unexpected data structure or no objectives:', jsonData);
+                    console.error('Unexpected data structure in the JSON data');
                 }
             })
             .catch(error => {
@@ -596,118 +549,272 @@ $(document).ready(function() {
             });
     }
 
-    $('#okr-table tbody').sortable({
-        items: 'tr.draggable',
-        cursor: 'move',
-        placeholder: 'ui-state-highlight',
-        start: function(event, ui) {
-            ui.placeholder.height(ui.item.height());
-        },
-        stop: function(event, ui) {
-            updateRowNumbers();
-        }
-    });
+/*     function updateData() {
+        var tableData = [];
+        $('#okr-table tbody tr').each(function() {
+            var row = $(this);
+            var name = row.find('td').eq(1).text();
+            var startDate = row.find('td').eq(2).text();
+            var endDate = row.find('td').eq(3).text();
+            var currentPeriod = row.find('td').eq(4).text();
 
-    $('#okr-layouttable tbody').sortable({
-        items: 'tr',
-        cursor: 'move',
-        placeholder: 'ui-state-highlight',
-        start: function(event, ui) {
-            ui.placeholder.height(ui.item.height());
-        },
-        stop: function(event, ui) {
-            updateRowNumbersLayout();
-        }
-    });
+            tableData.push({
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                currentPeriod: currentPeriod
+            });
+        });
 
-    $('#okr-table').on('click', '.edit-btn', function() {
+        if (tableData.length === 0) {
+            console.warn('No data to update');
+            return;
+        }
+
+        fetch('period/uploaddata', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tableData)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Data successfully updated:', result);
+        })
+        .catch(error => {
+            console.error('Error updating data:', error);
+        });
+    } */
+    function updateData() {
+        var rowsData = [];
+        var parentIdMap = {};
+
+        $('#okr-table tbody tr').each(function() {
+            var row = $(this);
+            var endDate = row.find('td').eq(3).text();
+            var endDateYear = new Date(endDate).getFullYear();
+
+            if (!parentIdMap[endDateYear]) {
+                parentIdMap[endDateYear] = null;
+            }
+
+            parentIdMap[endDateYear] = null; 
+        });
+
+        newRows.forEach(function(row) {
+            var name = row.find('td').eq(1).text();
+            var startDate = row.find('td').eq(2).text();
+            var endDate = row.find('td').eq(3).text();
+            var currentPeriod = row.find('td').eq(4).text() === 'true'; 
+
+            var endDateYear = new Date(endDate).getFullYear();
+            var parentId = parentIdMap[endDateYear]; 
+
+            var rowData = {
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                parentId: parentId, 
+                setAsRoot: parentId === null, 
+                currentPeriod: currentPeriod 
+            };
+
+            rowsData.push(rowData); 
+        });
+
+        newRows = [];
+
+        if (rowsData.length === 0) {
+            console.warn('No new data to update');
+            return;
+        }
+
+        rowsData.forEach(function(data) {
+            fetch('period/uploaddata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data successfully updated:', result);
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            });
+        });
+    }
+    
+    
+    function updateDataLayout() {
+        $('#okr-layouttable tbody tr[data-new="true"]').each(function() {
+            var row = $(this);
+            var description = row.find('td').eq(1).text().trim();
+            var weight = row.find('td').eq(2).text().trim();
+            var keyResultDescription = row.find('td').eq(3).text().trim();
+            var unit = row.find('td').eq(4).text().trim();
+            var startValue = row.find('td').eq(5).text().trim();
+            var target = row.find('td').eq(6).text().trim();
+
+            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target) {
+                console.warn('One or more fields are empty in the row.');
+                return; 
+            }
+
+            var objective = {
+                description: description,
+                status: 'DRAFT',
+                weight: weight,
+                comment: '',
+                keyResults: []
+            };
+
+            var keyResult = {
+                description: keyResultDescription,
+                dueDate: '',
+                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0,
+                weight: weight,
+                numberResult: 0,
+                numberTarget: target,
+                yesNoResult: false,
+                yesNoTarget: false,
+                percentageResult: 0,
+                percentageTarget: target,
+                standard: 'None',
+                startvalue: startValue
+            };
+
+            objective.keyResults.push(keyResult);
+
+            var requestData = { objectives: [objective] }; 
+
+            if (requestData.objectives.length === 0) {
+                console.warn('No data to update');
+                return;
+            }
+
+            console.log('Sending data:', JSON.stringify(requestData));
+
+            fetch('objectives/uploaddata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data successfully updated:', result);
+                row.removeAttr('data-new'); 
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            });
+        });
+    }
+
+
+
+
+
+    function updateRowNumbers() {
+        $('#okr-table tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+
+    function updateRowNumbersLayout() {
+        $('#okr-layouttable tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+
+    function makeTableSortable(selector) {
+        $(selector).sortable({
+            items: 'tbody tr',
+            cursor: 'move',
+            axis: 'y',
+            update: function(event, ui) {
+                updateRowNumbers();
+                updateRowNumbersLayout();
+            }
+        });
+    }
+
+    function enableCellEditTracking(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'true').addClass('cell-editable');
+        });
+        $(row).find('.editTracking-btn').html('<i class="fas fa-save"></i> Save');
+        $("#okr-table").sortable("disable");
+    }
+    
+    function enableCellEditLayout(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'true').addClass('cell-editable');
+        });
+        $(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
+        $("#okr-layouttable").sortable("disable");
+    }
+
+    function disableCellEditTracking(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
+        });
+        $(row).find('.editTracking-btn').html('<i class="fas fa-edit"></i> Edit');
+        $("#okr-table").sortable("enable");
+    }
+    
+    function disableCellEditLayout(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
+        });
+        $(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
+        $("#okr-layouttable").sortable("enable");
+    }
+
+    $('#MKSOLAddRow').click(addRow);
+    $('#MKSOLAddRowLayout').click(addRowLayout);
+
+    $('#MKSOLUpdateperiod').click(updateData);
+    $('#submit-layout').click(updateDataLayout);
+
+
+    $('#okr-table').on('click', '.editTracking-btn', function() {
         var row = $(this).closest('tr');
         if ($(this).find('i').hasClass('fa-edit')) {
-            enableCellEdit(row);
-        } else if ($(this).find('i').hasClass('fa-save')) {
-            disableCellEdit(row);
-            updateData();
+            enableCellEditTracking(row);
+        } else {
+            disableCellEditTracking(row);
         }
     });
 
-    $('#okr-table').on('click', '.delete-btn', function() {
+    $('#okr-layouttable').on('click', '.editLayout-btn', function() {
+        var row = $(this).closest('tr');
+        if ($(this).find('i').hasClass('fa-edit')) {
+            enableCellEditLayout(row);
+        } else {
+            disableCellEditLayout(row);
+        }
+    });
+
+    $('#okr-table').on('click', '.deleteTracking-btn', function() {
         var row = $(this).closest('tr');
         trackingTable.row(row).remove().draw();
         updateRowNumbers();
     });
 
-
-    $('#okr-table').on('dblclick', 'td', function() {
-        var cell = $(this);
-        if (!cell.hasClass('non-editable')) {
-            cell.attr('contenteditable', 'true').focus();
-        }
+    $('#okr-layouttable').on('click', '.deleteLayout-btn', function() {
+        var row = $(this).closest('tr');
+        layoutTable.row(row).remove().draw();
+        updateRowNumbersLayout();
     });
-
-    $('#okr-layouttable').on('dblclick', 'td', function() {
-        var cell = $(this);
-        if (!cell.hasClass('non-editable')) {
-            cell.attr('contenteditable', 'true').focus();
-        }
-    });
-
-    $('#MKSOLAddRow').on('click', addRow);
-    $('#MKSOLAddRowLayout').on('click', addRowLayout);
-
+    
     fetchData();
     fetchDataLayout();
-    
-    
-    
-    function fetchDataDashboard() {
-        fetch('objectives/loaddata')
-            .then(response => response.json())
-            .then(jsonData => {
-                const dashboardContent = $('#okr-dashboard-content');
-                dashboardContent.empty(); 
-
-                if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
-                    jsonData.data.objectives.forEach(objective => {
-                        const objectiveHtml = `
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">${objective.description}</h5>
-                                    <p class="card-text">Weight: ${objective.weight}%</p>
-                                    <div class="mb-2">
-                                        <p class="card-text">Key Results:</p>
-                                        <ul>
-                                            ${objective.keyResults.map(kr => `
-                                                <li>${kr.description} - Target: ${kr.target} (${getUnitType(kr.itype)})</li>
-                                            `).join('')}
-                                        </ul>
-                                    </div>
-                                    <p class="card-text">Start Value: ${objective.keyResults.map(kr => kr.startvalue).join(', ')}</p>
-                                    <p class="card-text">Target: ${objective.keyResults.map(kr => kr.target).join(', ')}</p>
-                                </div>
-                            </div>
-                        `;
-                        dashboardContent.append(objectiveHtml);
-                    });
-                } else {
-                    dashboardContent.append('<p>No objectives available.</p>');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching dashboard data:', error);
-            });
-    }
-
-    function getUnitType(itype) {
-        switch (itype) {
-            case 1: return 'Number';
-            case 2: return 'Yes/No';
-            case 3: return 'Percentage';
-            default: return 'N/A';
-        }
-    }
-
-
-    fetchDataDashboard();
 });
 </script>
 
