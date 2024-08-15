@@ -6,23 +6,20 @@
 <title>Self Scoring</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-<link href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <style>
 body {
 	margin-top: 7%;
 }
-.handsontable td, .handsontable th {
-	padding: 0.5rem !important;
-	text-align: center;
-	vertical-align: middle;
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	padding: 0.5rem;
 }
-.handsontable {
-	width: 100%;
+.dataTables_wrapper .dataTables_info {
+	padding: 0.5rem;
+}
+.dataTables_wrapper .dataTables_filter input {
+	padding: 0.5rem;
 }
 .text-primary {
 	color: #007bff !important;
@@ -74,53 +71,74 @@ body {
 					Le Van A <span class="badge" id="MKSOLnhanvienbadge">Nhân Viên</span>
 				</h4>
 				<div class="d-flex justify-content-between align-items-center mb-3">
-					<div class="form-group">
-						<input type="text" class="form-control" id="search-okrs" placeholder="Search OKRs...">
-					</div>
+			
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="full-mode" value="option1"> 
 						<label class="form-check-label" for="full-mode">Full mode</label> 
 						<span class="ml-3 font-weight-bold" id="current-date"></span>
 					</div>
 				</div>
-				<div id="okrs-table"></div>
+				<table id="okrs-table" class="display" style="width:100%">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Objectives</th>
+							<th>Weight</th>
+							<th>Key results</th>
+							<th>Unit</th>
+							<th>Start value</th>
+							<th>Target</th>
+							<th>Self-score</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 				<div class="text-right mt-3">
-					<button class="btn float-end" id="add-row-btn">Add Row</button>
 					<button class="btn float-end" id="update-btn">Update</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 	<script>
-		var container = document.getElementById('okrs-table');
-		var hot = new Handsontable(container, {
-			data : [],
-			colHeaders : [ 'No', 'Objectives', 'Weight', 'Key results', 'Unit', 'Start value', 'Target', 'Self-score' ],
-			columns : [ 
-				{ data : 'No', readOnly : true }, 
-				{ data : 'Objectives', readOnly : true }, 
-				{ data : 'Weight', readOnly : true }, 
-				{ data : 'Key results', readOnly : true }, 
-				{ data : 'Unit', readOnly : true }, 
-				{ data : 'Start value', readOnly : true }, 
-				{ data : 'Target', readOnly : true }, 
-				{ data : 'Self-score', type : 'numeric', validator : function(value, callback) {
-					if (value === null || value === '') {
-						callback(true);
-					} else if (isNaN(value)) {
-						callback(false);
-					} else {
-						callback(true);
-					}
-				}, allowInvalid : false }
-				/* ,{ data : 'keyResultId', readOnly : true, hidden: true } */
+
+	$(document).ready(function() {
+		var table = $('#okrs-table').DataTable({
+			data: [],
+			columns: [
+				{ data: 'No' },
+				{ data: 'Objectives' },
+				{ data: 'Weight' },
+				{ data: 'Key results' },
+				{ data: 'Unit' },
+				{ data: 'Start value' },
+				{ data: 'Target' },
+				{ data: 'Self-score' }
 			],
-			stretchH : 'all',
-			autoWrapRow : true,
-			height : 'auto',
-			licenseKey : 'non-commercial-and-evaluation',
-			mergeCells : []
+			paging: true,
+			searching: true,
+			info: true,
+			columnDefs: [
+				{
+					targets: '_all',
+					className: 'dt-center'
+				},
+				{
+					targets: 7, 
+					render: function(data, type, row, meta) {
+						if (type === 'display') {
+							return `<input type="text" class="form-control form-control-sm" value="${data}">`;
+						}
+						return data;
+					},
+					className: 'editable-cell'
+				}
+			]
 		});
 
 		function fetchData() {
@@ -142,12 +160,7 @@ body {
 		                });
 
 		                var datalayout = [];
-		                var mergeRanges = [];
-		                var objectiveCounter = 1;
-
-		                objectives.forEach(function(objective) {
-		                    var firstRow = datalayout.length;
-
+		                objectives.forEach(function(objective, objectiveIndex) {
 		                    objective.keyResults.forEach(function(keyResult, krIndex) {
 		                        var unit;
 		                        switch (keyResult.itype) {
@@ -166,7 +179,7 @@ body {
 		                        }
 
 		                        datalayout.push({
-		                            No: krIndex === 0 ? objectiveCounter : '',
+		                            No: krIndex === 0 ? (objectiveIndex + 1) : '',
 		                            Objectives: objective.description,
 		                            Weight: objective.weight,
 		                            "Key results": keyResult.description,
@@ -177,36 +190,9 @@ body {
 		                            /* ,keyResultId: keyResult.keyResultId */
 		                        });
 		                    });
-
-		                    objectiveCounter++;
-
-		                    if (objective.keyResults.length > 1) {
-		                        mergeRanges.push({
-		                            row: firstRow,
-		                            col: 0,
-		                            rowspan: objective.keyResults.length,
-		                            colspan: 1
-		                        });
-		                        mergeRanges.push({
-		                            row: firstRow,
-		                            col: 1,
-		                            rowspan: objective.keyResults.length,
-		                            colspan: 1
-		                        });
-		                        mergeRanges.push({
-		                            row: firstRow,
-		                            col: 2,
-		                            rowspan: objective.keyResults.length,
-		                            colspan: 1
-		                        });
-		                    }
 		                });
 
-		                hot.loadData(datalayout);
-		                hot.updateSettings({
-		                    mergeCells: mergeRanges
-		                });
-
+		                table.clear().rows.add(datalayout).draw();
 		            } else {
 		                console.error('Failed to fetch data. Status:', xhr.status);
 		            }
@@ -217,78 +203,21 @@ body {
 
 		function submitData() {
 		    var url = 'objectives/uploaddata';
-		    var data = hot.getData();
-		    var mergeCells = hot.getSettings().mergeCells;
-
+		    var data = table.rows().data().toArray();
+		    
 		    var formattedData = [];
-		    var rowMap = new Map();
-
-		    function getRowEntry(rowIndex) {
-		        if (!rowMap.has(rowIndex)) {
-		            rowMap.set(rowIndex, {
-		                No: '',
-		                Objectives: '',
-		                Weight: '',
-		                'Key results': '',
-		                Unit: '',
-		                'Start value': '',
-		                Target: '',
-		                'Self-score': ''
-		            });
-		        }
-		        return rowMap.get(rowIndex);
-		    }
-
-		    data.forEach((row, index) => {
-		        var rowEntry = getRowEntry(index);
-		        rowEntry.No = row[0];
-		        rowEntry.Objectives = row[1];
-		        rowEntry.Weight = row[2];
-		        rowEntry['Key results'] = row[3];
-		        rowEntry.Unit = row[4];
-		        rowEntry['Start value'] = row[5];
-		        rowEntry.Target = row[6];
-		        rowEntry['Self-score'] = row[7];
+		    data.forEach(row => {
+		        formattedData.push({
+		            No: row[0],
+		            Objectives: row[1],
+		            Weight: row[2],
+		            "Key results": row[3],
+		            Unit: row[4],
+		            "Start value": row[5],
+		            Target: row[6],
+		            "Self-score": row[7]
+		        });
 		    });
-
-		    mergeCells.forEach(merge => {
-		        const { row, col, rowspan, colspan } = merge;
-		        const topLeftCellValue = data[row][col];
-
-		        for (let r = row; r < row + rowspan; r++) {
-		            for (let c = col; c < col + colspan; c++) {
-		                var rowEntry = getRowEntry(r);
-		                switch (c) {
-		                    case 0:
-		                        rowEntry.No = topLeftCellValue;
-		                        break;
-		                    case 1:
-		                        rowEntry.Objectives = topLeftCellValue;
-		                        break;
-		                    case 2:
-		                        rowEntry.Weight = topLeftCellValue;
-		                        break;
-		                    case 3:
-		                        rowEntry['Key results'] = topLeftCellValue;
-		                        break;
-		                    case 4:
-		                        rowEntry.Unit = topLeftCellValue;
-		                        break;
-		                    case 5:
-		                        rowEntry['Start value'] = topLeftCellValue;
-		                        break;
-		                    case 6:
-		                        rowEntry.Target = topLeftCellValue;
-		                        break;
-		                    case 7:
-		                        rowEntry['Self-score'] = topLeftCellValue;
-		                        break;
-		                }
-		            }
-		        }
-		    });
-
-		    formattedData = Array.from(rowMap.values());
 
 		    var xhr = new XMLHttpRequest();
 		    xhr.open('POST', url, true);
@@ -305,69 +234,6 @@ body {
 		    xhr.send(JSON.stringify(formattedData));
 		}
 
-		/* function submitData() {
-		    var url = 'keyResult/grade/';
-		    var data = hot.getData();
-
-		    data.forEach(row => {
-		        var keyResultId = row[8]; // Index for keyResultId
-		        var finalScore = row[7];  // Index for Self-score
-
-		        if (keyResultId) {
-		            var xhr = new XMLHttpRequest();
-		            xhr.open('PUT', url + keyResultId, true);
-		            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-		            xhr.onreadystatechange = function() {
-		                if (xhr.readyState === XMLHttpRequest.DONE) {
-		                    if (xhr.status === 200) {
-		                        console.log('Data successfully submitted for keyResultId:', keyResultId);
-		                    } else {
-		                        console.error('Failed to submit data for keyResultId:', keyResultId, 'Status:', xhr.status);
-		                    }
-		                }
-		            };
-		            xhr.send(JSON.stringify({ finalScore: finalScore }));
-		        }
-		    });
-		} */
-		
-		function addRow() {
-			var newRow = {
-				No : hot.countRows() + 1,
-				Objectives : '',
-				Weigth : '',
-				"Key results" : '',
-				Unit : '',
-				"Start value" : '',
-				Target : '',
-				"Self-score" : ''
-				/* ,keyResultId: '' */
-			};
-
-			hot.alter('insert_row_below', hot.countRows(), 1);
-
-			var rowIndex = hot.countRows() - 1;
-
-			hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
-			hot.setDataAtRowProp(rowIndex, 'Objectives', newRow.Objectives);
-			hot.setDataAtRowProp(rowIndex, 'Weigth', newRow.Weigth);
-			hot.setDataAtRowProp(rowIndex, 'Key results', newRow["Key results"]);
-			hot.setDataAtRowProp(rowIndex, 'Unit', newRow.Unit);
-			hot.setDataAtRowProp(rowIndex, 'Start value', newRow["Start value"]);
-			hot.setDataAtRowProp(rowIndex, 'Target', newRow.Target);
-			hot.setDataAtRowProp(rowIndex, 'Self-score', newRow["Self-score"]);
-
-			hot.updateSettings({
-				cells : function(row, col, prop) {
-					var cellProperties = {};
-					if (row === rowIndex) {
-						cellProperties.readOnly = false;
-					}
-					return cellProperties;
-				}
-			});
-		}
-
 		fetchData();
 
 		$('#jstree').jstree({
@@ -379,14 +245,11 @@ body {
 			}
 		});
 
-		$('#search-okrs').on('input', function() {
-			var searchTerm = $(this).val().toLowerCase();
-		});
 
 		$('#full-mode').on('change', function() {
 			var newWidth = $(this).is(':checked') ? 200 : 150;
-			hot.updateSettings({
-				colWidths : newWidth
+			$('#okrs-table').DataTable().columns().every(function() {
+				this.header().style.width = newWidth + 'px';
 			});
 		});
 
@@ -394,8 +257,13 @@ body {
 			submitData();
 		});
 
-		$('#add-row-btn').on('click', function() {
-			addRow();
+		$('#okrs-table').on('change', 'input', function() {
+			var cell = $(this).closest('td');
+			var rowIndex = table.cell(cell).index().row;
+			var columnIndex = table.cell(cell).index().column;
+			var newValue = $(this).val();
+			
+			table.cell(rowIndex, columnIndex).data(newValue).draw();
 		});
 
 		$('#jstree').on('click', 'a[href="crud"]', function() {
@@ -408,6 +276,7 @@ body {
 			day : 'numeric'
 		});
 		$('#current-date').text(currentDate);
+	});
 	</script>
 </body>
 </html>
