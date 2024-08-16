@@ -663,6 +663,7 @@ $(document).ready(function() {
             var objective = {
                 description: description,
                 status: 'DRAFT',
+                progress: progress,
                 weight: weight,
                 comment: '',
                 keyResults: []
@@ -671,7 +672,7 @@ $(document).ready(function() {
             var keyResult = {
                 description: keyResultDescription,
                 dueDate: '',
-                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0,
+                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0, 
                 weight: weight,
                 numberResult: 0,
                 numberTarget: target,
@@ -681,7 +682,6 @@ $(document).ready(function() {
                 percentageTarget: target,
                 standard: 'None',
                 startvalue: startValue,
-                progress: progress,
             };
 
             objective.keyResults.push(keyResult);
