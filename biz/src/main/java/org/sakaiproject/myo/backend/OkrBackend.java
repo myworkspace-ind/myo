@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
@@ -488,7 +489,29 @@ public class OkrBackend implements IOkrBackend {
 	    }
 	}
 
-
+	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload){
+		try {
+			String serverUrl = okrBaseURL + "/keyResult/grade/" + keyResultId;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			
+			HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity, String.class);
+            
+            System.out.println("Here!");
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+            }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	public String getOkrAuthToken() {
 		return okrAuthToken;

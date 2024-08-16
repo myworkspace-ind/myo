@@ -118,7 +118,8 @@ body {
 				{ data: 'Unit' },
 				{ data: 'Start value' },
 				{ data: 'Target' },
-				{ data: 'Self-score' }
+				{ data: 'Self-score' },
+				{ data: 'KeyResultId', visible: false}
 			],
 			paging: true,
 			searching: true,
@@ -150,7 +151,7 @@ body {
 		            if (xhr.status === 200) {
 		                var jsonResponse = JSON.parse(xhr.responseText);
 		                var objectives = jsonResponse.data.objectives;
-
+						console.log(jsonResponse);
 		                objectives.sort((a, b) => {
 		                    if (a.description < b.description) return -1;
 		                    if (a.description > b.description) return 1;
@@ -186,8 +187,8 @@ body {
 		                            Unit: unit,
 		                            "Start value": keyResult.startvalue,
 		                            Target: keyResult.target,
-		                            "Self-score": keyResult.finalScore
-		                            /* ,keyResultId: keyResult.keyResultId */
+		                            "Self-score": keyResult.finalScore,
+		                            KeyResultId: keyResult.keyResultId
 		                        });
 		                    });
 		                });
@@ -201,38 +202,73 @@ body {
 		    xhr.send();
 		}
 
-		function submitData() {
-		    var url = 'objectives/uploaddata';
+		/* function submitData() {
 		    var data = table.rows().data().toArray();
 		    
-		    var formattedData = [];
-		    data.forEach(row => {
-		        formattedData.push({
-		            No: row[0],
-		            Objectives: row[1],
-		            Weight: row[2],
-		            "Key results": row[3],
-		            Unit: row[4],
-		            "Start value": row[5],
-		            Target: row[6],
-		            "Self-score": row[7]
-		        });
+		    data.forEach(function(row){
+		    	var keyResultId = row["KeyResultId"];
+		    	var payload = {
+		    			finalScore: row['Self-score']
+		    	};
+		    	var url = `update/selfscore/${keyResultId}`;
+		    	console.log("url: "+url);
+		    	console.log("self-score: "+ row['Self-score']);
+		    	var xhr = new XMLHttpRequest();
+		    	xhr.open('PUT', url, true);
+		    	xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+	            xhr.onreadystatechange = function() {
+	                if (xhr.readyState === XMLHttpRequest.DONE) {
+	                    if (xhr.status === 200) {
+	                        console.log('Data successfully updated for keyResultId:');
+	                    } else {
+	                        console.error('Failed to update data. Status:', xhr.status);
+	                    }
+	                }
+	            };
+	            xhr.send(JSON.stringify(payload));
+	        });
+		} */
+		
+		function submitData() {
+		    var data = table.rows().data().toArray();
+		    
+		    data.forEach(function(row){
+		        var keyResultId = row["KeyResultId"];
+		        var self_score = row["Self-score"];
+		        console.log("keyID: "+keyResultId);
+		        console.log("Score: "+self_score);
+		        
+		        var data = {
+		            finalScore: self_score
+		        };
+		        var payload = JSON.stringify(data);
+		        
+		        var url = `update/selfscore/${keyResultId}`;
+		        
+		        console.log("url: " + url);
+		        console.log("self-score: " + row['Self-score']);
+		        
+		        
+		        
+		        $.ajax({
+					url: url,
+					type: 'POST',
+					contentType: 'application/json',
+					data: payload,
+					success: function(response) {
+						console.log('Data saved successfully:', response);
+					},
+					error: function(xhr, status, error) {
+						console.error('Error saving data:', {
+						      status: xhr.status,
+						      statusText: xhr.statusText,
+						      responseText: xhr.responseText
+						    });
+					}
+				});
 		    });
-
-		    var xhr = new XMLHttpRequest();
-		    xhr.open('POST', url, true);
-		    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-		    xhr.onreadystatechange = function() {
-		        if (xhr.readyState === XMLHttpRequest.DONE) {
-		            if (xhr.status === 200) {
-		                console.log('Data successfully submitted.', JSON.stringify(formattedData));
-		            } else {
-		                console.error('Failed to submit data. Status:', xhr.status);
-		            }
-		        }
-		    };
-		    xhr.send(JSON.stringify(formattedData));
 		}
+
 
 		fetchData();
 

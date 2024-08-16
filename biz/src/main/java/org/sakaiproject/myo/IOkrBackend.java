@@ -1,5 +1,7 @@
 package org.sakaiproject.myo;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 
 public interface IOkrBackend {
@@ -11,4 +13,6 @@ public interface IOkrBackend {
 	public ResponseEntity<String> postOkr(String jsonData);
 	public ResponseEntity<String> postPeriod(String jsonData);
 	public boolean deleteObjectives(String Id);
+	
+	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload);
 }
