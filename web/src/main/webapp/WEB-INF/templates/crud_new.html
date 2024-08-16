@@ -244,9 +244,9 @@ body {
 						<ul class="nav nav-tabs card-header-tabs">
 							<li class="nav-item"><a
 								class="nav-link active MKSOLCRUDTabmenu" href="#okr-tracking"
-								data-bs-toggle="tab">OKR Tracking</a></li>
+								data-bs-toggle="tab">Period</a></li>
 							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
-								href="#okr-layout" data-bs-toggle="tab">OKR Layout</a></li>
+								href="#okr-layout" data-bs-toggle="tab">OKR</a></li>
 							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
 								href="#okr-dashboard" data-bs-toggle="tab">OKR Dashboard</a></li>
 						</ul>
@@ -256,7 +256,7 @@ body {
 							<div class="card p-3">
 								<div
 									class="mb-3 d-flex justify-content-between align-items-center">
-									<p class="m-0">OKR Tracking</p>
+									<p class="m-0">Period</p>
 									<button class="btn float-end btn-outline-dark btn-sm"
 										id="MKSOLAddRow">
 										<i class="fas fa-plus"></i> Add Row
@@ -284,7 +284,7 @@ body {
 						</div>
 						<div class="tab-pane" id="okr-layout">
 							<div class="card" style="padding: 2%">
-								<p>OKR Layout</p>
+								<p>OKR</p>
 								<div class="row">
 									<div class="col-9">
 										<div class="btn-group" style="width: 30%">
@@ -321,6 +321,7 @@ body {
 											<th class="column-unit">Unit</th>
 											<th class="column-start-value">Start value</th>
 											<th class="column-target">Target</th>
+											<th class="column-progress">Progress</th>
 											<th class="column-actions">Actions</th>
 										</tr>
 									</thead>
@@ -449,6 +450,8 @@ $(document).ready(function() {
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+
                 <td>
                     <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
                     <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>
@@ -555,7 +558,8 @@ $(document).ready(function() {
                                     keyResult.description, 
                                     unitType, 
                                     keyResult.startvalue, 
-                                    keyResult.target, 
+                                    keyResult.target,
+                                    keyResult.progress,
                                     '<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>'
                                 ];
                                 data.push(childData);
@@ -649,8 +653,9 @@ $(document).ready(function() {
             var unit = row.find('td').eq(4).text().trim();
             var startValue = row.find('td').eq(5).text().trim();
             var target = row.find('td').eq(6).text().trim();
-
-            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target) {
+            var progress = row.find('td').eq(7).text().trim();
+            
+            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
                 console.warn('One or more fields are empty in the row.');
                 return; 
             }
@@ -675,7 +680,8 @@ $(document).ready(function() {
                 percentageResult: 0,
                 percentageTarget: target,
                 standard: 'None',
-                startvalue: startValue
+                startvalue: startValue,
+                progress: progress,
             };
 
             objective.keyResults.push(keyResult);
@@ -698,7 +704,7 @@ $(document).ready(function() {
             })
             .then(response => response.json())
             .then(result => {
-                console.log('Data successfully updated:', result);
+                console.log('Data successfully updated:', JSON.stringify(result));
                 row.removeAttr('data-new'); 
             })
             .catch(error => {
