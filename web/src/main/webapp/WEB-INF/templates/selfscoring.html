@@ -95,7 +95,19 @@ body {
 					</tbody>
 				</table>
 				<div class="text-right mt-3">
-					<button class="btn float-end" id="update-btn">Update</button>
+					<!-- <button class="btn float-end" id="update-btn">Update</button> -->
+					<div id="update-wrapper">
+				        <button class="btn float-end" id="update-btn">Update</button>
+				    </div>
+				</div>
+				<!-- Notification -->
+				<br/>
+				<br/>
+				<div id="notification" class="alert alert-dismissible fade show" role="alert" style="display: none;">
+				  <strong id="notification-message"></strong>
+				  <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				  </button> -->
 				</div>
 			</div>
 		</div>
@@ -201,42 +213,16 @@ body {
 		    };
 		    xhr.send();
 		}
-
-		/* function submitData() {
-		    var data = table.rows().data().toArray();
-		    
-		    data.forEach(function(row){
-		    	var keyResultId = row["KeyResultId"];
-		    	var payload = {
-		    			finalScore: row['Self-score']
-		    	};
-		    	var url = `update/selfscore/${keyResultId}`;
-		    	console.log("url: "+url);
-		    	console.log("self-score: "+ row['Self-score']);
-		    	var xhr = new XMLHttpRequest();
-		    	xhr.open('PUT', url, true);
-		    	xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-	            xhr.onreadystatechange = function() {
-	                if (xhr.readyState === XMLHttpRequest.DONE) {
-	                    if (xhr.status === 200) {
-	                        console.log('Data successfully updated for keyResultId:');
-	                    } else {
-	                        console.error('Failed to update data. Status:', xhr.status);
-	                    }
-	                }
-	            };
-	            xhr.send(JSON.stringify(payload));
-	        });
-		} */
 		
 		function submitData() {
 		    var data = table.rows().data().toArray();
+		    var totalRequests = data.length; 
+		    var successfulRequests = 0; // Check for notification.
+		    var failedRequests = 0; // Check for notification,
 		    
 		    data.forEach(function(row){
 		        var keyResultId = row["KeyResultId"];
 		        var self_score = row["Self-score"];
-		        console.log("keyID: "+keyResultId);
-		        console.log("Score: "+self_score);
 		        
 		        var data = {
 		            finalScore: self_score
@@ -245,11 +231,6 @@ body {
 		        
 		        var url = `update/selfscore/${keyResultId}`;
 		        
-		        console.log("url: " + url);
-		        console.log("self-score: " + row['Self-score']);
-		        
-		        
-		        
 		        $.ajax({
 					url: url,
 					type: 'POST',
@@ -257,6 +238,8 @@ body {
 					data: payload,
 					success: function(response) {
 						console.log('Data saved successfully:', response);
+						successfulRequests++;
+						checkCompletion();
 					},
 					error: function(xhr, status, error) {
 						console.error('Error saving data:', {
@@ -264,11 +247,24 @@ body {
 						      statusText: xhr.statusText,
 						      responseText: xhr.responseText
 						    });
+						failedRequests++;
+						checkCompletion();
 					}
 				});
 		    });
-		}
+		    function checkCompletion() {
+		        if (successfulRequests + failedRequests === totalRequests) {
+		            var message = failedRequests === 0 ? 'Thành công!' : 'Thất bại!';
+		            $('#notification-message').text(message);
+		            $('#notification').addClass('alert-success').removeClass('alert-danger');
+		            if (failedRequests > 0) {
+		                $('#notification').addClass('alert-danger').removeClass('alert-success');
+		            }
+		            $('#notification').show();
+		        }
+		    }
 
+		}
 
 		fetchData();
 
