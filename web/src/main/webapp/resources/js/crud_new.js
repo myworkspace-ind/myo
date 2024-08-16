@@ -1,461 +1,573 @@
-document.addEventListener('DOMContentLoaded', function() {
+/*import React from 'react';
+import { Flex, Progress } from 'antd';
+const App = () => (
+  <Flex gap="small" vertical>
+    <Progress percent={30} />
+    <Progress percent={50} status="active" />
+    <Progress percent={70} status="exception" />
+    <Progress percent={100} />
+    <Progress percent={50} showInfo={false} />
+  </Flex>
+);
+export default App;*/
 
-	$('#jstree').jstree();
-	var container = document.getElementById('okr-table');
-	var hot;
-	var currentData = [];
+$(document).ready(function() {
+    $('#jstree').jstree({
+        'core': {
+            'themes': {
+                'name': 'default',
+                'responsive': true
+            }
+        }
+    });
 
-	var hotSettings = {
-		data: [],
-		colHeaders: ['No', 'Period', 'startDate', 'endDate', 'currentPeriod'],
-		columns: [
-			{ data: 'No', readOnly: true },
-			{ data: 'name' },
-			{ data: 'startDate' },
-			{ data: 'endDate' },
-			{ data: 'currentPeriod' }
-		],
-		stretchH: 'all',
-		autoWrapRow: true,
-		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation',
-		afterChange: function(changes, source) {
-			if (source === 'loadData') return;
-			currentData = hot.getData();
-		}
-	};
+    $('#jstree').on('click', 'a[href="crud"]', function() {
+        window.location.href = 'crud';
+    });
 
-	hot = new Handsontable(container, hotSettings);
+    $('#jstree').on('click', 'a[href="selfscoring"]', function() {
+        window.location.href = 'selfscoring';
+    });
+    $('#jstree').on('click', 'a[href="reviewokr"]', function() {
+        window.location.href = 'reviewokr';
+    });
 
-	function addRow() {
-		var newRow = {
-			No: hot.countRows() + 1,
-			name: '',
-			startDate: '',
-			endDate: '',
-			currentPeriod: ''
-		};
+    var trackingTable = $('#okr-table').DataTable({
+        "paging": true,
+        "searching": true,
+        "info": false,
+        "ordering": true,
+    });
 
-		hot.alter('insert_row_below', hot.countRows(), 1);
-		var rowIndex = hot.countRows() - 1;
+    var layoutTable = $('#okr-layouttable').DataTable({
+        "paging": true,
+        "searching": true,
+        "info": false,
+        "ordering": true,
+    });
+    
+    var newRows = [];
+    var newLayoutRows = [];
 
-		hot.setDataAtRowProp(rowIndex, 'No', newRow.No);
-		hot.setDataAtRowProp(rowIndex, 'name', newRow.name);
-		hot.setDataAtRowProp(rowIndex, 'startDate', newRow.startDate);
-		hot.setDataAtRowProp(rowIndex, 'endDate', newRow.endDate);
-		hot.setDataAtRowProp(rowIndex, 'currentPeriod', newRow.currentPeriod);
 
-		hot.updateSettings({
-			cells: function(row, col) {
-				var cellProperties = {};
-				if (row === rowIndex) {
-					cellProperties.readOnly = false;
-				}
-				return cellProperties;
-			}
-		});
-	}
+    function addRow() {
+        var newRowIndex = $('#okr-table tbody tr').length + 1;
+        var newRow = 
+            `<tr class="draggable new-row">
+                <td>${newRowIndex}</td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td contenteditable="false" tabindex="0"></td>
+                <td class="non-editable">
+                    <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
+                </td>
+            </tr>`;
+        var row = $(newRow);
+        trackingTable.row.add(row).draw();
+        newRows.push(row);
+        updateRowNumbers();
+        makeTableSortable('#okr-table');
+    }
 
-	fetch('period/loaddata')
-		.then(response => response.json())
-		.then(jsonData => {
-			var data = [];
-			var counter = 1;
+    function addRowLayout() {
+        var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
+        var newRow = 
+            `<tr data-new="true">
+                <td>${newRowIndex}</td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
 
-			if (jsonData.data && Array.isArray(jsonData.data)) {
-				for (var i = 0; i < jsonData.data.length; i++) {
-					var item = jsonData.data[i];
-					if (item.childs && Array.isArray(item.childs)) {
-						for (var j = 0; j < item.childs.length; j++) {
-							var childItem = item.childs[j];
-							var childData = {
-								No: counter++,
-								name: childItem.name,
-								startDate: childItem.startDate,
-								endDate: childItem.endDate,
-								currentPeriod: childItem.currentPeriod
-							};
-							data.push(childData);
-						}
-					}
-				}
-			} else {
-				console.error('Unexpected data structure in the JSON data');
-			}
+                <td>
+                    <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
+                    <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>
+                </td>
+            </tr>`;
+        var row = $(newRow);
+        layoutTable.row.add(row).draw();
+        newLayoutRows.push(row);
+        updateRowNumbersLayout();
+        makeTableSortable('#okr-layouttable');
+    }
 
-			hot.loadData(data);
-			currentData = data;
-		})
-		.catch(error => {
-			console.error('Error fetching data:', error);
-		});
+    function flattenData(data) {
+        var result = [];
+        data.forEach(function(item) {
+            result.push({
+                No: result.length + 1,
+                name: item.name,
+                startDate: item.startDate,
+                endDate: item.endDate,
+                currentPeriod: item.currentPeriod
+            });
+            if (item.childs && Array.isArray(item.childs)) {
+                item.childs.forEach(function(child) {
+                    result.push({
+                        No: result.length + 1,
+                        name: child.name,
+                        startDate: child.startDate,
+                        endDate: child.endDate,
+                        currentPeriod: child.currentPeriod
+                    });
+                });
+            }
+        });
+        return result;
+    }
 
-	document.getElementById('MKSOLUpdateperiod').addEventListener('click', function() {
-		if (currentData.length === 0) {
-			console.warn('No data to update');
-			return;
-		}
+    function fetchData() {
+        fetch('period/loaddata')
+            .then(response => response.json())
+            .then(jsonData => {
+                var data = [];
+                if (jsonData.data && Array.isArray(jsonData.data)) {
+                    data = flattenData(jsonData.data);
+                } else {
+                    console.error('Unexpected data structure in the JSON data');
+                }
 
-		fetch('period/uploaddata', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(currentData)
-		})
-			.then(response => response.json())
-			.then(result => {
-				console.log('Data successfully updated:', result);
-				console.log(currentData);
-			})
-			.catch(error => {
-				console.error('Error updating data:', error);
-			});
-	});
+                trackingTable.clear();
+                data.forEach(row => {
+                    var rowHtml = 
+                        `<tr class="draggable">
+                            <td>${row.No}</td>
+                            <td>${row.name}</td>
+                            <td>${row.startDate}</td>
+                            <td>${row.endDate}</td>
+                            <td>${row.currentPeriod}</td>
+                            <td class="non-editable">
+                                <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
+                                <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
+                            </td>
+                        </tr>`;
+                    trackingTable.row.add($(rowHtml)).draw();
+                });
+                updateRowNumbers();
+                makeTableSortable('#okr-table');
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
 
-	document.getElementById('MKSOLAddRow').addEventListener('click', function() {
-		addRow();
-	});
+    function fetchDataLayout() {
+        fetch('objectives/loaddata')
+            .then(response => response.json())
+            .then(jsonData => {
+                if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
+                    var data = [];
+                    var counter = 1;
 
-	var containerLayout = document.getElementById('okr-layouttable');
-	var hotLayout = new Handsontable(containerLayout, {
-		data: [],
-		colHeaders: ['No', 'Objectives', 'Weight', 'Key results', 'Unit', 'Start value', 'Target', 'Delete'],
-		columns: [
-			{ data: 'No' },
-			{ data: 'Objectives' },
-			{ data: 'Weight' },
-			{ data: 'Key results' },
-			{ data: 'Unit' },
-			{ data: 'Start value' },
-			{ data: 'Target' },
-			{
-				data: 'Delete',
-				renderer: function(instance, TD, row, col, prop, value, cellProperties) {
-					var button = document.createElement('button');
-					button.innerHTML = 'Delete';
+                    jsonData.data.objectives.forEach(item => {
+                        if (item.keyResults && Array.isArray(item.keyResults)) {
+                            item.keyResults.forEach(keyResult => {
+                                let unitType;
+                                switch (keyResult.itype) {
+                                    case 1:
+                                        unitType = 'Number';
+                                        break;
+                                    case 2:
+                                        unitType = 'Yes/No';
+                                        break;
+                                    case 3:
+                                        unitType = 'Percentage';
+                                        break;
+                                    default:
+                                        unitType = 'N/A';
+                                        break;
+                                }
 
-					button.style.border = '1px solid white';
-					button.style.backgroundColor = 'white';
-					button.style.boxShadow = 'none';
-					button.style.padding = '5px 10px';
-					button.style.cursor = 'pointer';
-					button.style.borderRadius = '3px';
+                                var childData = [
+                                    counter++, 
+                                    item.description, 
+                                    item.weight, 
+                                    keyResult.description, 
+                                    unitType, 
+                                    keyResult.result, 
+                                    keyResult.target,
+                                    item.progress,
+                                    '<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>'
+                                ];
+                                data.push(childData);
+                            });
+                        }
+                    });
 
-					button.onclick = function() {
-						var selectedRow = row;
-						hotLayout.alter('remove_row', selectedRow, 1);
-						adjustMergeCells(selectedRow);
-					};
+                    layoutTable.clear();
+                    layoutTable.rows.add(data).draw();
+                    updateRowNumbersLayout();
+                    makeTableSortable('#okr-layouttable');
+                    mergeObjectivesColumn();
 
-					Handsontable.dom.empty(TD);
-					TD.appendChild(button);
-				}
-			}
-		],
-		stretchH: 'all',
-		autoWrapRow: true,
-		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation',
-		mergeCells: []
-	});
+                } else {
+                    console.error('Unexpected data structure in the JSON data');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching layout data:', error);
+            });
+    }
 
-	function fetchDataLayout() {
-		var urlLayout = 'objectives/loaddata';
-		var xhrLayout = new XMLHttpRequest();
-		xhrLayout.open('GET', urlLayout, true);
-		xhrLayout.onreadystatechange = function() {
-			if (xhrLayout.readyState === XMLHttpRequest.DONE) {
-				if (xhrLayout.status === 200) {
-					var jsonResponseLayout = JSON.parse(xhrLayout.responseText);
-					var objectivesLayout = jsonResponseLayout.data.objectives;
+    function mergeObjectivesColumn() {
+        var rows = $('#okr-layouttable tbody tr');
+        var lastObjective = '';
+        var startIndex = -1;
 
-					objectivesLayout.sort((a, b) => {
-						if (a.description < b.description) return -1;
-						if (a.description > b.description) return 1;
-						if (a.keyResults[0].description < b.keyResults[0].description) return -1;
-						if (a.keyResults[0].description > b.keyResults[0].description) return 1;
-						return 0;
-					});
+        rows.each(function(index) {
+            var currentObjective = $(this).find('td').eq(1).text().trim();
 
-					var dataLayout = [];
-					var mergeRangesLayout = [];
-					var objectiveCounterLayout = 1;
+            if (currentObjective === lastObjective) {
+                $(this).find('td').eq(1).hide(); 
+                rows.eq(startIndex).find('td').eq(1).attr('rowspan', (index - startIndex + 1)); 
+            } else {
+                lastObjective = currentObjective;
+                startIndex = index;
+            }
+        });
+    }
+    function updateData() {
+        var rowsData = [];
+        var parentIdMap = {};
 
-					objectivesLayout.forEach(function(objective) {
-						var firstRowLayout = dataLayout.length;
+        $('#okr-table tbody tr').each(function() {
+            var row = $(this);
+            var endDate = row.find('td').eq(3).text();
+            var endDateYear = new Date(endDate).getFullYear();
 
-						objective.keyResults.forEach(function(keyResult, krIndex) {
-							var unitLayout;
-							switch (keyResult.itype) {
-								case 1:
-									unitLayout = 'Number';
-									break;
-								case 2:
-									unitLayout = 'Yes/No';
-									break;
-								case 3:
-									unitLayout = 'Percentage';
-									break;
-								default:
-									unitLayout = '';
-									break;
-							}
+            if (!parentIdMap[endDateYear]) {
+                parentIdMap[endDateYear] = null;
+            }
 
-							dataLayout.push({
-								No: krIndex === 0 ? objectiveCounterLayout : '',
-								Objectives: objective.description,
-								Weight: objective.weight,
-								"Key results": keyResult.description,
-								Unit: unitLayout,
-								"Start value": keyResult.startvalue,
-								Target: keyResult.target,
-								Delete: ''
-							});
-						});
+            parentIdMap[endDateYear] = null; 
+        });
 
-						objectiveCounterLayout++;
+        newRows.forEach(function(row) {
+            var name = row.find('td').eq(1).text();
+            var startDate = row.find('td').eq(2).text();
+            var endDate = row.find('td').eq(3).text();
+            var currentPeriod = row.find('td').eq(4).text() === 'true'; 
 
-						if (objective.keyResults.length > 1) {
-							mergeRangesLayout.push({
-								row: firstRowLayout,
-								col: 0,
-								rowspan: objective.keyResults.length,
-								colspan: 1
-							});
-							mergeRangesLayout.push({
-								row: firstRowLayout,
-								col: 1,
-								rowspan: objective.keyResults.length,
-								colspan: 1
-							});
-							mergeRangesLayout.push({
-								row: firstRowLayout,
-								col: 2,
-								rowspan: objective.keyResults.length,
-								colspan: 1
-							});
-						}
-					});
+            var endDateYear = new Date(endDate).getFullYear();
+            var parentId = parentIdMap[endDateYear]; 
 
-					hotLayout.loadData(dataLayout);
-					hotLayout.updateSettings({
-						mergeCells: mergeRangesLayout
-					});
+            var rowData = {
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                parentId: parentId, 
+                setAsRoot: parentId === null, 
+                currentPeriod: currentPeriod 
+            };
 
-				} else {
-					console.error('Failed to fetch data. Status:', xhrLayout.status);
-				}
-			}
-		};
-		xhrLayout.send();
-	}
+            rowsData.push(rowData); 
+        });
 
-	function adjustMergeCells(rowToRemove) {
-		var mergeCells = hotLayout.getSettings().mergeCells;
+        newRows = [];
 
-		mergeCells.forEach((merge) => {
-			if (rowToRemove >= merge.row && rowToRemove < merge.row + merge.rowspan) {
-				if (rowToRemove === merge.row) {
-					merge.rowspan--;
-				} else if (rowToRemove === merge.row + merge.rowspan - 1) {
-					merge.rowspan--;
-				}
-			}
-		});
+        if (rowsData.length === 0) {
+            console.warn('No new data to update');
+            return;
+        }
 
-		hotLayout.updateSettings({
-			mergeCells: mergeCells
-		});
-	}
+        rowsData.forEach(function(data) {
+            fetch('period/uploaddata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data successfully updated:', result);
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            });
+        });
+    }
+    
+    
+    function updateDataLayout() {
+        $('#okr-layouttable tbody tr[data-new="true"]').each(function() {
+            var row = $(this);
+            var description = row.find('td').eq(1).text().trim();
+            var weight = row.find('td').eq(2).text().trim();
+            var keyResultDescription = row.find('td').eq(3).text().trim();
+            var unit = row.find('td').eq(4).text().trim();
+            var startValue = row.find('td').eq(5).text().trim();
+            var target = row.find('td').eq(6).text().trim();
+            var progress = row.find('td').eq(7).text().trim();
+            
+            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
+                console.warn('One or more fields are empty in the row.');
+                return; 
+            }
 
-	function submitDataLayout() {
-		var urlLayout = 'objectives/uploaddata';
-		var dataLayout = hotLayout.getData();
-		var mergeCellsLayout = hotLayout.getSettings().mergeCells;
+            var objective = {
+                description: description,
+                status: 'DRAFT',
+                weight: weight,
+                comment: '',
+                keyResults: []
+            };
 
-		var formattedDataLayout = [];
-		var rowMapLayout = new Map();
+            var keyResult = {
+                description: keyResultDescription,
+                dueDate: '',
+                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0, 
+                progress: progress,
+                weight: weight,
+                numberResult: startValue,
+                numberTarget: target,
+                yesNoResult: false,
+                yesNoTarget: false,
+                percentageResult: startValue,
+                percentageTarget: target,
+                standard: 'None',
+                startvalue: startValue,
+            };
 
-		function getRowEntryLayout(rowIndex) {
-			if (!rowMapLayout.has(rowIndex)) {
-				rowMapLayout.set(rowIndex, {
-					No: '',
-					Objectives: '',
-					Weight: '',
-					'Key results': '',
-					Unit: '',
-					'Start value': '',
-					Target: '',
-					'Delete': ''
-				});
-			}
-			return rowMapLayout.get(rowIndex);
-		}
+            objective.keyResults.push(keyResult);
 
-		dataLayout.forEach((row, index) => {
-			var rowEntryLayout = getRowEntryLayout(index);
-			rowEntryLayout.No = row[0];
-			rowEntryLayout.Objectives = row[1];
-			rowEntryLayout.Weight = row[2];
-			rowEntryLayout['Key results'] = row[3];
-			rowEntryLayout.Unit = row[4];
-			rowEntryLayout['Start value'] = row[5];
-			rowEntryLayout.Target = row[6];
-			rowEntryLayout['Delete'] = row[7];
-		});
+            var requestData = { objectives: [objective] }; 
 
-		mergeCellsLayout.forEach(merge => {
-			const { row, col, rowspan, colspan } = merge;
-			const topLeftCellValue = dataLayout[row][col];
+            if (requestData.objectives.length === 0) {
+                console.warn('No data to update');
+                return;
+            }
 
-			for (let r = row; r < row + rowspan; r++) {
-				for (let c = col; c < col + colspan; c++) {
-					var rowEntryLayout = getRowEntryLayout(r);
-					switch (c) {
-						case 0:
-							rowEntryLayout.No = topLeftCellValue;
-							break;
-						case 1:
-							rowEntryLayout.Objectives = topLeftCellValue;
-							break;
-						case 2:
-							rowEntryLayout.Weight = topLeftCellValue;
-							break;
-						case 3:
-							rowEntryLayout['Key results'] = topLeftCellValue;
-							break;
-						case 4:
-							rowEntryLayout.Unit = topLeftCellValue;
-							break;
-						case 5:
-							rowEntryLayout['Start value'] = topLeftCellValue;
-							break;
-						case 6:
-							rowEntryLayout.Target = topLeftCellValue;
-							break;
-						case 7:
-							rowEntryLayout['Delete'] = topLeftCellValue;
-							break;
-					}
-				}
-			}
-		});
+            console.log('Sending data:', JSON.stringify(requestData));
 
-		formattedDataLayout = Array.from(rowMapLayout.values());
+            fetch('objectives/uploaddata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data successfully updated:', JSON.stringify(result));
+                row.removeAttr('data-new'); 
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            });
+        });
+    }
 
-		var xhrLayout = new XMLHttpRequest();
-		xhrLayout.open('POST', urlLayout, true);
-		xhrLayout.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-		xhrLayout.onreadystatechange = function() {
-			if (xhrLayout.readyState === XMLHttpRequest.DONE) {
-				if (xhrLayout.status === 200) {
-					console.log('Data successfully submitted.', JSON.stringify(formattedDataLayout));
-				} else {
-					console.error('Failed to submit data. Status:', xhrLayout.status);
-				}
-			}
-		};
-		xhrLayout.send(JSON.stringify(formattedDataLayout));
-	}
 
-	function addRowLayout() {
-		var newRowLayout = {
-			No: hotLayout.countRows() + 1,
-			Objectives: '',
-			Weight: '',
-			"Key results": '',
-			Unit: '',
-			"Start value": '',
-			Target: '',
-			Delete: ''
-		};
 
-		hotLayout.alter('insert_row_below', hotLayout.countRows(), 1);
 
-		var rowIndexLayout = hotLayout.countRows() - 1;
 
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'No', newRowLayout.No);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Objectives', newRowLayout.Objectives);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Weight', newRowLayout.Weight);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Key results', newRowLayout["Key results"]);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Unit', newRowLayout.Unit);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Start value', newRowLayout["Start value"]);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Target', newRowLayout.Target);
-		hotLayout.setDataAtRowProp(rowIndexLayout, 'Delete', newRowLayout["Delete"]);
+    function updateRowNumbers() {
+        $('#okr-table tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
 
-		hotLayout.updateSettings({
-			cells: function(row, col, prop) {
-				var cellProperties = {};
-				if (row === rowIndexLayout) {
-					cellProperties.readOnly = false;
-				}
-				return cellProperties;
-			}
-		});
-	}
+    function updateRowNumbersLayout() {
+        $('#okr-layouttable tbody tr').each(function(index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
 
-	fetchDataLayout();
+    function makeTableSortable(selector) {
+        $(selector).sortable({
+            items: 'tbody tr',
+            cursor: 'move',
+            axis: 'y',
+            update: function(event, ui) {
+                updateRowNumbers();
+                updateRowNumbersLayout();
+            }
+        });
+    }
 
-	function updateOkrDashboardFromUrl(url) {
-		fetch(url)
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.json();
-			})
-			.then(jsonResponse => {
-				var data = jsonResponse.data;
-				var objectives = data.objectives;
+    function enableCellEditTracking(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'true').addClass('cell-editable');
+        });
+        $(row).find('.editTracking-btn').html('<i class="fas fa-save"></i> Save');
+        $("#okr-table").sortable("disable");
+    }
+    
+    function enableCellEditLayout(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'true').addClass('cell-editable');
+        });
+        $(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
+        $("#okr-layouttable").sortable("disable");
+    }
 
-				var contentContainer = document.querySelector('.content');
-				contentContainer.innerHTML = '';
+    function disableCellEditTracking(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
+        });
+        $(row).find('.editTracking-btn').html('<i class="fas fa-edit"></i> Edit');
+        $("#okr-table").sortable("enable");
+    }
+    
+    function disableCellEditLayout(row) {
+        $(row).find('td').not('.non-editable').each(function() {
+            $(this).attr('contenteditable', 'false').removeClass('cell-editable');
+        });
+        $(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
+        $("#okr-layouttable").sortable("enable");
+    }
 
-				objectives.forEach(function(objective) {
-					var card = document.createElement('div');
-					card.classList.add('card');
+    $('#MKSOLAddRow').click(addRow);
+    $('#MKSOLAddRowLayout').click(addRowLayout);
 
-					var cardBody = document.createElement('div');
-					cardBody.classList.add('card-body');
+    $('#MKSOLUpdateperiod').click(updateData);
+    $('#submit-layout').click(updateDataLayout);
 
-					var htmlContent = `
-                        <h5 class="card-title">${objective.description}</h5>
-                        <p class="card-text">Weight: ${objective.weight}%, Progress: ${objective.progress.toFixed(2)}%</p>
-                        <p class="card-text">Status: ${objective.status}</p>
-                    `;
-					cardBody.innerHTML = htmlContent;
 
-					objective.keyResults.forEach(function(keyResult) {
-						var keyResultCard = document.createElement('div');
-						keyResultCard.classList.add('card');
-						keyResultCard.classList.add('mt-3');
+    $('#okr-table').on('click', '.editTracking-btn', function() {
+        var row = $(this).closest('tr');
+        if ($(this).find('i').hasClass('fa-edit')) {
+            enableCellEditTracking(row);
+        } else {
+            disableCellEditTracking(row);
+        }
+    });
 
-						var keyResultCardBody = document.createElement('div');
-						keyResultCardBody.classList.add('card-body');
+    $('#okr-layouttable').on('click', '.editLayout-btn', function() {
+        var row = $(this).closest('tr');
+        if ($(this).find('i').hasClass('fa-edit')) {
+            enableCellEditLayout(row);
+        } else {
+            disableCellEditLayout(row);
+        }
+    });
 
-						var keyResultHtmlContent = `
-                            <h6 class="card-title">${keyResult.description}</h6>
-                            <p class="card-text">Progress: ${keyResult.progress.toFixed(2)}%, Target: ${keyResult.target}%</p>
-                            <p class="card-text">Due Date: ${keyResult.dueDate}</p>
+    $('#okr-table').on('click', '.deleteTracking-btn', function() {
+        var row = $(this).closest('tr');
+        trackingTable.row(row).remove().draw();
+        updateRowNumbers();
+    });
+
+    $('#okr-layouttable').on('click', '.deleteLayout-btn', function() {
+        var row = $(this).closest('tr');
+        layoutTable.row(row).remove().draw();
+        updateRowNumbersLayout();
+    });
+    
+    fetchData();
+    fetchDataLayout();
+    
+
+    function loadOKRs() {
+        fetch('objectives/loaddata')
+            .then(response => response.json())
+            .then(data => {
+                if (data.data && data.data.objectives && Array.isArray(data.data.objectives)) {
+                    const okrCardsContainer = $('#okr-cards');
+                    okrCardsContainer.empty(); 
+
+                    data.data.objectives.forEach(objective => {
+                        let okrContent = '';
+                        if (objective.keyResults && Array.isArray(objective.keyResults)) {
+                            objective.keyResults.forEach(keyResult => {
+                                const startValue = keyResult.startvalue;
+                                const targetValue = keyResult.target;
+                                const progress = keyResult.progress;
+                                console.log('progress:', progress);
+
+
+                                if (!isNaN(progress) && isFinite(progress)) {
+                                    okrContent += `
+                                        <p>${keyResult.description}</p>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: ${progress}%;">${progress.toFixed(2)}%</div>
+                                        </div>
+                                    `;
+                                }
+                            });
+                        }
+
+                        const cardHtml = `
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${objective.description}</h5>
+                                        <p class="text-muted">Weight: ${objective.weight}</p>
+                                        <div class="okr-content">
+                                            ${okrContent}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         `;
-						keyResultCardBody.innerHTML = keyResultHtmlContent;
 
-						keyResultCard.appendChild(keyResultCardBody);
-						cardBody.appendChild(keyResultCard);
+                        okrCardsContainer.append(cardHtml);
+                    });
+                } else {
+                    console.error('Unexpected data structure in the JSON data');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching OKR data:', error);
+            });
+    }
+
+        loadOKRs();
+
+
+        document.getElementById('export-btn').addEventListener('click', function() {
+            const data = [
+                ["Objective", "Key Result", "Progress"],
+            ];
+
+            $('#okr-cards .card').each(function() {
+                const objective = $(this).find('.card-title').text();
+                $(this).find('.okr-content p').each(function(index, element) {
+                    const keyResult = $(element).text();
+                    const progress = $(element).next('.progress').find('.progress-bar').css('width');
+                    data.push([objective, keyResult, progress]);
+                });
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "OKRs");
+            XLSX.writeFile(wb, "OKR_Dashboard.xlsx");
+        });
+    
+		function deleteRowFromDatabase(name, url, onSuccess, onError) {
+				var completeUrl = `${url}/${name}`;
+				console.log('Request URL:', completeUrl);
+
+				fetch(completeUrl, {
+					method: 'DELETE', 
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+					.then(response => {
+						if (!response.ok) {
+							console.log('Response error:', response.status);
+							throw new Error('Network response was not ok');
+						}
+						return response.text(); 
+					})
+					.then(data => {
+						if (onSuccess) {
+							onSuccess(data);
+						}
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+						if (onError) {
+							onError(error);
+						}
 					});
-					card.appendChild(cardBody);
-					contentContainer.appendChild(card);
-				});
-			})
-			.catch(error => {
-				console.error('Error fetching data:', error);
-			});
-	}
-
-	
-
-	var apiUrl = 'objectives/loaddata';
-	updateOkrDashboardFromUrl(apiUrl);
-	submitDataLayout()
+			}
 });
