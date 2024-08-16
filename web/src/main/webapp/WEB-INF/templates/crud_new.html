@@ -35,6 +35,8 @@
 <script
 	src="https://cdn.datatables.net/1.13.6/js/dataTables.dateTime.min.js"></script>
 
+<script
+	src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
 body {
@@ -184,6 +186,28 @@ body {
 .dataTables_wrapper .dataTables_paginate {
 	margin-bottom: 2%;
 }
+
+.card {
+	margin-bottom: 20px;
+}
+
+.progress-bar {
+	background-color: #000;
+}
+
+.card-title {
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+.okr-content {
+	font-size: 0.9rem;
+}
+
+.export-btn {
+	float: right;
+	margin-bottom: 20px;
+}
 </style>
 
 </head>
@@ -220,9 +244,9 @@ body {
 						<ul class="nav nav-tabs card-header-tabs">
 							<li class="nav-item"><a
 								class="nav-link active MKSOLCRUDTabmenu" href="#okr-tracking"
-								data-bs-toggle="tab">OKR Tracking</a></li>
+								data-bs-toggle="tab">Period</a></li>
 							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
-								href="#okr-layout" data-bs-toggle="tab">OKR Layout</a></li>
+								href="#okr-layout" data-bs-toggle="tab">OKR</a></li>
 							<li class="nav-item"><a class="nav-link MKSOLCRUDTabmenu"
 								href="#okr-dashboard" data-bs-toggle="tab">OKR Dashboard</a></li>
 						</ul>
@@ -232,7 +256,7 @@ body {
 							<div class="card p-3">
 								<div
 									class="mb-3 d-flex justify-content-between align-items-center">
-									<p class="m-0">OKR Tracking</p>
+									<p class="m-0">Period</p>
 									<button class="btn float-end btn-outline-dark btn-sm"
 										id="MKSOLAddRow">
 										<i class="fas fa-plus"></i> Add Row
@@ -260,7 +284,7 @@ body {
 						</div>
 						<div class="tab-pane" id="okr-layout">
 							<div class="card" style="padding: 2%">
-								<p>OKR Layout</p>
+								<p>OKR</p>
 								<div class="row">
 									<div class="col-9">
 										<div class="btn-group" style="width: 30%">
@@ -297,6 +321,7 @@ body {
 											<th class="column-unit">Unit</th>
 											<th class="column-start-value">Start value</th>
 											<th class="column-target">Target</th>
+											<th class="column-progress">Progress %</th>
 											<th class="column-actions">Actions</th>
 										</tr>
 									</thead>
@@ -316,33 +341,36 @@ body {
 
 						<div class="tab-pane" id="okr-dashboard">
 							<div class="card p-3">
-								<div class="content">
-									<div class="row">
-										<div class="col">
-											<div
-												class="mb-3 d-flex justify-content-between align-items-center">
-												<p class="m-0">OKR Dashboard</p>
-												<button type="button" class="btn btn-outline-dark btn-sm"
-													style="width: 10%">
-													<i class="fas fa-plus"></i> Add OKR
-												</button>
-											</div>
-											<div id="okr-dashboard-content"></div>
-										</div>
+								<div
+									class="mb-3 d-flex justify-content-between align-items-center">
+									<p class="m-0">OKR Dashboard</p>
+									<button type="button" class="btn btn-outline-dark btn-sm"
+										id="export-btn">
+										<i class="fas fa-file-excel"></i> Export to Excel
+									</button>
+								</div>
+								<div class="row mb-3">
+									<div class="col-md-4">
+										<select class="form-select">
+											<option>All Periods</option>
+										</select>
 									</div>
-									<div class="row my-3">
-										<div class="col">
-											<button class="btn btn-light" id="self-scoring">
-												<i class="fa fa-pencil-square-o"></i> Self-scoring
-											</button>
-											<button class="btn btn-dark" id="upload-okr">
-												<i class="fa fa-upload"></i> Upload OKR
-											</button>
-										</div>
+									<div class="col-md-4">
+										<select class="form-select">
+											<option>All Departments</option>
+										</select>
+									</div>
+									<div class="col-md-4">
+										<select class="form-select">
+											<option>All Users</option>
+										</select>
 									</div>
 								</div>
+								<div id="okr-cards" class="row"></div>
 							</div>
 						</div>
+
+
 
 					</div>
 				</div>
@@ -422,6 +450,8 @@ $(document).ready(function() {
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
                 <td contenteditable="false"></td>
+                <td contenteditable="false"></td>
+
                 <td>
                     <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
                     <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>
@@ -527,8 +557,9 @@ $(document).ready(function() {
                                     item.weight, 
                                     keyResult.description, 
                                     unitType, 
-                                    keyResult.startvalue, 
-                                    keyResult.target, 
+                                    keyResult.result, 
+                                    keyResult.target,
+                                    item.progress,
                                     '<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>'
                                 ];
                                 data.push(childData);
@@ -540,6 +571,8 @@ $(document).ready(function() {
                     layoutTable.rows.add(data).draw();
                     updateRowNumbersLayout();
                     makeTableSortable('#okr-layouttable');
+                    mergeObjectivesColumn();
+
                 } else {
                     console.error('Unexpected data structure in the JSON data');
                 }
@@ -549,43 +582,23 @@ $(document).ready(function() {
             });
     }
 
-/*     function updateData() {
-        var tableData = [];
-        $('#okr-table tbody tr').each(function() {
-            var row = $(this);
-            var name = row.find('td').eq(1).text();
-            var startDate = row.find('td').eq(2).text();
-            var endDate = row.find('td').eq(3).text();
-            var currentPeriod = row.find('td').eq(4).text();
+    function mergeObjectivesColumn() {
+        var rows = $('#okr-layouttable tbody tr');
+        var lastObjective = '';
+        var startIndex = -1;
 
-            tableData.push({
-                name: name,
-                startDate: startDate,
-                endDate: endDate,
-                currentPeriod: currentPeriod
-            });
+        rows.each(function(index) {
+            var currentObjective = $(this).find('td').eq(1).text().trim();
+
+            if (currentObjective === lastObjective) {
+                $(this).find('td').eq(1).hide(); 
+                rows.eq(startIndex).find('td').eq(1).attr('rowspan', (index - startIndex + 1)); 
+            } else {
+                lastObjective = currentObjective;
+                startIndex = index;
+            }
         });
-
-        if (tableData.length === 0) {
-            console.warn('No data to update');
-            return;
-        }
-
-        fetch('period/uploaddata', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tableData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Data successfully updated:', result);
-        })
-        .catch(error => {
-            console.error('Error updating data:', error);
-        });
-    } */
+    }
     function updateData() {
         var rowsData = [];
         var parentIdMap = {};
@@ -658,8 +671,9 @@ $(document).ready(function() {
             var unit = row.find('td').eq(4).text().trim();
             var startValue = row.find('td').eq(5).text().trim();
             var target = row.find('td').eq(6).text().trim();
-
-            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target) {
+            var progress = row.find('td').eq(7).text().trim();
+            
+            if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
                 console.warn('One or more fields are empty in the row.');
                 return; 
             }
@@ -675,16 +689,17 @@ $(document).ready(function() {
             var keyResult = {
                 description: keyResultDescription,
                 dueDate: '',
-                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0,
+                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0, 
+                progress: progress,
                 weight: weight,
-                numberResult: 0,
+                numberResult: startValue,
                 numberTarget: target,
                 yesNoResult: false,
                 yesNoTarget: false,
-                percentageResult: 0,
+                percentageResult: startValue,
                 percentageTarget: target,
                 standard: 'None',
-                startvalue: startValue
+                startvalue: startValue,
             };
 
             objective.keyResults.push(keyResult);
@@ -707,7 +722,7 @@ $(document).ready(function() {
             })
             .then(response => response.json())
             .then(result => {
-                console.log('Data successfully updated:', result);
+                console.log('Data successfully updated:', JSON.stringify(result));
                 row.removeAttr('data-new'); 
             })
             .catch(error => {
@@ -815,6 +830,86 @@ $(document).ready(function() {
     
     fetchData();
     fetchDataLayout();
+    
+
+    function loadOKRs() {
+        fetch('objectives/loaddata')
+            .then(response => response.json())
+            .then(data => {
+                if (data.data && data.data.objectives && Array.isArray(data.data.objectives)) {
+                    const okrCardsContainer = $('#okr-cards');
+                    okrCardsContainer.empty(); 
+
+                    data.data.objectives.forEach(objective => {
+                        let okrContent = '';
+                        if (objective.keyResults && Array.isArray(objective.keyResults)) {
+                            objective.keyResults.forEach(keyResult => {
+                                const startValue = keyResult.startvalue;
+                                const targetValue = keyResult.target;
+                                const progress = keyResult.progress;
+                                console.log('progress:', progress);
+
+
+                                if (!isNaN(progress) && isFinite(progress)) {
+                                    okrContent += `
+                                        <p>${keyResult.description}</p>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: ${progress}%;">${progress.toFixed(2)}%</div>
+                                        </div>
+                                    `;
+                                }
+                            });
+                        }
+
+                        const cardHtml = `
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${objective.description}</h5>
+                                        <p class="text-muted">Weight: ${objective.weight}</p>
+                                        <div class="okr-content">
+                                            ${okrContent}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        okrCardsContainer.append(cardHtml);
+                    });
+                } else {
+                    console.error('Unexpected data structure in the JSON data');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching OKR data:', error);
+            });
+    }
+
+        loadOKRs();
+
+
+        document.getElementById('export-btn').addEventListener('click', function() {
+            const data = [
+                ["Objective", "Key Result", "Progress"],
+            ];
+
+            $('#okr-cards .card').each(function() {
+                const objective = $(this).find('.card-title').text();
+                $(this).find('.okr-content p').each(function(index, element) {
+                    const keyResult = $(element).text();
+                    const progress = $(element).next('.progress').find('.progress-bar').css('width');
+                    data.push([objective, keyResult, progress]);
+                });
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "OKRs");
+            XLSX.writeFile(wb, "OKR_Dashboard.xlsx");
+        });
+    
+
 });
 </script>
 
