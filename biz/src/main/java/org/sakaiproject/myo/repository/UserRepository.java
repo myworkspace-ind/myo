@@ -15,9 +15,4 @@ public interface UserRepository extends JpaRepository<OkrUser, UUID> {
 	// findByEmail auto generated and perform the query in @Query
 	OkrUser findByEmail(@Param("name") String name);
 
-	@Query(value="SELECT u.manager_email FROM OkrUser u WHERE u.user_id = :user_id", nativeQuery=true)
-	String findManagerEmailByUserId(@Param("user_id") UUID userId);
-	
-	@Query(value="SELECT u.manager_id FROM OkrUser u WHERE u.user_id = :user_id", nativeQuery=true)
-	UUID findManagerIdByUserId(@Param("user_id") UUID userId);
 }

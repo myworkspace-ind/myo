@@ -9,6 +9,4 @@ import org.sakaiproject.myo.repository.UserRepository;
 public interface UserService {
 	public List<OkrUser> findAll();
 	UserRepository getRepo();
-	String findManagerEmailByUserId(UUID UserId);
-	UUID findManagerIdByUserId(UUID UserId);
 }

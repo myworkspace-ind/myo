@@ -24,14 +24,5 @@ public class UserServiceImpl implements UserService {
 	public UserRepository getRepo() {
 		return userRepo;
 	}
-	
-	@Override
-    public String findManagerEmailByUserId(UUID userId) {
-        return userRepo.findManagerEmailByUserId(userId);
-    }
-	
-	@Override
-	public UUID findManagerIdByUserId(UUID userId) {
-		return userRepo.findManagerIdByUserId(userId);
-	}
+
 }

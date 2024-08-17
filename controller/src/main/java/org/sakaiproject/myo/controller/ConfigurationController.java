@@ -40,7 +40,7 @@ public class ConfigurationController extends BaseController {
      * @return 
 	 */
 	@GetMapping(value = "configuration")
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
+	public ModelAndView displayConfiguration(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("configuration");
 
 		return mav;

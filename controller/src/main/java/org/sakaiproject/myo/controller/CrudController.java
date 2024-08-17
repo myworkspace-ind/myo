@@ -21,6 +21,7 @@ package org.sakaiproject.myo.controller;
 
 import java.io.Console;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -161,5 +163,17 @@ public class CrudController extends BaseController {
             System.out.println("delete failed");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    
+    @PostMapping("/update/selfscore/{keyResultId}")
+    public ResponseEntity<String> updateKeyResultGrade(
+    		@PathVariable String keyResultId,
+    		@RequestBody String payload){
+    	
+    	System.out.println("payload: " + payload);
+    	JsonObject jsonObject = new JsonParser().parse(payload).getAsJsonObject();
+    	String _jsonObject = jsonObject.toString();
+    	
+    	return serviceOkrBackend.updateKeyResultGrade(keyResultId, _jsonObject);
     }
 }
