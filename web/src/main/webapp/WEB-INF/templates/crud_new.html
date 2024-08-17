@@ -321,7 +321,7 @@ body {
 											<th class="column-unit">Unit</th>
 											<th class="column-start-value">Start value</th>
 											<th class="column-target">Target</th>
-											<th class="column-progress">Progress</th>
+											<th class="column-progress">Progress %</th>
 											<th class="column-actions">Actions</th>
 										</tr>
 									</thead>
@@ -557,9 +557,9 @@ $(document).ready(function() {
                                     item.weight, 
                                     keyResult.description, 
                                     unitType, 
-                                    keyResult.startvalue, 
+                                    keyResult.result, 
                                     keyResult.target,
-                                    keyResult.progress,
+                                    item.progress,
                                     '<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>'
                                 ];
                                 data.push(childData);
@@ -571,6 +571,8 @@ $(document).ready(function() {
                     layoutTable.rows.add(data).draw();
                     updateRowNumbersLayout();
                     makeTableSortable('#okr-layouttable');
+                    mergeObjectivesColumn();
+
                 } else {
                     console.error('Unexpected data structure in the JSON data');
                 }
@@ -580,7 +582,23 @@ $(document).ready(function() {
             });
     }
 
+    function mergeObjectivesColumn() {
+        var rows = $('#okr-layouttable tbody tr');
+        var lastObjective = '';
+        var startIndex = -1;
 
+        rows.each(function(index) {
+            var currentObjective = $(this).find('td').eq(1).text().trim();
+
+            if (currentObjective === lastObjective) {
+                $(this).find('td').eq(1).hide(); 
+                rows.eq(startIndex).find('td').eq(1).attr('rowspan', (index - startIndex + 1)); 
+            } else {
+                lastObjective = currentObjective;
+                startIndex = index;
+            }
+        });
+    }
     function updateData() {
         var rowsData = [];
         var parentIdMap = {};
@@ -671,17 +689,17 @@ $(document).ready(function() {
             var keyResult = {
                 description: keyResultDescription,
                 dueDate: '',
-                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0,
+                itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0, 
+                progress: progress,
                 weight: weight,
-                numberResult: 0,
+                numberResult: startValue,
                 numberTarget: target,
                 yesNoResult: false,
                 yesNoTarget: false,
-                percentageResult: 0,
+                percentageResult: startValue,
                 percentageTarget: target,
                 standard: 'None',
                 startvalue: startValue,
-                progress: progress,
             };
 
             objective.keyResults.push(keyResult);
