@@ -386,6 +386,7 @@ public class OkrBackend implements IOkrBackend {
 
 			// Check response status
 			if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NO_CONTENT) {
+				System.out.println("Status: " + response.getStatusCode());
 			    System.out.println("Objective deleted successfully");
 			    return true;
 			} else {
