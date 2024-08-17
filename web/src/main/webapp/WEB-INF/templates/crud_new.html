@@ -334,6 +334,8 @@ body {
 									<button type="button" class="btn mr-2 border MKSOLokrlayout"
 										id="MKSOLAddRowLayout">Add Row</button>
 									<button type="button" class="btn border MKSOLokrlayout"
+										id="draft-save">Draft Save</button>
+									<button type="button" class="btn border MKSOLokrlayout"
 										id="submit-layout">Submit</button>
 								</div>
 							</div>
@@ -664,6 +666,7 @@ $(document).ready(function() {
     
     function updateDataLayout() {
         $('#okr-layouttable tbody tr[data-new="true"]').each(function() {
+        	
             var row = $(this);
             var description = row.find('td').eq(1).text().trim();
             var weight = row.find('td').eq(2).text().trim();
@@ -732,6 +735,195 @@ $(document).ready(function() {
     }
 
 
+    
+	function getOrgId() {
+	    return $.ajax({
+	        url: 'organization/loaddata',
+	        method: 'GET',
+	        dataType: 'text'
+	    }).then(function(data) {
+	        console.log("orgId:", data);
+	        return data; 
+	    }).catch(function(error) {
+	        console.error('Error fetching orgId:', error);
+	        return null; // Trả về giá trị mặc định nếu có lỗi
+	    });
+	}
+
+	function getPeriodId() {
+	    return $.ajax({
+	        url: 'period/currentPeriodId',
+	        method: 'GET',
+	        dataType: 'text'
+	    }).then(function(data) {
+	        console.log("periodId:", data);
+	        return data; 
+	    }).catch(function(error) {
+	        console.error('Error fetching periodId:', error);
+	        return null; // Trả về giá trị mặc định nếu có lỗi
+	    });
+	}
+	
+    function draftSaveOkr(){
+    	
+    	var table = $('#okr-layouttable').DataTable();
+    	
+    	var data = table.rows().data().toArray();
+    	
+    	/* $.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
+	    	// Khởi tạo đối tượng JSON theo cấu trúc yêu cầu
+	    	var jsonData = {
+	    	    "status": "DRAFT",
+	     	    "organizationId": orgId,
+	    	    "periodId": periodId, 
+	    	    "objectives": []
+	    	};
+	    	
+	    	data.forEach(row=>{
+	    		var objDesc1 = row[1];
+	        	console.log("Object change: " + objDesc1)
+	    		
+	    		// Assign table data to variables
+	    	    var objDesc = row[1];
+	    	    var objWeight = row[2];
+	    	    var ksDesc = row[3];
+	    	    var unit = row[4];
+	    	    var startValue = row[5];
+	    	    var target = row[6];
+	    	    var progress = row[7]; 
+	    	    
+	    		// Kiểm tra nếu đã tồn tại 'objective' với description tương ứng
+	    	    var objective = jsonData.objectives.find(obj => obj.description === objDesc);
+	
+	    	 	// Nếu chưa tồn tại, tạo mới một objective
+	    	    if (!objective) {
+	    	      objective = {
+	    	        "description": objDesc,
+	    	        "status": "DRAFT",
+	    	        "weight": objWeight || 0,
+	    	        "comment": "test_comment",
+	    	        "keyResults": []
+	    	      };
+	    	      jsonData.objectives.push(objective);
+	    	    }
+	    	 	
+	    	 	// Thêm keyResult vào trong objective tương ứng
+	    	 	var itype = (unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0);
+	    	 	
+	    	 	var keyResult = {
+	    	            "description": ksDesc,
+	    	            "standard": 'None',
+	    	            "startvalue": itype === 2 ? 0 : startValue,
+	    	            "itype" : itype
+	    	        };
+	    	 	
+	    	 	if (itype === 1) { // Number
+	                keyResult.numberResult = parseFloat(startValue) || 0;
+	                keyResult.numberTarget = parseFloat(target) || 0;
+	            } else if (itype === 2) { // Yes/No
+	                keyResult.yesNoResult = startValue; // assuming startValue is a string
+	                keyResult.yesNoTarget = target; // assuming target is a string
+	            } else if (itype === 3) { // Percentage
+	                keyResult.percentageResult = parseFloat(startValue) || 0;
+	                keyResult.percentageTarget = parseFloat(target) || 0;
+	            }
+	    	 	
+	    	    objective.keyResults.push(keyResult);
+	    	}) */
+	    	
+	    	
+	    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
+		    	
+	    		
+	    		var jsonData = {
+			    	    "status": "DRAFT",
+			     	    "organizationId": orgId,
+			    	    "periodId": periodId, 
+			    	    "objectives": []
+			    	};
+	    		
+	    		$('#okr-layouttable').each(function() {
+	            	
+	                var row = $(this);
+	                var objDesc = row.find('td').eq(1).text().trim();
+	                var objWeight = row.find('td').eq(2).text().trim();
+	                var ksDesc = row.find('td').eq(3).text().trim();
+	                var unit = row.find('td').eq(4).text().trim();
+	                var startValue = row.find('td').eq(5).text().trim();
+	                var target = row.find('td').eq(6).text().trim();
+	                var progress = row.find('td').eq(7).text().trim();
+	    		
+	    		// Khởi tạo đối tượng JSON theo cấu trúc yêu cầu
+		    		// Kiểm tra nếu đã tồn tại 'objective' với description tương ứng
+		    	    var objective = jsonData.objectives.find(obj => obj.description === objDesc);
+		
+		    	 	// Nếu chưa tồn tại, tạo mới một objective
+		    	    if (!objective) {
+		    	      objective = {
+		    	        "description": objDesc,
+		    	        "status": "DRAFT",
+		    	        "weight": objWeight || 0,
+		    	        "comment": "test_comment",
+		    	        "keyResults": []
+		    	      };
+		    	      jsonData.objectives.push(objective);
+		    	    }
+		    	 	
+		    	 	// Thêm keyResult vào trong objective tương ứng
+		    	 	var itype = (unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0);
+		    	 	
+		    	 	var keyResult = {
+		    	            "description": ksDesc,
+		    	            "standard": 'None',
+		    	            "startvalue": itype === 2 ? 0 : startValue,
+		    	            "itype" : itype
+		    	        };
+		    	 	
+		    	 	if (itype === 1) { // Number
+		                keyResult.numberResult = parseFloat(startValue) || 0;
+		                keyResult.numberTarget = parseFloat(target) || 0;
+		            } else if (itype === 2) { // Yes/No
+		                keyResult.yesNoResult = startValue; // assuming startValue is a string
+		                keyResult.yesNoTarget = target; // assuming target is a string
+		            } else if (itype === 3) { // Percentage
+		                keyResult.percentageResult = parseFloat(startValue) || 0;
+		                keyResult.percentageTarget = parseFloat(target) || 0;
+		            }
+		    	 	
+		    	    objective.keyResults.push(keyResult);
+		    	})
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	// Call API
+	    	var payload = JSON.stringify(jsonData);
+	    	console.log(payload);
+	    	var url = "objectives/updateOkr"
+	    	
+	    	
+	    	
+	    	$.ajax({
+				url: url,
+				type: 'POST',
+				contentType: 'application/json',
+				data: payload,
+				success: function(response) {
+					console.log('Data saved successfully:', response);
+				},
+				error: function(xhr, status, error) {
+					console.error('Error saving data:', {
+					      status: xhr.status,
+					      statusText: xhr.statusText,
+					      responseText: xhr.responseText
+					    });
+				}
+			});
+
+    	})
+    }
+    
 
 
 
@@ -795,8 +987,9 @@ $(document).ready(function() {
     $('#MKSOLAddRowLayout').click(addRowLayout);
 
     $('#MKSOLUpdateperiod').click(updateData);
-    $('#submit-layout').click(updateDataLayout);
-
+    /* $('#submit-layout').click(updateDataLayout); */
+    $('#submit-layout').on('click',updateDataLayout);
+	$('#draft-save').click(draftSaveOkr);
 
     $('#okr-table').on('click', '.editTracking-btn', function() {
         var row = $(this).closest('tr');
