@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
@@ -288,6 +289,38 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
+	
+//	@Override
+//	public String getObjectives(String periodId, String organizationId) {
+//		try {
+//			System.out.println(okrAuthToken);
+//			if(organizationId == null || organizationId.isEmpty()) {
+//				organizationId = getOrganization();
+//			}
+//			if(periodId == null || periodId.isEmpty()) {
+//				periodId = getCurrentPeriodId();
+//			}
+//			
+////			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+//			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.set("Authorization", "Bearer " + okrAuthToken);
+//			HttpEntity<String> entity = new HttpEntity<>(headers);
+//			System.out.println("Fined1");
+//			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+//			headers.set("Authorization", "Bearer " + okrAuthToken);
+//			entity = new HttpEntity<>(headers);
+//			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+//			String responseJson = response.getBody(); 
+//			System.out.print(responseJson);
+//			return responseJson;
+//		} catch (Exception e) {
+//			System.out.println("An error occurred: " + e.getMessage());
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+
 	@Override
 	public String getObjectives() {
 	    try {
@@ -457,7 +490,29 @@ public class OkrBackend implements IOkrBackend {
 	    }
 	}
 
-
+	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload){
+		try {
+			String serverUrl = okrBaseURL + "/keyResult/grade/" + keyResultId;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			
+			HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity, String.class);
+            
+            System.out.println("Here!");
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+            }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	public String getOkrAuthToken() {
 		return okrAuthToken;

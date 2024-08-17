@@ -95,7 +95,19 @@ body {
 					</tbody>
 				</table>
 				<div class="text-right mt-3">
-					<button class="btn float-end" id="update-btn">Update</button>
+					<!-- <button class="btn float-end" id="update-btn">Update</button> -->
+					<div id="update-wrapper">
+				        <button class="btn float-end" id="update-btn">Update</button>
+				    </div>
+				</div>
+				<!-- Notification -->
+				<br/>
+				<br/>
+				<div id="notification" class="alert alert-dismissible fade show" role="alert" style="display: none;">
+				  <strong id="notification-message"></strong>
+				  <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				  </button> -->
 				</div>
 			</div>
 		</div>
@@ -106,6 +118,7 @@ body {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 	<script>
+
 	$(document).ready(function() {
 		var table = $('#okrs-table').DataTable({
 			data: [],
@@ -117,7 +130,8 @@ body {
 				{ data: 'Unit' },
 				{ data: 'Start value' },
 				{ data: 'Target' },
-				{ data: 'Self-score' }
+				{ data: 'Self-score' },
+				{ data: 'KeyResultId', visible: false}
 			],
 			paging: true,
 			searching: true,
@@ -149,7 +163,7 @@ body {
 		            if (xhr.status === 200) {
 		                var jsonResponse = JSON.parse(xhr.responseText);
 		                var objectives = jsonResponse.data.objectives;
-
+						console.log(jsonResponse);
 		                objectives.sort((a, b) => {
 		                    if (a.description < b.description) return -1;
 		                    if (a.description > b.description) return 1;
@@ -185,7 +199,8 @@ body {
 		                            Unit: unit,
 		                            "Start value": keyResult.startvalue,
 		                            Target: keyResult.target,
-		                            "Self-score": keyResult.finalScore
+		                            "Self-score": keyResult.finalScore,
+		                            KeyResultId: keyResult.keyResultId
 		                        });
 		                    });
 		                });
@@ -198,38 +213,57 @@ body {
 		    };
 		    xhr.send();
 		}
-
+		
 		function submitData() {
-		    var url = 'objectives/uploaddata';
 		    var data = table.rows().data().toArray();
+		    var totalRequests = data.length; 
+		    var successfulRequests = 0; // Check for notification.
+		    var failedRequests = 0; // Check for notification,
 		    
-		    var formattedData = [];
-		    data.forEach(row => {
-		        formattedData.push({
-		            No: row[0],
-		            Objectives: row[1],
-		            Weight: row[2],
-		            "Key results": row[3],
-		            Unit: row[4],
-		            "Start value": row[5],
-		            Target: row[6],
-		            "Self-score": row[7]
-		        });
+		    data.forEach(function(row){
+		        var keyResultId = row["KeyResultId"];
+		        var self_score = row["Self-score"];
+		        
+		        var data = {
+		            finalScore: self_score
+		        };
+		        var payload = JSON.stringify(data);
+		        
+		        var url = `update/selfscore/${keyResultId}`;
+		        
+		        $.ajax({
+					url: url,
+					type: 'POST',
+					contentType: 'application/json',
+					data: payload,
+					success: function(response) {
+						console.log('Data saved successfully:', response);
+						successfulRequests++;
+						checkCompletion();
+					},
+					error: function(xhr, status, error) {
+						console.error('Error saving data:', {
+						      status: xhr.status,
+						      statusText: xhr.statusText,
+						      responseText: xhr.responseText
+						    });
+						failedRequests++;
+						checkCompletion();
+					}
+				});
 		    });
-
-		    var xhr = new XMLHttpRequest();
-		    xhr.open('POST', url, true);
-		    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-		    xhr.onreadystatechange = function() {
-		        if (xhr.readyState === XMLHttpRequest.DONE) {
-		            if (xhr.status === 200) {
-		                console.log('Data successfully submitted.', JSON.stringify(formattedData));
-		            } else {
-		                console.error('Failed to submit data. Status:', xhr.status);
+		    function checkCompletion() {
+		        if (successfulRequests + failedRequests === totalRequests) {
+		            var message = failedRequests === 0 ? 'Thành công!' : 'Thất bại!';
+		            $('#notification-message').text(message);
+		            $('#notification').addClass('alert-success').removeClass('alert-danger');
+		            if (failedRequests > 0) {
+		                $('#notification').addClass('alert-danger').removeClass('alert-success');
 		            }
+		            $('#notification').show();
 		        }
-		    };
-		    xhr.send(JSON.stringify(formattedData));
+		    }
+
 		}
 
 		fetchData();
