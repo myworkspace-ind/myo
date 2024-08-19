@@ -58,7 +58,7 @@ public class ReviewOkrController extends BaseController {
 	 */
 	@RequestMapping(value = {"reviewokr"}, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("reviewokr");
+		ModelAndView mav = new ModelAndView("reviewokr_new");
 
 		initSession(request, httpSession);
 		
