@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Self-scoring</title>
+<style>
+.content {
+	transition: margin-left 0.3s ease;
+	margin-top: 6%;
+}
+
+.sidebar.open ~ .content {
+	margin-left: 200px;
+}
+</style>
+<th:block th:include="fragments/head"></th:block>
+<link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
+
+<link rel="stylesheet" type="text/css" href="resources/css/my_okr.css">
+
+
+</head>
+<body>
+	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
+	<div id="content" class="content">
+		<th:block th:include="selfscoring.html"></th:block>
+	</div>
+	<script>
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			var content = document.getElementById("content");
+			sidebar.classList.toggle("open");
+			content.classList.toggle("shifted", sidebar.classList
+					.contains("open"));
+		}
+
+		var toggles = document.querySelectorAll('.toggle-submenu');
+		toggles.forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				var parent = this.parentElement;
+				parent.classList.toggle('open');
+			});
+		});
+	</script>
+</body>
+</html>
