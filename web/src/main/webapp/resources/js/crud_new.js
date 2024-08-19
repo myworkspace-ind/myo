@@ -36,7 +36,7 @@ $(document).ready(function() {
 		"paging": true,
 		"searching": true,
 		"info": false,
-		"ordering": true,
+		"ordering": false,
 	});
 
 	var layoutTable = $('#okr-layouttable').DataTable({
@@ -98,26 +98,29 @@ $(document).ready(function() {
 
 	function flattenData(data) {
 		var result = [];
+
 		data.forEach(function(item) {
 			result.push({
 				No: result.length + 1,
-				name: item.name,
-				startDate: item.startDate,
-				endDate: item.endDate,
-				currentPeriod: item.currentPeriod
+				name: item.name || '', 
+				startDate: item.startDate || '', 
+				endDate: item.endDate || '', 
+				currentPeriod: item.currentPeriod || '' 
 			});
+
 			if (item.childs && Array.isArray(item.childs)) {
 				item.childs.forEach(function(child) {
 					result.push({
 						No: result.length + 1,
-						name: child.name,
-						startDate: child.startDate,
-						endDate: child.endDate,
-						currentPeriod: child.currentPeriod
+						name: child.name || '', 
+						startDate: child.startDate || '',
+						endDate: child.endDate || '', 
+						currentPeriod: child.currentPeriod || '' 
 					});
 				});
 			}
 		});
+
 		return result;
 	}
 
@@ -125,29 +128,55 @@ $(document).ready(function() {
 		fetch('period/loaddata')
 			.then(response => response.json())
 			.then(jsonData => {
-				var data = [];
+				let data = [];
+
 				if (jsonData.data && Array.isArray(jsonData.data)) {
 					data = flattenData(jsonData.data);
 				} else {
 					console.error('Unexpected data structure in the JSON data');
+					return; 
 				}
 
-				trackingTable.clear();
-				data.forEach(row => {
-					var rowHtml =
-						`<tr class="draggable">
-                            <td>${row.No}</td>
-                            <td>${row.name}</td>
-                            <td>${row.startDate}</td>
-                            <td>${row.endDate}</td>
-                            <td>${row.currentPeriod}</td>
-                            <td class="non-editable">
-                                <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
-                                <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
-                            </td>
-                        </tr>`;
-					trackingTable.row.add($(rowHtml)).draw();
+				console.log("Raw JSON Data: ", jsonData.data);
+				console.log("Processed Data: ", data);
+
+				data.forEach((item, index) => {
+					console.log(`Item ${index}:`, item, 'Type:', typeof item);
+					if (Array.isArray(item)) {
+						console.log(`Item ${index} startDate: ${item.startDate}, Type: ${typeof item.startDate}`);
+					}
 				});
+
+				data.sort((a, b) => {
+					const dateA = new Date(a.startDate);
+					const dateB = new Date(b.startDate); 
+					console.log(`Sorting ${dateA} vs ${dateB}`); // Debugging date comparison
+					return dateA - dateB;
+				});
+
+				console.log("Data after sorting: ", data);
+
+				trackingTable.clear().draw();
+				data.forEach(row => {
+					if (row) {
+						let rowHtml = `
+	                        <tr class="draggable">
+	                            <td>${row.No || ''}</td>
+	                            <td>${row.name || ''}</td>
+	                            <td>${row.startDate || ''}</td>
+	                            <td>${row.endDate || ''}</td>
+	                            <td>${row.currentPeriod || ''}</td>
+	                            <td class="non-editable">
+	                                <span class="editTracking-btn"><i class="fas fa-edit"></i> Edit</span>
+	                                <span class="deleteTracking-btn"><i class="fas fa-trash"></i> Delete</span>
+	                            </td>
+	                        </tr>`;
+						trackingTable.row.add($(rowHtml)).draw();
+					} else {
+						console.error('Invalid row data:', row);
+					}
+				});
+
 				updateRowNumbers();
 				makeTableSortable('#okr-table');
 			})
@@ -183,7 +212,6 @@ $(document).ready(function() {
 										break;
 								}
 
-								// Create row data including the delete button with a data-id attribute
 								var childData = [
 									counter++,
 									item.description,
@@ -335,6 +363,7 @@ $(document).ready(function() {
 					console.error('Error updating data:', error);
 				});
 		});
+		window.location.reload();
 	}
 
 
@@ -405,6 +434,7 @@ $(document).ready(function() {
 					console.error('Error updating data:', error);
 				});
 		});
+		window.location.reload();
 	}
 
 	function updateRowNumbers() {
