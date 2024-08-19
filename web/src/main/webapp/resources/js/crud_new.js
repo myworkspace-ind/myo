@@ -43,7 +43,7 @@ $(document).ready(function() {
 		"paging": true,
 		"searching": true,
 		"info": false,
-		"ordering": true,
+		"ordering": false,
 	});
 
 	var newRows = [];
@@ -162,8 +162,8 @@ $(document).ready(function() {
 			.then(jsonData => {
 				if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
 					var data = [];
-					var counter = 1;
-
+					var counter = 0;
+					console.log("Fetch data");
 					jsonData.data.objectives.forEach(item => {
 						if (item.keyResults && Array.isArray(item.keyResults)) {
 							item.keyResults.forEach(keyResult => {
@@ -198,15 +198,22 @@ $(document).ready(function() {
 	                                 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
 								];
 								data.push(childData);
+								console.log("Child: " + childData);
 							});
 						}
 					});
+					console.log("Data before sorting: ", data);
+					data.sort((a, b) => a[1].localeCompare(b[1]));
+
+					// Log data to check sorting
+					console.log("Data after description's sorting: ", data);
 
 					// Clear and redraw the table
 					layoutTable.clear();
 					layoutTable.rows.add(data).draw();
-					updateRowNumbersLayout();
 					makeTableSortable('#okr-layouttable');
+					updateRowNumbersLayout();
+
 					mergeObjectivesColumn();
 
 					document.querySelectorAll('.deleteLayout-btn').forEach(button => {
@@ -400,10 +407,6 @@ $(document).ready(function() {
 		});
 	}
 
-
-
-
-
 	function updateRowNumbers() {
 		$('#okr-table tbody tr').each(function(index) {
 			$(this).find('td').eq(0).text(index + 1);
@@ -498,6 +501,7 @@ $(document).ready(function() {
 	});
 
 	fetchData();
+	console.log("loaded");
 	fetchDataLayout();
 
 
