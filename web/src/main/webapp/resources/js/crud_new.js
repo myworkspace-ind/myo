@@ -12,25 +12,6 @@ const App = () => (
 export default App;*/
 
 $(document).ready(function() {
-	$('#jstree').jstree({
-		'core': {
-			'themes': {
-				'name': 'default',
-				'responsive': true
-			}
-		}
-	});
-
-	$('#jstree').on('click', 'a[href="crud"]', function() {
-		window.location.href = 'crud';
-	});
-
-	$('#jstree').on('click', 'a[href="selfscoring"]', function() {
-		window.location.href = 'selfscoring';
-	});
-	$('#jstree').on('click', 'a[href="reviewokr"]', function() {
-		window.location.href = 'reviewokr';
-	});
 
 	var trackingTable = $('#okr-table').DataTable({
 		"paging": true,
@@ -641,4 +622,5 @@ $(document).ready(function() {
 				}
 			});
 	}
+	
 });
