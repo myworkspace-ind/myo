@@ -4,11 +4,192 @@ body {
 	margin-top: 5%;
 }
 
-.MKSOLCRUDTabmenu {
-	color: black !important;
+.table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.875rem;
+	color: #ffffff; /* White text color for table */
 }
 
-.MKSOLokrlayout{
-	border:thick;
-	border-color: black;
+.table th, .table td {
+	border: 1px solid #444444; /* Darker border */
+	padding: 12px;
+	text-align: left;
+}
+
+.table th {
+	background-color: #333333; /* Darker header background */
+	color: #ffffff; /* White text color for header */
+}
+
+.table tr:nth-child(even) {
+	background-color: #1a1a1a; /* Dark grey for even rows */
+}
+
+.table tr:nth-child(odd) {
+	background-color: #000000; /* Black for odd rows */
+}
+
+.draggable {
+	cursor: move;
+}
+
+.edit-btn, .delete-btn {
+	cursor: pointer;
+	color: #ffffff; /* White text color */
+	text-decoration: none;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+	color: #cccccc; /* Lighter text color on hover */
+}
+
+.ui-state-highlight {
+	background: #444444; /* Darker highlight */
+	border: 1px dashed #ffffff; /* White dashed border */
+}
+
+.cell-editable {
+	border: 1px solid #007bff; /* Blue border */
+	background-color: #333333; /* Dark grey background */
+}
+
+.non-editable {
+	cursor: default;
+}
+
+.btn-custom {
+	border-color: #ffffff; /* White border color */
+	color: #ffffff; /* White text color */
+}
+
+.btn-custom:hover {
+	background-color: #ffffff; /* White background on hover */
+	color: #000000; /* Black text color on hover */
+}
+
+.column-name, .column-start-date, .column-end-date,
+	.column-current-period, .column-actions {
+	color: #ffffff; /* White text color */
+}
+
+.card-header {
+	background-color: #333333; /* Dark grey background for card header */
+	color: #ffffff; /* White text color */
+}
+
+.card-body {
+	background-color: #000000; /* Black background for card body */
+	color: #ffffff; /* White text color */
+}
+
+.nav-tabs .nav-link {
+	color: #ffffff; /* White text color */
+}
+
+.nav-tabs .nav-link.active {
+	color: #ffffff; /* White text color for active tab */
+	background-color: #333333; /* Dark grey background for active tab */
+}
+
+.btn-outline-dark {
+	color: #ffffff; /* White text color */
+	border-color: #ffffff; /* White border color */
+}
+
+.btn-outline-dark:hover {
+	background-color: #ffffff; /* White background on hover */
+	color: #000000; /* Black text color on hover */
+}
+
+.dropdown-menu {
+	background-color: #333333; /* Dark grey background */
+	border: 1px solid #444444; /* Darker border */
+}
+
+.dropdown-item {
+	color: #ffffff; /* White text color */
+}
+
+.dropdown-item:hover {
+	background-color: #444444; /* Darker background on hover */
+}
+
+.form-check-label {
+	color: #ffffff; /* White text color */
+}
+
+.form-check-input {
+	cursor: pointer;
+}
+
+#okr-dashboard-content .card {
+	margin-bottom: 1rem;
+}
+
+.dataTables_wrapper .dataTables_filter {
+	margin-bottom: 2%;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+	margin-bottom: 2%;
+}
+
+.card {
+	margin-bottom: 20px;
+}
+
+.progress-bar {
+	background-color: gray; /* Blue progress bar */
+}
+
+.card-title {
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+.okr-content {
+	font-size: 0.9rem;
+}
+
+.export-btn {
+	float: right;
+	margin-bottom: 20px;
+}
+
+.card {
+	background-color: #1f2225 !important;
+	color: white !important;
+}
+
+.nav-link {
+	color: white !important;
+}
+
+.MKSOLCRUDTabmenu {
+	background-color: #1f2225 !important;
+}
+.MKSOLdropdownperiod{
+	border-color: white;
+}
+
+.dataTables_filter {
+	color: white !important;
+}
+
+.dataTables_length {
+	color: white !important;
+}
+
+.okr-table_length {
+	color: white !important;
+}
+
+.MKSOLokrlayout {
+	color: white !important;
+}
+
+.form-select {
+	background-color: #1f2225 !important;
+	color: white !important;
 }

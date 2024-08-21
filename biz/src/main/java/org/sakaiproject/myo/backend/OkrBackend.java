@@ -371,6 +371,9 @@ public class OkrBackend implements IOkrBackend {
 			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	
 
 	@Override
 	public ResponseEntity<String> postPeriod(String jsonData) {
@@ -501,7 +504,6 @@ public class OkrBackend implements IOkrBackend {
 			HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
             ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity, String.class);
             
-            System.out.println("Here!");
             if (response.getStatusCode() == HttpStatus.OK) {
                 return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
             } else {
@@ -514,6 +516,33 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
+	@Override
+	public ResponseEntity<String> updateOkrDraftSave(String updatedOkr) {
+		try {
+			String serverUrl = okrBaseURL + "/personalOkr/advanced/update/";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			
+
+			HttpEntity<String> requestEntity = new HttpEntity<>(updatedOkr, headers);
+            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, String.class);
+			System.out.println("Checked");
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Handle successful response
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				// Handle non-200 response status
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			// Handle exception
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	public String getOkrAuthToken() {
 		return okrAuthToken;
 	}

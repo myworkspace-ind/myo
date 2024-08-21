@@ -1,0 +1,152 @@
+@charset "UTF-8";
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #1f2225 !important;
+	color: white !important;
+}
+
+.navbar {
+		padding: 0;
+	
+	background-color: #333435;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 60px;
+}
+
+.navbar-brand {
+	padding: 0;
+	color: #ffffff;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	margin-right: 20px;
+	background-color: #003a6b;
+	margin-top: 0;
+}
+
+.navbar-brand img {
+	max-height: 35px;
+	margin-right: 10px;
+}
+
+.navbar .toggle-btn {
+	font-size: 24px;
+	color: #ffffff;
+	cursor: pointer;
+	background: none;
+	border: none;
+	padding: 5px 10px;
+}
+
+.navbar-auth {
+	color: #ffffff;
+	font-size: 24px;
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	padding: 5px 10px;
+	text-decoration: none;
+	background-color: gray !important;
+}
+
+.navbar-auth i {
+	font-size: 24px;
+}
+
+.sidebar {
+	width: 190px;
+	height: calc(100vh - 50px);
+	background-color: #31353b;
+	position: fixed;
+	top: 50px;
+	left: -250px;
+	padding-top: 20px;
+	color: #ffffff;
+	transition: left 0.3s ease;
+	overflow-y: hidden;
+}
+
+.sidebar.open {
+	left: 0;
+}
+
+.sidebar .nav {
+	max-height: calc(100vh - 100px);
+	overflow-y: auto;
+}
+
+.sidebar a {
+	color: #ffffff;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+}
+
+.sidebar a:hover {
+	background-color: #1c2b38;
+}
+
+.sidebar .nav-item .bi {
+	margin-right: 10px;
+	color: #ffffff;
+}
+
+.sidebar .active {
+	background-color: #3d6fa1;
+}
+
+.bottom-link {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background-color: #4a586e;
+	text-align: center;
+	padding: 15px 0;
+	color: #ffffff;
+	height: 50px;
+}
+
+.bottom-link a {
+	color: #ffffff !important;
+	font-size: 14px;
+}
+
+.nav-link {
+	color: white !important;
+}
+
+.nav-item .sub-menu {
+	display: none;
+	padding-left: 20px;
+}
+
+.nav-item .sub-menu .nav-link {
+	font-size: 14px;
+}
+
+.nav-item .sub-menu .sub-sub-menu {
+	padding-left: 20px;
+}
+
+.nav-item.open>.sub-menu {
+	display: block;
+}
+
+.nav-item .toggle-submenu {
+	cursor: pointer;
+}
+
+.bi-box-arrow-right {
+	color: white !important;
+	font-size: 15px !important;
+}
