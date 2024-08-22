@@ -330,6 +330,7 @@ body {
 								</table>
 
 								</br>
+								
 								<div class="d-flex justify-content-end">
 									<button type="button" class="btn mr-2 border MKSOLokrlayout"
 										id="MKSOLAddRowLayout">Add Row</button>
@@ -338,6 +339,11 @@ body {
 									<button type="button" class="btn border MKSOLokrlayout"
 										id="submit-layout">Submit</button>
 								</div>
+								<!-- <div id="notiDraftSave" style="display: none; padding: 10px; margin: 10px 0; border-radius: 5px; text-align: center;"></div> -->
+								<div id="notiDraftSave" class="alert alert-dismissible fade show" role="alert" style="display: none;">
+								  <strong id="notification-message"></strong>
+								</div>
+								
 							</div>
 						</div>
 
@@ -911,6 +917,7 @@ $(document).ready(function() {
 				data: payload,
 				success: function(response) {
 					console.log('Data saved successfully:', response);
+					showNotiDraftSave('Update successfully!', 'success');
 				},
 				error: function(xhr, status, error) {
 					console.error('Error saving data:', {
@@ -918,6 +925,7 @@ $(document).ready(function() {
 					      statusText: xhr.statusText,
 					      responseText: xhr.responseText
 					    });
+					showNotiDraftSave('Failed to update! Try again, please', 'error');
 				}
 			});
 
@@ -925,6 +933,33 @@ $(document).ready(function() {
     }
     
 
+   	function showNotiDraftSave(message, type) {
+   	    /* var notification = $('#notiDraftSave');
+   	    notification.text(message);
+
+   	    if (type === 'success') {
+   	        notification.removeClass('error').addClass('success');
+   	    } else if (type === 'error') {
+   	        notification.removeClass('success').addClass('error');
+   	    }
+
+   	    notification.fadeIn(); */
+   	    
+   	 	$('#notification-message').text(message);
+   	    if(type === 'success'){
+   	    	$('#notiDraftSave').addClass('alert-success').removeClass('alert-danger');
+   	    } else if (type === 'error'){
+   	    	$('#notiDraftSave').addClass('alert-danger').removeClass('alert-success');
+   	    }
+
+        $('#notiDraftSave').show();
+        $('#notiDraftSave').fadeIn();
+        
+   	    // Hide notificaiton after 3s
+   	    setTimeout(function() {
+   	    	$('#notiDraftSave').fadeOut();
+   	    }, 3000);
+   	}
 
 
     function updateRowNumbers() {
