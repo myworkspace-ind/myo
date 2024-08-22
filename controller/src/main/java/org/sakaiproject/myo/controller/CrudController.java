@@ -71,6 +71,13 @@ public class CrudController extends BaseController {
 		return serviceOkrBackend.getPeriod();
 	}
 
+	@GetMapping(value = "/period/currentPeriodId")
+	@ResponseBody
+	public String getCurrentPeriod() {
+		// Get and process response
+		return serviceOkrBackend.getCurrentPeriodId();
+	}
+	
 	@GetMapping(value = "/organization/loaddata")
 	@ResponseBody
 	public String getInfoOrganization() {
@@ -118,6 +125,20 @@ public class CrudController extends BaseController {
         return serviceOkrBackend.postOkr(modifiedJsonData);
     }
     
+    @PostMapping("/objectives/updateOkr")
+    public ResponseEntity<String> updateOkr(@RequestBody String payload) {
+    	
+    	JsonObject jsonObject = new JsonParser().parse(payload).getAsJsonObject();
+        // Convert modified JSON object back to string
+        String _jsonObject = jsonObject.toString();
+        
+        System.out.println(_jsonObject);
+
+        // Pass modifiedJsonData to serviceOkrBackend for further processing
+        return serviceOkrBackend.updateOkrDraftSave(_jsonObject);
+    }
+    
+    
     @PostMapping("/period/uploaddata")
     public ResponseEntity<String> createPeriod(@RequestBody String jsonData) {
         return serviceOkrBackend.postPeriod(jsonData);
@@ -141,4 +162,24 @@ public class CrudController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    public ResponseEntity<Void> deleteObjective(@PathVariable String name) {
+        try {
+        	System.out.println("delete");
+            boolean isDeleted = serviceOkrBackend.deleteObjectives(name);
+            System.out.println("deleteeeee");
+            if (isDeleted) {
+                return ResponseEntity.ok().build();
+            } else {
+            	System.out.println("delete fails");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("delete failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    
+    
 }
