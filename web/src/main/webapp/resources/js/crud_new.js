@@ -148,10 +148,18 @@ $(document).ready(function() {
 				});
 
 				data.sort((a, b) => {
-					const dateA = new Date(a.startDate);
-					const dateB = new Date(b.startDate); 
-					console.log(`Sorting ${dateA} vs ${dateB}`); // Debugging date comparison
-					return dateA - dateB;
+				    const startDateA = new Date(a.startDate);
+				    const startDateB = new Date(b.startDate);
+				    const endDateA = new Date(a.endDate);
+				    const endDateB = new Date(b.endDate);
+
+				    // Compare start dates
+				    if (startDateA.getTime() !== startDateB.getTime()) {
+				        return startDateA - startDateB;
+				    }
+
+				    // If start dates are the same, compare end dates (later dates come first)
+				    return endDateB - endDateA;
 				});
 
 				console.log("Data after sorting: ", data);
