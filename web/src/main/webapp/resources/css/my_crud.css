@@ -169,7 +169,8 @@ body {
 .MKSOLCRUDTabmenu {
 	background-color: #1f2225 !important;
 }
-.MKSOLdropdownperiod{
+
+.MKSOLdropdownperiod {
 	border-color: white;
 }
 
@@ -190,6 +191,15 @@ body {
 }
 
 .form-select {
+	background-color: #1f2225 !important;
+	color: white !important;
+}
+
+.MKSOLdropdownperiodgroup {
+	color: white !important;
+}
+
+.unit-select {
 	background-color: #1f2225 !important;
 	color: white !important;
 }

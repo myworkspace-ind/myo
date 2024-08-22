@@ -53,29 +53,36 @@ $(document).ready(function() {
 	}
 
 	function addRowLayout() {
-		var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
-		var newRow =
-			`<tr data-new="true">
-                <td>${newRowIndex}</td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
-                <td contenteditable="false"></td>
+    var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
+    var newRow =
+        `<tr data-new="true">
+            <td>${newRowIndex}</td>
+            <td contenteditable="false"></td>
+            <td contenteditable="false"></td>
+            <td contenteditable="false"></td>
+            <td>
+                <select class="unit-select">
+                    <option value="">Select unit</option>
+                    <option value="Number">Number</option>
+                    <option value="Yes/No">Yes/No</option>
+                    <option value="Percentage">Percentage</option>
+                </select>
+            </td>
+            <td contenteditable="false"></td>
+            <td contenteditable="false"></td>
+            <td contenteditable="false"></td>
+            <td>
+                <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
+                <span class="deleteLayout-btn" data-id="${newRowIndex}"><i class="fas fa-trash"></i> Delete</span>
+            </td>
+        </tr>`;
+    var row = $(newRow);
+    layoutTable.row.add(row).draw();
+    newLayoutRows.push(row);
+    updateRowNumbersLayout();
+    makeTableSortable('#okr-layouttable');
+}
 
-                <td>
-                    <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
-                    <span class="deleteLayout-btn"><i class="fas fa-trash"></i> Delete</span>
-                </td>
-            </tr>`;
-		var row = $(newRow);
-		layoutTable.row.add(row).draw();
-		newLayoutRows.push(row);
-		updateRowNumbersLayout();
-		makeTableSortable('#okr-layouttable');
-	}
 
 	function flattenData(data) {
 		var result = [];
@@ -349,74 +356,91 @@ $(document).ready(function() {
 
 
 	function updateDataLayout() {
-		$('#okr-layouttable tbody tr[data-new="true"]').each(function() {
-			var row = $(this);
-			var description = row.find('td').eq(1).text().trim();
-			var weight = row.find('td').eq(2).text().trim();
-			var keyResultDescription = row.find('td').eq(3).text().trim();
-			var unit = row.find('td').eq(4).text().trim();
-			var startValue = row.find('td').eq(5).text().trim();
-			var target = row.find('td').eq(6).text().trim();
-			var progress = row.find('td').eq(7).text().trim();
+    $('#okr-layouttable tbody tr[data-new="true"]').each(function() {
+        var row = $(this);
+        var description = row.find('td').eq(1).text().trim();
+        var weight = row.find('td').eq(2).text().trim();
+        var keyResultDescription = row.find('td').eq(3).text().trim();
+        var unit = row.find('.unit-select').val(); // Get the selected value
+        var startValue = row.find('td').eq(5).text().trim();
+        var target = row.find('td').eq(6).text().trim();
+        var progress = row.find('td').eq(7).text().trim();
 
-			if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
-				console.warn('One or more fields are empty in the row.');
-				return;
-			}
+        if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
+            console.warn('One or more fields are empty in the row.');
+            return;
+        }
 
-			var objective = {
-				description: description,
-				status: 'DRAFT',
-				weight: weight,
-				comment: '',
-				keyResults: []
-			};
+        var itype;
+        switch (unit) {
+            case 'Number':
+                itype = 1;
+                break;
+            case 'Yes/No':
+                itype = 2;
+                break;
+            case 'Percentage':
+                itype = 3;
+                break;
+            default:
+                itype = 0;
+                break;
+        }
 
-			var keyResult = {
-				description: keyResultDescription,
-				dueDate: '',
-				itype: unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0,
-				progress: progress,
-				weight: weight,
-				numberResult: startValue,
-				numberTarget: target,
-				yesNoResult: false,
-				yesNoTarget: false,
-				percentageResult: startValue,
-				percentageTarget: target,
-				standard: 'None',
-				startvalue: startValue,
-			};
+        var objective = {
+            description: description,
+            status: 'DRAFT',
+            weight: weight,
+            comment: '',
+            keyResults: []
+        };
 
-			objective.keyResults.push(keyResult);
+        var keyResult = {
+            description: keyResultDescription,
+            dueDate: '',
+            itype: itype,
+            progress: progress,
+            weight: weight,
+            numberResult: startValue,
+            numberTarget: target,
+            yesNoResult: false,
+            yesNoTarget: false,
+            percentageResult: startValue,
+            percentageTarget: target,
+            standard: 'None',
+            startvalue: startValue,
+        };
 
-			var requestData = { objectives: [objective] };
+        objective.keyResults.push(keyResult);
 
-			if (requestData.objectives.length === 0) {
-				console.warn('No data to update');
-				return;
-			}
+        var requestData = { objectives: [objective] };
 
-			console.log('Sending data:', JSON.stringify(requestData));
+        if (requestData.objectives.length === 0) {
+            console.warn('No data to update');
+            return;
+        }
 
-			fetch('objectives/uploaddata', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(requestData)
-			})
-				.then(response => response.json())
-				.then(result => {
-					console.log('Data successfully updated:', JSON.stringify(result));
-					row.removeAttr('data-new');
-				})
-				.catch(error => {
-					console.error('Error updating data:', error);
-				});
-		});
-		window.location.reload();
-	}
+        console.log('Sending data:', JSON.stringify(requestData));
+
+        fetch('objectives/uploaddata', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data successfully updated:', JSON.stringify(result));
+                row.removeAttr('data-new');
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            });
+    });
+    window.location.reload();
+}
+
 
 	function updateRowNumbers() {
 		$('#okr-table tbody tr').each(function(index) {
@@ -450,13 +474,18 @@ $(document).ready(function() {
 		$("#okr-table").sortable("disable");
 	}
 
-	function enableCellEditLayout(row) {
-		$(row).find('td').not('.non-editable').each(function() {
-			$(this).attr('contenteditable', 'true').addClass('cell-editable');
-		});
-		$(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
-		$("#okr-layouttable").sortable("disable");
-	}
+function enableCellEditLayout(row) {
+    $(row).find('td').not('.non-editable').each(function() {
+        var cell = $(this);
+        if (cell.find('select').length) {
+            cell.find('select').prop('disabled', false);
+        } else {
+            cell.attr('contenteditable', 'true').addClass('cell-editable');
+        }
+    });
+    $(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
+    $("#okr-layouttable").sortable("disable");
+}
 
 	function disableCellEditTracking(row) {
 		$(row).find('td').not('.non-editable').each(function() {
@@ -467,12 +496,17 @@ $(document).ready(function() {
 	}
 
 	function disableCellEditLayout(row) {
-		$(row).find('td').not('.non-editable').each(function() {
-			$(this).attr('contenteditable', 'false').removeClass('cell-editable');
-		});
-		$(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
-		$("#okr-layouttable").sortable("enable");
-	}
+    $(row).find('td').not('.non-editable').each(function() {
+        var cell = $(this);
+        if (cell.find('select').length) {
+            cell.find('select').prop('disabled', true);
+        } else {
+            cell.attr('contenteditable', 'false').removeClass('cell-editable');
+        }
+    });
+    $(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
+    $("#okr-layouttable").sortable("enable");
+}
 
 	$('#MKSOLAddRow').click(addRow);
 	$('#MKSOLAddRowLayout').click(addRowLayout);
