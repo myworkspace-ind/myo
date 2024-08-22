@@ -746,7 +746,7 @@ $(document).ready(function() {
 	        return data; 
 	    }).catch(function(error) {
 	        console.error('Error fetching orgId:', error);
-	        return null; // Trả về giá trị mặc định nếu có lỗi
+	        return null; // Return default value if occurs error
 	    });
 	}
 
@@ -760,7 +760,7 @@ $(document).ready(function() {
 	        return data; 
 	    }).catch(function(error) {
 	        console.error('Error fetching periodId:', error);
-	        return null; // Trả về giá trị mặc định nếu có lỗi
+	        return null; // Return default value if occurs error
 	    });
 	}
 	
@@ -769,8 +769,8 @@ $(document).ready(function() {
     	var table = $('#okr-layouttable').DataTable();
     	
     	var data = table.rows().data().toArray();
-    	
-    	/* $.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
+    	/*
+    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
 	    	// Khởi tạo đối tượng JSON theo cấu trúc yêu cầu
 	    	var jsonData = {
 	    	    "status": "DRAFT",
@@ -834,15 +834,15 @@ $(document).ready(function() {
 	    	
 	    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
 		    	
-	    		
+	    		// Initial OKR JSON object for updating
 	    		var jsonData = {
 			    	    "status": "DRAFT",
 			     	    "organizationId": orgId,
-			    	    "periodId": periodId, 
+			    	    "periodId": periodId, 		
 			    	    "objectives": []
 			    	};
 	    		
-	    		$('#okr-layouttable').each(function() {
+	    		$('#okr-layouttable tbody tr').each(function() {
 	            	
 	                var row = $(this);
 	                var objDesc = row.find('td').eq(1).text().trim();
@@ -853,11 +853,11 @@ $(document).ready(function() {
 	                var target = row.find('td').eq(6).text().trim();
 	                var progress = row.find('td').eq(7).text().trim();
 	    		
-	    		// Khởi tạo đối tượng JSON theo cấu trúc yêu cầu
-		    		// Kiểm tra nếu đã tồn tại 'objective' với description tương ứng
+	    			
+		    		// Check if exists 'objective' by compare description
 		    	    var objective = jsonData.objectives.find(obj => obj.description === objDesc);
 		
-		    	 	// Nếu chưa tồn tại, tạo mới một objective
+		    	 	// If not exists, generate new objective
 		    	    if (!objective) {
 		    	      objective = {
 		    	        "description": objDesc,
@@ -891,7 +891,7 @@ $(document).ready(function() {
 		            }
 		    	 	
 		    	    objective.keyResults.push(keyResult);
-		    	})
+		    	}) 
 	    	
 	    	
 	    	
