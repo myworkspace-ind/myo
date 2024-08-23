@@ -775,69 +775,7 @@ $(document).ready(function() {
     	var table = $('#okr-layouttable').DataTable();
     	
     	var data = table.rows().data().toArray();
-    	/*
-    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
-	    	// Khởi tạo đối tượng JSON theo cấu trúc yêu cầu
-	    	var jsonData = {
-	    	    "status": "DRAFT",
-	     	    "organizationId": orgId,
-	    	    "periodId": periodId, 
-	    	    "objectives": []
-	    	};
-	    	
-	    	data.forEach(row=>{
-	    		var objDesc1 = row[1];
-	        	console.log("Object change: " + objDesc1)
-	    		
-	    		// Assign table data to variables
-	    	    var objDesc = row[1];
-	    	    var objWeight = row[2];
-	    	    var ksDesc = row[3];
-	    	    var unit = row[4];
-	    	    var startValue = row[5];
-	    	    var target = row[6];
-	    	    var progress = row[7]; 
-	    	    
-	    		// Kiểm tra nếu đã tồn tại 'objective' với description tương ứng
-	    	    var objective = jsonData.objectives.find(obj => obj.description === objDesc);
-	
-	    	 	// Nếu chưa tồn tại, tạo mới một objective
-	    	    if (!objective) {
-	    	      objective = {
-	    	        "description": objDesc,
-	    	        "status": "DRAFT",
-	    	        "weight": objWeight || 0,
-	    	        "comment": "test_comment",
-	    	        "keyResults": []
-	    	      };
-	    	      jsonData.objectives.push(objective);
-	    	    }
-	    	 	
-	    	 	// Thêm keyResult vào trong objective tương ứng
-	    	 	var itype = (unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0);
-	    	 	
-	    	 	var keyResult = {
-	    	            "description": ksDesc,
-	    	            "standard": 'None',
-	    	            "startvalue": itype === 2 ? 0 : startValue,
-	    	            "itype" : itype
-	    	        };
-	    	 	
-	    	 	if (itype === 1) { // Number
-	                keyResult.numberResult = parseFloat(startValue) || 0;
-	                keyResult.numberTarget = parseFloat(target) || 0;
-	            } else if (itype === 2) { // Yes/No
-	                keyResult.yesNoResult = startValue; // assuming startValue is a string
-	                keyResult.yesNoTarget = target; // assuming target is a string
-	            } else if (itype === 3) { // Percentage
-	                keyResult.percentageResult = parseFloat(startValue) || 0;
-	                keyResult.percentageTarget = parseFloat(target) || 0;
-	            }
-	    	 	
-	    	    objective.keyResults.push(keyResult);
-	    	}) */
-	    	
-	    	
+    	
 	    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
 		    	
 	    		// Initial OKR JSON object for updating
@@ -899,10 +837,7 @@ $(document).ready(function() {
 		    	    objective.keyResults.push(keyResult);
 		    	}) 
 	    	
-	    	
-	    	
-	    	
-	    	
+	    		
 	    	// Call API
 	    	var payload = JSON.stringify(jsonData);
 	    	console.log(payload);
@@ -934,16 +869,6 @@ $(document).ready(function() {
     
 
    	function showNotiDraftSave(message, type) {
-   	    /* var notification = $('#notiDraftSave');
-   	    notification.text(message);
-
-   	    if (type === 'success') {
-   	        notification.removeClass('error').addClass('success');
-   	    } else if (type === 'error') {
-   	        notification.removeClass('success').addClass('error');
-   	    }
-
-   	    notification.fadeIn(); */
    	    
    	 	$('#notification-message').text(message);
    	    if(type === 'success'){
@@ -958,7 +883,7 @@ $(document).ready(function() {
    	    // Hide notificaiton after 3s
    	    setTimeout(function() {
    	    	$('#notiDraftSave').fadeOut();
-   	    }, 3000);
+   	    }, 5000);
    	}
 
 
