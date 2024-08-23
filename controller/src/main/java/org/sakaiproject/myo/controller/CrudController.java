@@ -162,6 +162,24 @@ public class CrudController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    public ResponseEntity<Void> deleteObjective(@PathVariable String name) {
+        try {
+        	System.out.println("delete");
+            boolean isDeleted = serviceOkrBackend.deleteObjectives(name);
+            System.out.println("deleteeeee");
+            if (isDeleted) {
+                return ResponseEntity.ok().build();
+            } else {
+            	System.out.println("delete fails");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("delete failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
     
     
 }
