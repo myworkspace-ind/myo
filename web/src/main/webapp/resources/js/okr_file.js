@@ -1,3 +1,13 @@
+/*Sample data:
+Description	Weight	KeyResultDescription	Unit	StartValue	Target	Progress
+Love1	100	NotLove1	Number	10	100	10
+NotLove	100	Love	Number	20	200	20
+Tuan	90	Fall	Number	30	300	30
+Trung	80	Winter	Number	40	100	20
+My	77	Test	Number	23	50	46
+Thach	120	Law	Number	70	100	50
+Tuan	30	Mouse	Number	55	120	30*/
+
 $(document).ready(function() {
 	document.getElementById('preview-button').addEventListener('click', function() {
 		const fileInput = document.getElementById('file-input');
