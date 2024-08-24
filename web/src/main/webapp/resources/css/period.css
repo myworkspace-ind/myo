@@ -1,25 +1,15 @@
 @charset "UTF-8";
 
 #periods-title {
-	text-align: center;
-	color: #333; /* Example text color */
-	font-size: 3em; /* Adjust the font size for impact */
-	text-transform: uppercase; /* Example text transformation */
-	letter-spacing: 2px; /* Example letter spacing */
-	margin-bottom: 20px; /* Example spacing from the next element */
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-	/* Example text shadow for emphasis */
-}
-
-#periods-table {
-	width: 700px; margin-left : auto;
-	margin-right: auto;
-	margin-left: auto;
-}
-
-#new-period {
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 46%;
+    text-align: center; /* Centers the text */
+    color: #333; /* Dark grey text color for readability */
+    font-size: 3.5em; /* Slightly larger font size for more impact */
+    font-family: 'Helvetica', sans-serif; /* Uses a clean, sans-serif font */
+    font-weight: 200; /* Makes the text bold */
+    margin-bottom: 30px; /* Increases spacing from the next element */
+    line-height: 1.2; /* Adjusts line height for better readability */
+    padding: 10px 0; /* Adds padding to the top and bottom of the title */
+    display: inline-block; /* Ensures the background and padding wrap tightly around the text */
+    margin-left: auto;
+    margin-right: auto;
 }

@@ -161,7 +161,5 @@ public class CrudController extends BaseController {
             System.out.println("delete failed");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-    
-    
+    } 
 }
