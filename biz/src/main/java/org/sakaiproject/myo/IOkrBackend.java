@@ -15,4 +15,5 @@ public interface IOkrBackend {
 	public boolean deleteObjectives(String Id);
 	
 	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload);
+	public ResponseEntity<String> updateOkrDraftSave(String updatedOkr);
 }

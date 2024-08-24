@@ -1,0 +1,57 @@
+
+<nav class="navbar">
+	<a class="navbar-brand"> <img
+		src="resources/assets/img/profile/sakaiLogo.png" alt="MK SOL Logo">
+		<button class="toggle-btn" onclick="toggleSidebar()">
+			<i class="bi bi-list"></i>
+		</button>
+	</a>
+
+	<form name="myform" action="auth/logout" method="post">
+
+		<button class="navbar-auth" type="submit">
+			<i class="bi bi-box-arrow-right"> Log Out</i>
+		</button>
+	</form>
+</nav>
+
+<div id="sidebar" class="sidebar">
+	<ul class="nav flex-column">
+		<li class="nav-item"><a class="nav-link active" href="#"><i
+				class="bi bi-house-door"></i> Home</a></li>
+
+		<li class="nav-item"><a class="nav-link toggle-submenu"><i
+				class="bi bi-table"></i> CRUD <i class="bi bi-chevron-down"></i></a>
+			<ul class="sub-menu">
+				<li class="nav-item"><a class="nav-link toggle-submenu"><i
+						class="bi bi-plus-circle"></i> Create OKR <i
+						class="bi bi-chevron-down"></i></a>
+					<ul class="sub-menu sub-sub-menu">
+						<li class="nav-item"><a class="nav-link" href="selfscoring"><i
+								class="bi bi-clipboard"></i> Self-scoring</a></li>
+						<li class="nav-item"><a class="nav-link" href="crud"><i
+								class="bi bi-cloud-upload"></i> CRUD</a></li>
+						<li class="nav-item"><a class="nav-link" href="Createokr"><i
+								class="bi bi-cloud-upload"></i> new CRUD</a></li>
+					</ul></li>
+				<li class="nav-item"><a class="nav-link" href="reviewokr"><i
+						class="bi bi-eye"></i> Review OKR</a></li>
+			</ul></li>
+
+		<li class="nav-item"><a class="nav-link toggle-submenu"><i
+				class="bi bi-gear"></i> Configuration <i class="bi bi-chevron-down"></i></a>
+			<ul class="sub-menu">
+				<li class="nav-item"><a class="nav-link" href="#"><i
+						class="bi bi-calendar-range"></i> Periods</a></li>
+				<li class="nav-item"><a class="nav-link" href="#"><i
+						class="bi bi-building"></i> Units</a></li>
+			</ul></li>
+
+
+		<li class="nav-item"><a class="nav-link" href="MyProfile"><i
+				class="bi bi-person"></i> Profile</a></li>
+	</ul>
+	<div class="bottom-link">
+		<a href="#"><i class="bi bi-grid-3x3-gap"></i> View all my sites</a>
+	</div>
+</div>
