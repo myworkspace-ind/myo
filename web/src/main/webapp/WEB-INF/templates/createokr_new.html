@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>CV</title>
+<title>Create OKR</title>
 <style>
 .content {
 	transition: margin-left 0.3s ease;
@@ -13,17 +13,15 @@
 }
 </style>
 <th:block th:include="fragments/head"></th:block>
-<link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
 
 <link rel="stylesheet" type="text/css" href="resources/css/my_okr.css">
 
-<script src="resources/js/crud_new.js"></script>
 
 </head>
 <body>
 	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
 	<div id="content" class="content">
-		<th:block th:include="crud_new.html"></th:block>
+		<th:block th:include="createokr.html"></th:block>
 	</div>
 	<script>
 		function toggleSidebar() {
