@@ -101,7 +101,7 @@ public class CrudController extends BaseController {
     	System.out.println("post--0");
     	JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
     	System.out.println("post0");
-        // Add default values for attributes that may be missing
+        // Add values for attributes that may be missing
         if (!jsonObject.has("status")) {
             jsonObject.addProperty("status", "DRAFT");
         }

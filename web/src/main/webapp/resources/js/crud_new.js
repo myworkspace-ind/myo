@@ -12,7 +12,7 @@ const App = () => (
 export default App;*/
 
 $(document).ready(function() {
-	let selectedPeriodId = '';  // Global variable to hold the selected period ID
+	//	let selectedPeriodId = ''; 
 
 	var trackingTable = $('#okr-table').DataTable({
 		"paging": true,
@@ -30,7 +30,6 @@ $(document).ready(function() {
 
 	var newRows = [];
 	var newLayoutRows = [];
-
 
 	function addRow() {
 		var newRowIndex = $('#okr-table tbody tr').length + 1;
@@ -254,19 +253,18 @@ $(document).ready(function() {
 			});
 	}*/
 
-	function fetchDataLayout() {
-		if (!selectedPeriodId) {
+	function fetchDataLayout(periodId) {
+		if (!periodId) {
 			console.error('No period ID selected');
-			return;
 		}
 
-		fetch(`objectives/loaddata?periodId=${selectedPeriodId}`)
+		fetch(`objectives/loaddata?periodId=${periodId}`)
 			.then(response => response.json())
 			.then(jsonData => {
 				if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
 					const data = [];
 					let counter = 0;
-					console.log("Fetch data for period:", selectedPeriodId);
+					console.log("Fetch data for period:", periodId);
 					jsonData.data.objectives.forEach(item => {
 						if (item.keyResults && Array.isArray(item.keyResults)) {
 							item.keyResults.forEach(keyResult => {
@@ -331,69 +329,67 @@ $(document).ready(function() {
 	}
 
 	function fetchPeriods() {
-	  fetch('period/loaddata')
-	    .then(response => response.json())
-	    .then(jsonData => {
-	      console.log('Fetched JSON data:', jsonData);
-	      if (jsonData.data && Array.isArray(jsonData.data)) {
-	        const dropdown = document.getElementById('periodDropdown');
+		fetch('period/loaddata')
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log('Fetched JSON data:', jsonData);
+				if (jsonData.data && Array.isArray(jsonData.data)) {
+					const dropdown = document.getElementById('periodDropdown');
 
-	        dropdown.innerHTML = '';
+					dropdown.innerHTML = '';
 
-	        const placeholderOption = document.createElement('option');
-	        placeholderOption.value = '';
-	        placeholderOption.textContent = 'Select a Period';
-	        placeholderOption.disabled = true;
-	        placeholderOption.hidden = true;
-	        dropdown.appendChild(placeholderOption);
+					const placeholderOption = document.createElement('option');
+					placeholderOption.value = '';
+					placeholderOption.textContent = 'Select a Period';
+					placeholderOption.disabled = true;
+					placeholderOption.hidden = true;
+					dropdown.appendChild(placeholderOption);
 
-	        jsonData.data.forEach(period => {
-	          // Create and append top-level period option
-	          const option = document.createElement('option');
-	          option.value = period.periodId;
-	          option.textContent = period.name;
-	          dropdown.appendChild(option);
+					jsonData.data.forEach(period => {
+						// Create and append top-level period option
+						const option = document.createElement('option');
+						option.value = period.periodId;
+						option.textContent = period.name;
+						dropdown.appendChild(option);
 
-	          // Create and append child period options
-	          period.childs.forEach(child => {
-	            const childOption = document.createElement('option');
-	            childOption.value = child.periodId;
-	            childOption.textContent = `-- ${child.name}`;
-	            dropdown.appendChild(childOption);
-	          });
-	        });
+						// Create and append child period options
+						period.childs.forEach(child => {
+							const childOption = document.createElement('option');
+							childOption.value = child.periodId;
+							childOption.textContent = `-- ${child.name}`;
+							dropdown.appendChild(childOption);
+						});
+					});
 
-	        // Add event listener to handle user selection
-	        dropdown.addEventListener('change', function() {
-	          selectedPeriodId = this.value;  // Update the global variable
-	          fetchDataForPeriod();  // Fetch and display data for the selected period
-	        });
-
-	        // If you want to set a default selected period, you can do it here
-	        // For example, setting the first period as selected if available
-	        if (jsonData.data.length > 0) {
-	          selectedPeriodId = jsonData.data[0].periodId;
-	          dropdown.value = selectedPeriodId;
-	          fetchDataForPeriod();  // Initial fetch for the default period
-	        }
-	      } else {
-	        console.error('Unexpected data structure in the JSON data');
-	      }
-	    })
-	    .catch(error => {
-	      console.error('Error fetching period data:', error);
-	    });
+					if (jsonData.data.length > 0) {
+						let selectedPeriodId = jsonData.data[0].periodId;
+						dropdown.value = selectedPeriodId;
+						fetchDataLayout(selectedPeriodId);  // Initial fetch for the default period
+						loadOKRs(selectedPeriodId);
+					}
+					// Add event listener to handle user selection
+					dropdown.addEventListener('change', function() {
+						let selectedPeriodId = this.value;  // Update the global variable
+						fetchDataLayout(selectedPeriodId);  // Fetch and display data for the selected period
+						loadOKRs(selectedPeriodId);
+					});
+				} else {
+					console.error('Unexpected data structure in the JSON data');
+				}
+			})
+			.catch(error => {
+				console.error('Error fetching period data:', error);
+			});
 	}
 
 	fetchPeriods();
 
 	document.getElementById('periodDropdown').addEventListener('change', function() {
-		selectedPeriodId = this.value;  // Update the global variable
+		let selectedPeriodId = this.value;  // Update the global variable
 		if (selectedPeriodId) {
-			fetchDataLayout();
+			fetchDataLayout(selectedPeriodId);
 		}
 	});
-
 
 	function handleDelete(event) {
 		const id = event.target.closest('.deleteLayout-btn').getAttribute('data-id');
@@ -441,6 +437,7 @@ $(document).ready(function() {
 			}
 		});
 	}
+
 	function updateData() {
 		var rowsData = [];
 		var parentIdMap = {};
@@ -840,11 +837,10 @@ $(document).ready(function() {
 
 	fetchData();
 	console.log("loaded");
-	fetchObjectivesForPeriod();
+	//	fetchDataLayout(selectedPeriodId);
 
-
-	function loadOKRs() {
-		fetch('objectives/loaddata')
+	function loadOKRs(periodId) {
+		fetch(`objectives/loaddata?periodId=${periodId}`)
 			.then(response => response.json())
 			.then(data => {
 				if (data.data && data.data.objectives && Array.isArray(data.data.objectives)) {
