@@ -70,7 +70,7 @@ $(document).ready(function() {
             </td>
             <td contenteditable="false"></td>
             <td contenteditable="false"></td>
-            <td contenteditable="false"></td>
+			<td contenteditable="false"></td>
             <td>
                 <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
                 <span class="deleteLayout-btn" data-id="${newRowIndex}"><i class="fas fa-trash"></i> Delete</span>
@@ -79,6 +79,7 @@ $(document).ready(function() {
 		var row = $(newRow);
 		layoutTable.row.add(row).draw();
 		newLayoutRows.push(row);
+
 		updateRowNumbersLayout();
 		makeTableSortable('#okr-layouttable');
 	}
@@ -293,9 +294,9 @@ $(document).ready(function() {
 									keyResult.result,
 									keyResult.target,
 									item.progress,
-									keyResult.keyResultId,
+//									`<input type="hidden" class="keyResultId" value="${keyResult.keyResultId}">
 									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
-	                 <span class="deleteLayout-btn" data-id="${keyResult.keyResultId}"><i class="fas fa-trash"></i> Delete</span>`
+	                 				<span class="deleteLayout-btn" data-id="${keyResult.keyResultId}"><i class="fas fa-trash"></i> Delete</span>`
 								];
 								data.push(childData);
 								console.log("Child: " + childData);
@@ -504,6 +505,12 @@ $(document).ready(function() {
 
 
 	function updateDataLayout() {
+		// Get the selected periodId from the dropdown
+		var periodId = $('#periodDropdown').val();
+
+		// Prepare the array to hold objectives
+		var objectivesArray = [];
+
 		$('#okr-layouttable tbody tr[data-new="true"]').each(function() {
 			var row = $(this);
 			var description = row.find('td').eq(1).text().trim();
@@ -560,34 +567,41 @@ $(document).ready(function() {
 			};
 
 			objective.keyResults.push(keyResult);
-
-			var requestData = { objectives: [objective] };
-
-			if (requestData.objectives.length === 0) {
-				console.warn('No data to update');
-				return;
-			}
-
-			console.log('Sending data:', JSON.stringify(requestData));
-
-			fetch('objectives/uploaddata', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(requestData)
-			})
-				.then(response => response.json())
-				.then(result => {
-					console.log('Data successfully updated:', JSON.stringify(result));
-					row.removeAttr('data-new');
-				})
-				.catch(error => {
-					console.error('Error updating data:', error);
-				});
+			objectivesArray.push(objective); // Add the objective to the array
 		});
+
+		// Prepare the final JSON structure including periodId and objectives
+		var requestData = {
+			periodId: periodId, // Set the periodId at the root level
+			objectives: objectivesArray // Add the objectives array
+		};
+
+		if (objectivesArray.length === 0) {
+			console.warn('No data to update');
+			return;
+		}
+
+		console.log('Sending data:', JSON.stringify(requestData));
+
+		fetch('objectives/uploaddata', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log('Data successfully updated:', JSON.stringify(result));
+				$('#okr-layouttable tbody tr[data-new="true"]').removeAttr('data-new');
+			})
+			.catch(error => {
+				console.error('Error updating data:', error);
+			});
+
 		window.location.reload();
 	}
+
 
 	/* Draft Save OKR by nhbthach __START */
 	function getOrgId() {
