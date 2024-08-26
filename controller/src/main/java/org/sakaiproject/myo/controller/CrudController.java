@@ -38,9 +38,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
@@ -87,31 +87,15 @@ public class CrudController extends BaseController {
 	}
 
 	@GetMapping(value = "/objectives/loaddata")
-    @ResponseBody
-    public ResponseEntity<String> getInfoObjectives(@RequestParam(value = "periodId", required = false) String periodId) {
-        try {
-            // Pass the periodId to the service method
-            String objectivesData = serviceOkrBackend.getObjectives(periodId);
-            return ResponseEntity.ok(objectivesData);
-        } catch (Exception e) {
-            // Handle exceptions and return an appropriate error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching objectives data.");
-        }
-    }
-	
-	@GetMapping(value = "/objectives/loaddatacurrent")
-    @ResponseBody
-    public ResponseEntity<String> getInfoCurrentObjectives(@RequestParam(value = "periodId", required = false) String periodId) {
-        try {
-            // Pass the periodId to the service method
-            String objectivesData = serviceOkrBackend.getCurrentObjectives();
-            return ResponseEntity.ok(objectivesData);
-        } catch (Exception e) {
-            // Handle exceptions and return an appropriate error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching objectives data.");
-        }
-    }
-	
+	@ResponseBody
+	public String getInfoObjectives(
+			@RequestParam(value = "periodId", required = false) String periodId,
+			@RequestParam(value = "organizationId", required = false) String organizationId) {
+			
+		// System.out.print(serviceOkrBackend.getObjectives());
+		return serviceOkrBackend.getObjectives(periodId, organizationId);
+	}
+    
     @PostMapping("/objectives/uploaddata")
     public ResponseEntity<String> createOkr(@RequestBody String jsonData) {
     	System.out.println("post--0");
@@ -181,5 +165,7 @@ public class CrudController extends BaseController {
             System.out.println("delete failed");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    } 
+    }
+    
+    
 }
