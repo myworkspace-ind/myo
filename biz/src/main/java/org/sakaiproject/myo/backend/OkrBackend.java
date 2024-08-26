@@ -414,9 +414,9 @@ public class OkrBackend implements IOkrBackend {
 	public boolean deleteObjectives(String Id) {
 		try {
 			System.out.println("deleteObjectiveTest");
-			String objectiveId = getObjectiveIdByName(Id);
-			System.out.println("ObjID: " + objectiveId);
-			String serverUrl = okrBaseURL + "/personalOkr/" + objectiveId;
+
+			System.out.println("ObjID: " + Id);
+			String serverUrl = okrBaseURL + "/keyResult/" + Id;
 			System.out.println("okok1");
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);

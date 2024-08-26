@@ -293,8 +293,9 @@ $(document).ready(function() {
 									keyResult.result,
 									keyResult.target,
 									item.progress,
+									keyResult.keyResultId,
 									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
-	                 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
+	                 <span class="deleteLayout-btn" data-id="${keyResult.keyResultId}"><i class="fas fa-trash"></i> Delete</span>`
 								];
 								data.push(childData);
 								console.log("Child: " + childData);
@@ -916,8 +917,8 @@ $(document).ready(function() {
 		XLSX.writeFile(wb, "OKR_Dashboard.xlsx");
 	});
 
-	function deleteRowFromDatabase(name, url, onSuccess, onError) {
-		var completeUrl = `${url}/${name}`;
+	function deleteRowFromDatabase(id, url, onSuccess, onError) {
+		var completeUrl = `${url}/${id}`;
 		console.log('Request URL:', completeUrl);
 
 		fetch(completeUrl, {

@@ -148,11 +148,11 @@ public class CrudController extends BaseController {
         return serviceOkrBackend.postPeriod(jsonData);
     }
     
-    @DeleteMapping("/objectives/deletedata/{name}") // /objectives/deletedata/Tuan
-    public ResponseEntity<Void> deleteObjective(@PathVariable String name) {
+    @DeleteMapping("/objectives/deletedata/{id}") // /objectives/deletedata/Tuan
+    public ResponseEntity<Void> deleteObjective(@PathVariable String id) {
         try {
         	System.out.println("delete");
-            boolean isDeleted = serviceOkrBackend.deleteObjectives(name);
+            boolean isDeleted = serviceOkrBackend.deleteObjectives(id);
             System.out.println("deleteeeee");
             if (isDeleted) {
                 return ResponseEntity.ok().build();
