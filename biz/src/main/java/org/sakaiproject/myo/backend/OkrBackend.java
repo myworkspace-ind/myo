@@ -322,7 +322,7 @@ public class OkrBackend implements IOkrBackend {
 //	}
 
 	@Override
-	public String getObjectives() {
+	public String getCurrentObjectives() {
 	    try {
 	        String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
 
@@ -342,6 +342,34 @@ public class OkrBackend implements IOkrBackend {
 	        e.printStackTrace();
 	        return null;
 	    }
+	}
+	
+	@Override
+	public String getObjectives(String periodId) {
+		if (periodId == null || periodId.isEmpty()) {
+			System.out.println("Invalid periodId provided: {}" + periodId);
+            return "{\"error\":\"Invalid periodId provided\"}";
+        }
+		
+		try {
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + periodId;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

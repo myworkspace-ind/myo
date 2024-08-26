@@ -12,6 +12,7 @@ const App = () => (
 export default App;*/
 
 $(document).ready(function() {
+	let selectedPeriodId = '';  // Global variable to hold the selected period ID
 
 	var trackingTable = $('#okr-table').DataTable({
 		"paging": true,
@@ -181,7 +182,7 @@ $(document).ready(function() {
 			});
 	}
 
-	function fetchDataLayout() {
+	/*function fetchDataLayout() {
 		fetch('objectives/loaddata')
 			.then(response => response.json())
 			.then(jsonData => {
@@ -219,7 +220,83 @@ $(document).ready(function() {
 									item.progress,
 									// Add data-id attribute for deletion
 									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> 
-	                                 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
+									 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
+								];
+								data.push(childData);
+								console.log("Child: " + childData);
+							});
+						}
+					});
+					console.log("Data before sorting: ", data);
+					data.sort((a, b) => a[1].localeCompare(b[1]));
+
+					// Log data to check sorting
+					console.log("Data after description's sorting: ", data);
+
+					// Clear and redraw the table
+					layoutTable.clear();
+					layoutTable.rows.add(data).draw();
+					makeTableSortable('#okr-layouttable');
+					updateRowNumbersLayout();
+
+					mergeObjectivesColumn();
+
+					document.querySelectorAll('.deleteLayout-btn').forEach(button => {
+						button.addEventListener('click', handleDelete);
+					});
+
+				} else {
+					console.error('Unexpected data structure in the JSON data');
+				}
+			})
+			.catch(error => {
+				console.error('Error fetching layout data:', error);
+			});
+	}*/
+
+	function fetchDataLayout() {
+		if (!selectedPeriodId) {
+			console.error('No period ID selected');
+			return;
+		}
+
+		fetch(`objectives/loaddata?periodId=${selectedPeriodId}`)
+			.then(response => response.json())
+			.then(jsonData => {
+				if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
+					const data = [];
+					let counter = 0;
+					console.log("Fetch data for period:", selectedPeriodId);
+					jsonData.data.objectives.forEach(item => {
+						if (item.keyResults && Array.isArray(item.keyResults)) {
+							item.keyResults.forEach(keyResult => {
+								let unitType;
+								switch (keyResult.itype) {
+									case 1:
+										unitType = 'Number';
+										break;
+									case 2:
+										unitType = 'Yes/No';
+										break;
+									case 3:
+										unitType = 'Percentage';
+										break;
+									default:
+										unitType = 'N/A';
+										break;
+								}
+
+								const childData = [
+									counter++,
+									item.description,
+									item.weight,
+									keyResult.description,
+									unitType,
+									keyResult.result,
+									keyResult.target,
+									item.progress,
+									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
+	                 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
 								];
 								data.push(childData);
 								console.log("Child: " + childData);
@@ -254,61 +331,69 @@ $(document).ready(function() {
 	}
 
 	function fetchPeriods() {
-		fetch('period/loaddata')
-			.then(response => response.json())
-			.then(jsonData => {
-				console.log('Fetched JSON data:', jsonData);
-				if (jsonData.data && Array.isArray(jsonData.data)) {
-					const dropdown = document.getElementById('periodDropdown');
+	  fetch('period/loaddata')
+	    .then(response => response.json())
+	    .then(jsonData => {
+	      console.log('Fetched JSON data:', jsonData);
+	      if (jsonData.data && Array.isArray(jsonData.data)) {
+	        const dropdown = document.getElementById('periodDropdown');
 
-					dropdown.innerHTML = '';
+	        dropdown.innerHTML = '';
 
-					const placeholderOption = document.createElement('option');
-					placeholderOption.value = '';
-					placeholderOption.textContent = 'Select a Period';
-					placeholderOption.disabled = true;
-					placeholderOption.hidden = true;
-					dropdown.appendChild(placeholderOption);
+	        const placeholderOption = document.createElement('option');
+	        placeholderOption.value = '';
+	        placeholderOption.textContent = 'Select a Period';
+	        placeholderOption.disabled = true;
+	        placeholderOption.hidden = true;
+	        dropdown.appendChild(placeholderOption);
 
-					let selectedPeriodId = '';
+	        jsonData.data.forEach(period => {
+	          // Create and append top-level period option
+	          const option = document.createElement('option');
+	          option.value = period.periodId;
+	          option.textContent = period.name;
+	          dropdown.appendChild(option);
 
-					jsonData.data.forEach(period => {
-						if (period.currentPeriod) {
-							selectedPeriodId = period.periodId;
-						}
+	          // Create and append child period options
+	          period.childs.forEach(child => {
+	            const childOption = document.createElement('option');
+	            childOption.value = child.periodId;
+	            childOption.textContent = `-- ${child.name}`;
+	            dropdown.appendChild(childOption);
+	          });
+	        });
 
-						// Create and append top-level period option
-						const option = document.createElement('option');
-						option.value = period.periodId;
-						option.textContent = period.name;
-						dropdown.appendChild(option);
+	        // Add event listener to handle user selection
+	        dropdown.addEventListener('change', function() {
+	          selectedPeriodId = this.value;  // Update the global variable
+	          fetchDataForPeriod();  // Fetch and display data for the selected period
+	        });
 
-						// Create and append child period options
-						period.childs.forEach(child => {
-							const childOption = document.createElement('option');
-							childOption.value = child.periodId;
-							childOption.textContent = `-- ${child.name}`;
-							dropdown.appendChild(childOption);
-						});
-					});
-
-					// Set the current period as selected if available
-					if (selectedPeriodId) {
-						dropdown.value = selectedPeriodId;
-					}
-				} else {
-					console.error('Unexpected data structure in the JSON data');
-				}
-			})
-			.catch(error => {
-				console.error('Error fetching period data:', error);
-			});
+	        // If you want to set a default selected period, you can do it here
+	        // For example, setting the first period as selected if available
+	        if (jsonData.data.length > 0) {
+	          selectedPeriodId = jsonData.data[0].periodId;
+	          dropdown.value = selectedPeriodId;
+	          fetchDataForPeriod();  // Initial fetch for the default period
+	        }
+	      } else {
+	        console.error('Unexpected data structure in the JSON data');
+	      }
+	    })
+	    .catch(error => {
+	      console.error('Error fetching period data:', error);
+	    });
 	}
 
-
-
-
 	fetchPeriods();
+
+	document.getElementById('periodDropdown').addEventListener('change', function() {
+		selectedPeriodId = this.value;  // Update the global variable
+		if (selectedPeriodId) {
+			fetchDataLayout();
+		}
+	});
+
 
 	function handleDelete(event) {
 		const id = event.target.closest('.deleteLayout-btn').getAttribute('data-id');
@@ -319,7 +404,7 @@ $(document).ready(function() {
 
 		function onSuccess(result) {
 			console.log('Row successfully deleted:', result);
-			fetchDataLayout();
+			fetchObjectivesForPeriod();
 		}
 
 		function onError(error) {
@@ -755,7 +840,7 @@ $(document).ready(function() {
 
 	fetchData();
 	console.log("loaded");
-	fetchDataLayout();
+	fetchObjectivesForPeriod();
 
 
 	function loadOKRs() {

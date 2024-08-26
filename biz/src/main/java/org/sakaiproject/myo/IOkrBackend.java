@@ -9,7 +9,8 @@ public interface IOkrBackend {
 	String getCurrentPeriodId();
 	String getOrganization();
 //	String getObjectives(String periodId, String organizationId);
-	String getObjectives();
+	String getObjectives(String periodId);
+	public String getCurrentObjectives();
 	public ResponseEntity<String> postOkr(String jsonData);
 	public ResponseEntity<String> postPeriod(String jsonData);
 	public boolean deleteObjectives(String Id);
