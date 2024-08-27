@@ -2,7 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Profile</title>
+<style>
+.content {
+	transition: margin-left 0.3s ease;
+	margin-top: 6%;
+}
+
+.sidebar.open ~ .content {
+	margin-left: 200px;
+}
+</style>
 <th:block th:include="fragments/head"></th:block>
+<link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
+
+<link rel="stylesheet" type="text/css" href="resources/css/my_okr.css">
+
 <link rel="stylesheet" type="text/css"
 	href="resources/css/my_profile.css">
 <script src="resources/js/profile/my_profile.js">
@@ -13,13 +27,32 @@
 
 </head>
 <body>
-	<th:block th:include="fragments/profile/my_navbar"></th:block>
+	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
+	<script>
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			var content = document.getElementById("content");
+			sidebar.classList.toggle("open");
+			content.classList.toggle("shifted", sidebar.classList
+					.contains("open"));
+		}
 
-	<th:block th:include="fragments/profile/my_header"></th:block>
-	<th:block th:include="fragments/profile/my_menu"></th:block>
-	<th:block th:include="fragments/profile/my_profiledisplay"></th:block>
-	<button type="button" class="btn btn-primary" id="MKSOLchangemode">Change
-		mode</button>
+		var toggles = document.querySelectorAll('.toggle-submenu');
+		toggles.forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				var parent = this.parentElement;
+				parent.classList.toggle('open');
+			});
+		});
+	</script>
+	<div class="container-fluid">
+		<th:block th:include="fragments/profile/my_header"></th:block>
+		<th:block th:include="fragments/profile/my_menu"></th:block>
+		<th:block th:include="fragments/profile/my_profiledisplay"></th:block>
+		<button type="button" class="btn btn-primary" id="MKSOLchangemode">Change
+			mode</button>
+	</div>
+	
 
 
 </body>

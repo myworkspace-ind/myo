@@ -2,34 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Authentication</title>
+<style>
+.content {
+	transition: margin-left 0.3s ease;
+	margin-top: 6%;
+}
+
+.sidebar.open ~ .content {
+	margin-left: 200px;
+}
+</style>
 <th:block th:include="fragments/head"></th:block>
-<th:block th:include="fragments/hnav"></th:block>
+<link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
+
+<link rel="stylesheet" type="text/css" href="resources/css/my_okr.css">
+
+
 </head>
 <body>
-	<h1>Login</h1>
-    <div th:if="${loggedIn != null and loggedIn}">
-        <form th:action="@{/auth/logout}" method="post">
-            <button type="submit">Logout</button>
-        </form>
+	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
+	<div id="content" class="content">	
+		<th:block th:include="fragments/frg_auth.html"></th:block>
     </div>
- 	<div th:if="${loggedIn == null or not loggedIn}">
-        <form th:action="@{/auth/login}" method="post">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
-            </div>
-            <div>
-                <button type="submit">Login</button>
-            </div>
-        </form>
-        <div th:if="${error}" style="color: red;">
-            <p th:text="${error}"></p>
-        </div>
-    </div>
+    <script>
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			var content = document.getElementById("content");
+			sidebar.classList.toggle("open");
+			content.classList.toggle("shifted", sidebar.classList
+					.contains("open"));
+		}
+
+		var toggles = document.querySelectorAll('.toggle-submenu');
+		toggles.forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				var parent = this.parentElement;
+				parent.classList.toggle('open');
+			});
+		});
+	</script>
 
 </body>
 </html>
