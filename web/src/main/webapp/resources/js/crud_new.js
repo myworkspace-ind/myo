@@ -1,18 +1,6 @@
-/*import React from 'react';
-import { Flex, Progress } from 'antd';
-const App = () => (
-  <Flex gap="small" vertical>
-	<Progress percent={30} />
-	<Progress percent={50} status="active" />
-	<Progress percent={70} status="exception" />
-	<Progress percent={100} />
-	<Progress percent={50} showInfo={false} />
-  </Flex>
-);
-export default App;*/
+
 
 $(document).ready(function() {
-	//	let selectedPeriodId = ''; 
 
 	var trackingTable = $('#okr-table').DataTable({
 		"paging": true,
@@ -182,77 +170,6 @@ $(document).ready(function() {
 			});
 	}
 
-	/*function fetchDataLayout() {
-		fetch('objectives/loaddata')
-			.then(response => response.json())
-			.then(jsonData => {
-				if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
-					var data = [];
-					var counter = 0;
-					console.log("Fetch data");
-					jsonData.data.objectives.forEach(item => {
-						if (item.keyResults && Array.isArray(item.keyResults)) {
-							item.keyResults.forEach(keyResult => {
-								let unitType;
-								switch (keyResult.itype) {
-									case 1:
-										unitType = 'Number';
-										break;
-									case 2:
-										unitType = 'Yes/No';
-										break;
-									case 3:
-										unitType = 'Percentage';
-										break;
-									default:
-										unitType = 'N/A';
-										break;
-								}
-
-								var childData = [
-									counter++,
-									item.description,
-									item.weight,
-									keyResult.description,
-									unitType,
-									keyResult.result,
-									keyResult.target,
-									item.progress,
-									// Add data-id attribute for deletion
-									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> 
-									 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
-								];
-								data.push(childData);
-								console.log("Child: " + childData);
-							});
-						}
-					});
-					console.log("Data before sorting: ", data);
-					data.sort((a, b) => a[1].localeCompare(b[1]));
-
-					// Log data to check sorting
-					console.log("Data after description's sorting: ", data);
-
-					// Clear and redraw the table
-					layoutTable.clear();
-					layoutTable.rows.add(data).draw();
-					makeTableSortable('#okr-layouttable');
-					updateRowNumbersLayout();
-
-					mergeObjectivesColumn();
-
-					document.querySelectorAll('.deleteLayout-btn').forEach(button => {
-						button.addEventListener('click', handleDelete);
-					});
-
-				} else {
-					console.error('Unexpected data structure in the JSON data');
-				}
-			})
-			.catch(error => {
-				console.error('Error fetching layout data:', error);
-			});
-	}*/
 
 	function fetchDataLayout(periodId) {
 		if (!periodId) {
@@ -852,7 +769,6 @@ $(document).ready(function() {
 
 	fetchData();
 	console.log("loaded");
-	//	fetchDataLayout(selectedPeriodId);
 
 	function loadOKRs(periodId) {
 		fetch(`objectives/loaddata?periodId=${periodId}`)
