@@ -1,0 +1,25 @@
+
+	<div class="container mt-5">
+        <form id="excel-form" action="/myo-web/upload" method="POST" enctype="multipart/form-data">
+            <div class="input-field mb-3">
+                <input name="file" type="file" class="form-control" id="file-input" accept=".xlsx, .xls" />
+                <span>Upload Excel file to input OKR</span>
+            </div>
+            <button type="button" id="preview-button" class="btn btn-secondary">Preview file</button>
+            <button type="button" id="upload-button" class="btn btn-primary">Upload Data</button>
+        </form>
+        <div id="preview-container" class="mt-5"></div>
+    </div>
+
+	<table border="1">
+		<thead>
+			<tr>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="row : ${data}">
+				<td th:each="cell : ${row}" th:text="${cell}"></td>
+			</tr>
+		</tbody>
+	</table>
+

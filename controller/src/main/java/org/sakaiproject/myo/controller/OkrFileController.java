@@ -21,13 +21,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class OkrFileController {
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
 	public ModelAndView showOkrFile() {
-		ModelAndView m = new ModelAndView("okr_file");
+		ModelAndView m = new ModelAndView("upload");
 		return m;
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file, @ModelAttribute("model") ExcelFileModel model) throws IOException {
-		ModelAndView m = new ModelAndView("okr_file");
+		ModelAndView m = new ModelAndView("upload");
 		model.setFile(file);
 		List<List<String>> data = new ArrayList<>();
 
