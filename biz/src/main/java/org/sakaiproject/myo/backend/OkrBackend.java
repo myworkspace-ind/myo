@@ -322,10 +322,17 @@ public class OkrBackend implements IOkrBackend {
 //	}
 
 	@Override
-	public String getObjectives() {
+	public String getObjectives(String periodId, String organizationId) {
 	    try {
-	        String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
-
+			if(organizationId == null || organizationId.isEmpty()) {
+				organizationId = getOrganization();
+			}
+			if(periodId == null || periodId.isEmpty()) {
+				periodId = getCurrentPeriodId();
+			}
+//			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
+	    	
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.set("Authorization", "Bearer " + okrAuthToken);
 
@@ -407,9 +414,9 @@ public class OkrBackend implements IOkrBackend {
 	public boolean deleteObjectives(String Id) {
 		try {
 			System.out.println("deleteObjectiveTest");
-			String objectiveId = getObjectiveIdByName(Id);
-			System.out.println("ObjID: " + objectiveId);
-			String serverUrl = okrBaseURL + "/personalOkr/" + objectiveId;
+
+			System.out.println("ObjID: " + Id);
+			String serverUrl = okrBaseURL + "/keyResult/" + Id;
 			System.out.println("okok1");
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);

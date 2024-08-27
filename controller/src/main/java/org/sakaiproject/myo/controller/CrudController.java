@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -87,9 +88,12 @@ public class CrudController extends BaseController {
 
 	@GetMapping(value = "/objectives/loaddata")
 	@ResponseBody
-	public String getInfoObjectives() {
+	public String getInfoObjectives(
+			@RequestParam(value = "periodId", required = false) String periodId,
+			@RequestParam(value = "organizationId", required = false) String organizationId) {
+			
 		// System.out.print(serviceOkrBackend.getObjectives());
-		return serviceOkrBackend.getObjectives();
+		return serviceOkrBackend.getObjectives(periodId, organizationId);
 	}
     
     @PostMapping("/objectives/uploaddata")
@@ -97,7 +101,7 @@ public class CrudController extends BaseController {
     	System.out.println("post--0");
     	JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
     	System.out.println("post0");
-        // Add default values for attributes that may be missing
+        // Add values for attributes that may be missing
         if (!jsonObject.has("status")) {
             jsonObject.addProperty("status", "DRAFT");
         }
@@ -144,11 +148,11 @@ public class CrudController extends BaseController {
         return serviceOkrBackend.postPeriod(jsonData);
     }
     
-    @DeleteMapping("/objectives/deletedata/{name}") // /objectives/deletedata/Tuan
-    public ResponseEntity<Void> deleteObjective(@PathVariable String name) {
+    @DeleteMapping("/objectives/deletedata/{id}") // /objectives/deletedata/Tuan
+    public ResponseEntity<Void> deleteObjective(@PathVariable String id) {
         try {
         	System.out.println("delete");
-            boolean isDeleted = serviceOkrBackend.deleteObjectives(name);
+            boolean isDeleted = serviceOkrBackend.deleteObjectives(id);
             System.out.println("deleteeeee");
             if (isDeleted) {
                 return ResponseEntity.ok().build();
@@ -161,5 +165,7 @@ public class CrudController extends BaseController {
             System.out.println("delete failed");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    } 
+    }
+    
+    
 }

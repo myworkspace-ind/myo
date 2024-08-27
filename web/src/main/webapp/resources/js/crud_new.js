@@ -1,15 +1,4 @@
-/*import React from 'react';
-import { Flex, Progress } from 'antd';
-const App = () => (
-  <Flex gap="small" vertical>
-	<Progress percent={30} />
-	<Progress percent={50} status="active" />
-	<Progress percent={70} status="exception" />
-	<Progress percent={100} />
-	<Progress percent={50} showInfo={false} />
-  </Flex>
-);
-export default App;*/
+
 
 $(document).ready(function() {
 
@@ -29,7 +18,6 @@ $(document).ready(function() {
 
 	var newRows = [];
 	var newLayoutRows = [];
-
 
 	function addRow() {
 		var newRowIndex = $('#okr-table tbody tr').length + 1;
@@ -53,9 +41,9 @@ $(document).ready(function() {
 	}
 
 	function addRowLayout() {
-    var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
-    var newRow =
-        `<tr data-new="true">
+		var newRowIndex = $('#okr-layouttable tbody tr').length + 1;
+		var newRow =
+			`<tr data-new="true">
             <td>${newRowIndex}</td>
             <td contenteditable="false"></td>
             <td contenteditable="false"></td>
@@ -70,18 +58,19 @@ $(document).ready(function() {
             </td>
             <td contenteditable="false"></td>
             <td contenteditable="false"></td>
-            <td contenteditable="false"></td>
+			<td contenteditable="false"></td>
             <td>
                 <span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
                 <span class="deleteLayout-btn" data-id="${newRowIndex}"><i class="fas fa-trash"></i> Delete</span>
             </td>
         </tr>`;
-    var row = $(newRow);
-    layoutTable.row.add(row).draw();
-    newLayoutRows.push(row);
-    updateRowNumbersLayout();
-    makeTableSortable('#okr-layouttable');
-}
+		var row = $(newRow);
+		layoutTable.row.add(row).draw();
+		newLayoutRows.push(row);
+
+		updateRowNumbersLayout();
+		makeTableSortable('#okr-layouttable');
+	}
 
 
 	function flattenData(data) {
@@ -90,20 +79,20 @@ $(document).ready(function() {
 		data.forEach(function(item) {
 			result.push({
 				No: result.length + 1,
-				name: item.name || '', 
-				startDate: item.startDate || '', 
-				endDate: item.endDate || '', 
-				currentPeriod: item.currentPeriod || '' 
+				name: item.name || '',
+				startDate: item.startDate || '',
+				endDate: item.endDate || '',
+				currentPeriod: item.currentPeriod || ''
 			});
 
 			if (item.childs && Array.isArray(item.childs)) {
 				item.childs.forEach(function(child) {
 					result.push({
 						No: result.length + 1,
-						name: child.name || '', 
+						name: child.name || '',
 						startDate: child.startDate || '',
-						endDate: child.endDate || '', 
-						currentPeriod: child.currentPeriod || '' 
+						endDate: child.endDate || '',
+						currentPeriod: child.currentPeriod || ''
 					});
 				});
 			}
@@ -122,7 +111,7 @@ $(document).ready(function() {
 					data = flattenData(jsonData.data);
 				} else {
 					console.error('Unexpected data structure in the JSON data');
-					return; 
+					return;
 				}
 
 				console.log("Raw JSON Data: ", jsonData.data);
@@ -136,18 +125,18 @@ $(document).ready(function() {
 				});
 
 				data.sort((a, b) => {
-				    const startDateA = new Date(a.startDate);
-				    const startDateB = new Date(b.startDate);
-				    const endDateA = new Date(a.endDate);
-				    const endDateB = new Date(b.endDate);
+					const startDateA = new Date(a.startDate);
+					const startDateB = new Date(b.startDate);
+					const endDateA = new Date(a.endDate);
+					const endDateB = new Date(b.endDate);
 
-				    // Compare start dates
-				    if (startDateA.getTime() !== startDateB.getTime()) {
-				        return startDateA - startDateB;
-				    }
+					// Compare start dates
+					if (startDateA.getTime() !== startDateB.getTime()) {
+						return startDateA - startDateB;
+					}
 
-				    // If start dates are the same, compare end dates (later dates come first)
-				    return endDateB - endDateA;
+					// If start dates are the same, compare end dates (later dates come first)
+					return endDateB - endDateA;
 				});
 
 				console.log("Data after sorting: ", data);
@@ -181,14 +170,19 @@ $(document).ready(function() {
 			});
 	}
 
-	function fetchDataLayout() {
-		fetch('objectives/loaddata')
+
+	function fetchDataLayout(periodId) {
+		if (!periodId) {
+			console.error('No period ID selected');
+		}
+
+		fetch(`objectives/loaddata?periodId=${periodId}`)
 			.then(response => response.json())
 			.then(jsonData => {
 				if (jsonData.data.objectives && Array.isArray(jsonData.data.objectives)) {
-					var data = [];
-					var counter = 0;
-					console.log("Fetch data");
+					const data = [];
+					let counter = 0;
+					console.log("Fetch data for period:", periodId);
 					jsonData.data.objectives.forEach(item => {
 						if (item.keyResults && Array.isArray(item.keyResults)) {
 							item.keyResults.forEach(keyResult => {
@@ -208,7 +202,7 @@ $(document).ready(function() {
 										break;
 								}
 
-								var childData = [
+								const childData = [
 									counter++,
 									item.description,
 									item.weight,
@@ -217,9 +211,9 @@ $(document).ready(function() {
 									keyResult.result,
 									keyResult.target,
 									item.progress,
-									// Add data-id attribute for deletion
-									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span> 
-	                                 <span class="deleteLayout-btn" data-id="${item.description}"><i class="fas fa-trash"></i> Delete</span>`
+//									`<input type="hidden" class="keyResultId" value="${keyResult.keyResultId}">
+									`<span class="editLayout-btn"><i class="fas fa-edit"></i> Edit</span>
+	                 				<span class="deleteLayout-btn" data-id="${keyResult.keyResultId}"><i class="fas fa-trash"></i> Delete</span>`
 								];
 								data.push(childData);
 								console.log("Child: " + childData);
@@ -253,6 +247,69 @@ $(document).ready(function() {
 			});
 	}
 
+	function fetchPeriods() {
+		fetch('period/loaddata')
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log('Fetched JSON data:', jsonData);
+				if (jsonData.data && Array.isArray(jsonData.data)) {
+					const dropdown = document.getElementById('periodDropdown');
+
+					dropdown.innerHTML = '';
+
+					const placeholderOption = document.createElement('option');
+					placeholderOption.value = '';
+					placeholderOption.textContent = 'Select a Period';
+					placeholderOption.disabled = true;
+					placeholderOption.hidden = true;
+					dropdown.appendChild(placeholderOption);
+
+					jsonData.data.forEach(period => {
+						// Create and append top-level period option
+						const option = document.createElement('option');
+						option.value = period.periodId;
+						option.textContent = period.name;
+						dropdown.appendChild(option);
+
+						// Create and append child period options
+						period.childs.forEach(child => {
+							const childOption = document.createElement('option');
+							childOption.value = child.periodId;
+							childOption.textContent = `-- ${child.name}`;
+							dropdown.appendChild(childOption);
+						});
+					});
+
+					if (jsonData.data.length > 0) {
+						let selectedPeriodId = jsonData.data[0].periodId;
+						dropdown.value = selectedPeriodId;
+						fetchDataLayout(selectedPeriodId);  // Initial fetch for the default period
+						loadOKRs(selectedPeriodId);
+					}
+					// Add event listener to handle user selection
+					dropdown.addEventListener('change', function() {
+						let selectedPeriodId = this.value;  // Update the global variable
+						fetchDataLayout(selectedPeriodId);  // Fetch and display data for the selected period
+						loadOKRs(selectedPeriodId);
+					});
+				} else {
+					console.error('Unexpected data structure in the JSON data');
+				}
+			})
+			.catch(error => {
+				console.error('Error fetching period data:', error);
+			});
+	}
+
+	fetchPeriods();
+
+	document.getElementById('periodDropdown').addEventListener('change', function() {
+		let selectedPeriodId = this.value;  // Update the global variable
+		if (selectedPeriodId) {
+			fetchDataLayout(selectedPeriodId);
+		}
+	});
+
 	function handleDelete(event) {
 		const id = event.target.closest('.deleteLayout-btn').getAttribute('data-id');
 		if (!id) {
@@ -262,7 +319,7 @@ $(document).ready(function() {
 
 		function onSuccess(result) {
 			console.log('Row successfully deleted:', result);
-			fetchDataLayout();
+			fetchObjectivesForPeriod();
 		}
 
 		function onError(error) {
@@ -299,6 +356,7 @@ $(document).ready(function() {
 			}
 		});
 	}
+
 	function updateData() {
 		var rowsData = [];
 		var parentIdMap = {};
@@ -364,193 +422,206 @@ $(document).ready(function() {
 
 
 	function updateDataLayout() {
-    $('#okr-layouttable tbody tr[data-new="true"]').each(function() {
-        var row = $(this);
-        var description = row.find('td').eq(1).text().trim();
-        var weight = row.find('td').eq(2).text().trim();
-        var keyResultDescription = row.find('td').eq(3).text().trim();
-        var unit = row.find('.unit-select').val(); // Get the selected value
-        var startValue = row.find('td').eq(5).text().trim();
-        var target = row.find('td').eq(6).text().trim();
-        var progress = row.find('td').eq(7).text().trim();
+		// Get the selected periodId from the dropdown
+		var periodId = $('#periodDropdown').val();
 
-        if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
-            console.warn('One or more fields are empty in the row.');
-            return;
-        }
+		// Prepare the array to hold objectives
+		var objectivesArray = [];
 
-        var itype;
-        switch (unit) {
-            case 'Number':
-                itype = 1;
-                break;
-            case 'Yes/No':
-                itype = 2;
-                break;
-            case 'Percentage':
-                itype = 3;
-                break;
-            default:
-                itype = 0;
-                break;
-        }
+		$('#okr-layouttable tbody tr[data-new="true"]').each(function() {
+			var row = $(this);
+			var description = row.find('td').eq(1).text().trim();
+			var weight = row.find('td').eq(2).text().trim();
+			var keyResultDescription = row.find('td').eq(3).text().trim();
+			var unit = row.find('.unit-select').val(); // Get the selected value
+			var startValue = row.find('td').eq(5).text().trim();
+			var target = row.find('td').eq(6).text().trim();
+			var progress = row.find('td').eq(7).text().trim();
 
-        var objective = {
-            description: description,
-            status: 'DRAFT',
-            weight: weight,
-            comment: '',
-            keyResults: []
-        };
+			if (!description || !weight || !keyResultDescription || !unit || !startValue || !target || !progress) {
+				console.warn('One or more fields are empty in the row.');
+				return;
+			}
 
-        var keyResult = {
-            description: keyResultDescription,
-            dueDate: '',
-            itype: itype,
-            progress: progress,
-            weight: weight,
-            numberResult: startValue,
-            numberTarget: target,
-            yesNoResult: false,
-            yesNoTarget: false,
-            percentageResult: startValue,
-            percentageTarget: target,
-            standard: 'None',
-            startvalue: startValue,
-        };
+			var itype;
+			switch (unit) {
+				case 'Number':
+					itype = 1;
+					break;
+				case 'Yes/No':
+					itype = 2;
+					break;
+				case 'Percentage':
+					itype = 3;
+					break;
+				default:
+					itype = 0;
+					break;
+			}
 
-        objective.keyResults.push(keyResult);
+			var objective = {
+				description: description,
+				status: 'DRAFT',
+				weight: weight,
+				comment: '',
+				keyResults: []
+			};
 
-        var requestData = { objectives: [objective] };
+			var keyResult = {
+				description: keyResultDescription,
+				dueDate: '',
+				itype: itype,
+				progress: progress,
+				weight: weight,
+				numberResult: startValue,
+				numberTarget: target,
+				yesNoResult: false,
+				yesNoTarget: false,
+				percentageResult: startValue,
+				percentageTarget: target,
+				standard: 'None',
+				startvalue: startValue,
+			};
 
-        if (requestData.objectives.length === 0) {
-            console.warn('No data to update');
-            return;
-        }
+			objective.keyResults.push(keyResult);
+			objectivesArray.push(objective); // Add the objective to the array
+		});
 
-        console.log('Sending data:', JSON.stringify(requestData));
+		// Prepare the final JSON structure including periodId and objectives
+		var requestData = {
+			periodId: periodId, // Set the periodId at the root level
+			objectives: objectivesArray // Add the objectives array
+		};
 
-        fetch('objectives/uploaddata', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Data successfully updated:', JSON.stringify(result));
-                row.removeAttr('data-new');
-            })
-            .catch(error => {
-                console.error('Error updating data:', error);
-            });
-    });
-    	window.location.reload();
+		if (objectivesArray.length === 0) {
+			console.warn('No data to update');
+			return;
+		}
+
+		console.log('Sending data:', JSON.stringify(requestData));
+
+		fetch('objectives/uploaddata', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log('Data successfully updated:', JSON.stringify(result));
+				$('#okr-layouttable tbody tr[data-new="true"]').removeAttr('data-new');
+			})
+			.catch(error => {
+				console.error('Error updating data:', error);
+			});
+
+		window.location.reload();
 	}
 
-    /* Draft Save OKR by nhbthach __START */
+
+	/* Draft Save OKR by nhbthach __START */
 	function getOrgId() {
-	    return $.ajax({
-	        url: 'organization/loaddata',
-	        method: 'GET',
-	        dataType: 'text'
-	    }).then(function(data) {
-	        console.log("orgId:", data);
-	        return data; 
-	    }).catch(function(error) {
-	        console.error('Error fetching orgId:', error);
-	        return null; // Return default value if occurs error
-	    });
+		return $.ajax({
+			url: 'organization/loaddata',
+			method: 'GET',
+			dataType: 'text'
+		}).then(function(data) {
+			console.log("orgId:", data);
+			return data;
+		}).catch(function(error) {
+			console.error('Error fetching orgId:', error);
+			return null; // Return default value if occurs error
+		});
 	}
 
 	function getPeriodId() {
-	    return $.ajax({
-	        url: 'period/currentPeriodId',
-	        method: 'GET',
-	        dataType: 'text'
-	    }).then(function(data) {
-	        console.log("periodId:", data);
-	        return data; 
-	    }).catch(function(error) {
-	        console.error('Error fetching periodId:', error);
-	        return null; // Return default value if occurs error
-	    });
+		return $.ajax({
+			url: 'period/currentPeriodId',
+			method: 'GET',
+			dataType: 'text'
+		}).then(function(data) {
+			console.log("periodId:", data);
+			return data;
+		}).catch(function(error) {
+			console.error('Error fetching periodId:', error);
+			return null; // Return default value if occurs error
+		});
 	}
-	
-    function draftSaveOkr(){
-    	
-    	var table = $('#okr-layouttable').DataTable();
-    	
-    	var data = table.rows().data().toArray();
-    	
-	    	$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
-		    	
-	    		// Initial OKR JSON object for updating
-	    		var jsonData = {
-			    	    "status": "DRAFT",
-			     	    "organizationId": orgId,
-			    	    "periodId": periodId, 		
-			    	    "objectives": []
-			    	};
-	    		
-	    		$('#okr-layouttable tbody tr').each(function() {
-	            	
-	                var row = $(this);
-	                var objDesc = row.find('td').eq(1).text().trim();
-	                var objWeight = row.find('td').eq(2).text().trim();
-	                var ksDesc = row.find('td').eq(3).text().trim();
-	                var unit = row.find('td').eq(4).text().trim();
-	                var startValue = row.find('td').eq(5).text().trim();
-	                var target = row.find('td').eq(6).text().trim();
-	                var progress = row.find('td').eq(7).text().trim();
-	    		
-	    			
-		    		// Check if exists 'objective' by compare description
-		    	    var objective = jsonData.objectives.find(obj => obj.description === objDesc);
-		
-		    	 	// If not exists, generate new objective
-		    	    if (!objective) {
-		    	      objective = {
-		    	        "description": objDesc,
-		    	        "status": "DRAFT",
-		    	        "weight": objWeight || 0,
-		    	        "comment": "test_comment",
-		    	        "keyResults": []
-		    	      };
-		    	      jsonData.objectives.push(objective);
-		    	    }
-		    	 
-		    	 	// Add KeyResult into corresponding Objective
-		    	 	var itype = (unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0);
-		    	 	
-		    	 	var keyResult = {
-		    	            "description": ksDesc,
-		    	            "standard": 'None',
-		    	            "startvalue": itype === 2 ? 0 : startValue,
-		    	            "itype" : itype
-		    	        };
-		    	 	
-		    	 	if (itype === 1) { // Number
-		                keyResult.numberResult = parseFloat(startValue) || 0;
-		                keyResult.numberTarget = parseFloat(target) || 0;
-		            } else if (itype === 2) { // Yes/No
-		                keyResult.yesNoResult = startValue; // assuming startValue is a string
-		                keyResult.yesNoTarget = target; // assuming target is a string
-		            } else if (itype === 3) { // Percentage
-		                keyResult.percentageResult = parseFloat(startValue) || 0;
-		                keyResult.percentageTarget = parseFloat(target) || 0;
-		            }
-		    	 	
-		    	    objective.keyResults.push(keyResult);
-		    	}) 
-	    	   		
-	    	// Call API
-	    	var payload = JSON.stringify(jsonData);
-	    	console.log(payload);
-	    	var url = "objectives/updateOkr"
-	    	
-	    	$.ajax({
+
+	function draftSaveOkr() {
+
+		var table = $('#okr-layouttable').DataTable();
+
+		var data = table.rows().data().toArray();
+
+		$.when(getOrgId(), getPeriodId()).done(function(orgId, periodId) {
+
+			// Initial OKR JSON object for updating
+			var jsonData = {
+				"status": "DRAFT",
+				"organizationId": orgId,
+				"periodId": periodId,
+				"objectives": []
+			};
+
+			$('#okr-layouttable tbody tr').each(function() {
+
+				var row = $(this);
+				var objDesc = row.find('td').eq(1).text().trim();
+				var objWeight = row.find('td').eq(2).text().trim();
+				var ksDesc = row.find('td').eq(3).text().trim();
+				var unit = row.find('td').eq(4).text().trim();
+				var startValue = row.find('td').eq(5).text().trim();
+				var target = row.find('td').eq(6).text().trim();
+				var progress = row.find('td').eq(7).text().trim();
+
+
+				// Check if exists 'objective' by compare description
+				var objective = jsonData.objectives.find(obj => obj.description === objDesc);
+
+				// If not exists, generate new objective
+				if (!objective) {
+					objective = {
+						"description": objDesc,
+						"status": "DRAFT",
+						"weight": objWeight || 0,
+						"comment": "test_comment",
+						"keyResults": []
+					};
+					jsonData.objectives.push(objective);
+				}
+
+				// Add KeyResult into corresponding Objective
+				var itype = (unit === 'Number' ? 1 : unit === 'Yes/No' ? 2 : unit === 'Percentage' ? 3 : 0);
+
+				var keyResult = {
+					"description": ksDesc,
+					"standard": 'None',
+					"startvalue": itype === 2 ? 0 : startValue,
+					"itype": itype
+				};
+
+				if (itype === 1) { // Number
+					keyResult.numberResult = parseFloat(startValue) || 0;
+					keyResult.numberTarget = parseFloat(target) || 0;
+				} else if (itype === 2) { // Yes/No
+					keyResult.yesNoResult = startValue; // assuming startValue is a string
+					keyResult.yesNoTarget = target; // assuming target is a string
+				} else if (itype === 3) { // Percentage
+					keyResult.percentageResult = parseFloat(startValue) || 0;
+					keyResult.percentageTarget = parseFloat(target) || 0;
+				}
+
+				objective.keyResults.push(keyResult);
+			})
+
+			// Call API
+			var payload = JSON.stringify(jsonData);
+			console.log(payload);
+			var url = "objectives/updateOkr"
+
+			$.ajax({
 				url: url,
 				type: 'POST',
 				contentType: 'application/json',
@@ -561,34 +632,34 @@ $(document).ready(function() {
 				},
 				error: function(xhr, status, error) {
 					console.error('Error saving data:', {
-					      status: xhr.status,
-					      statusText: xhr.statusText,
-					      responseText: xhr.responseText
-					    });
+						status: xhr.status,
+						statusText: xhr.statusText,
+						responseText: xhr.responseText
+					});
 					showNotiDraftSave('Failed to update! Try again, please', 'error');
 				}
 			});
 
-    	})
-    }
-    
-   	function showNotiDraftSave(message, type) {
-   	    
-   	 	$('#notification-message').text(message);
-   	    if(type === 'success'){
-   	    	$('#notiDraftSave').addClass('alert-success').removeClass('alert-danger');
-   	    } else if (type === 'error'){
-   	    	$('#notiDraftSave').addClass('alert-danger').removeClass('alert-success');
-   	    }
+		})
+	}
 
-        $('#notiDraftSave').show();
-        $('#notiDraftSave').fadeIn();
-        
-   	    // Hide notificaiton after 3s
-   	    setTimeout(function() {
-   	    	$('#notiDraftSave').fadeOut();
-   	    }, 5000);
-   	}
+	function showNotiDraftSave(message, type) {
+
+		$('#notification-message').text(message);
+		if (type === 'success') {
+			$('#notiDraftSave').addClass('alert-success').removeClass('alert-danger');
+		} else if (type === 'error') {
+			$('#notiDraftSave').addClass('alert-danger').removeClass('alert-success');
+		}
+
+		$('#notiDraftSave').show();
+		$('#notiDraftSave').fadeIn();
+
+		// Hide notificaiton after 3s
+		setTimeout(function() {
+			$('#notiDraftSave').fadeOut();
+		}, 5000);
+	}
 	/* DraftSave OKR by nhbthach __ END */
 
 	function updateRowNumbers() {
@@ -623,18 +694,18 @@ $(document).ready(function() {
 		$("#okr-table").sortable("disable");
 	}
 
-function enableCellEditLayout(row) {
-    $(row).find('td').not('.non-editable').each(function() {
-        var cell = $(this);
-        if (cell.find('select').length) {
-            cell.find('select').prop('disabled', false);
-        } else {
-            cell.attr('contenteditable', 'true').addClass('cell-editable');
-        }
-    });
-    $(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
-    $("#okr-layouttable").sortable("disable");
-}
+	function enableCellEditLayout(row) {
+		$(row).find('td').not('.non-editable').each(function() {
+			var cell = $(this);
+			if (cell.find('select').length) {
+				cell.find('select').prop('disabled', false);
+			} else {
+				cell.attr('contenteditable', 'true').addClass('cell-editable');
+			}
+		});
+		$(row).find('.editLayout-btn').html('<i class="fas fa-save"></i> Save');
+		$("#okr-layouttable").sortable("disable");
+	}
 
 	function disableCellEditTracking(row) {
 		$(row).find('td').not('.non-editable').each(function() {
@@ -645,24 +716,24 @@ function enableCellEditLayout(row) {
 	}
 
 	function disableCellEditLayout(row) {
-    $(row).find('td').not('.non-editable').each(function() {
-        var cell = $(this);
-        if (cell.find('select').length) {
-            cell.find('select').prop('disabled', true);
-        } else {
-            cell.attr('contenteditable', 'false').removeClass('cell-editable');
-        }
-    });
-    $(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
-    $("#okr-layouttable").sortable("enable");
-}
+		$(row).find('td').not('.non-editable').each(function() {
+			var cell = $(this);
+			if (cell.find('select').length) {
+				cell.find('select').prop('disabled', true);
+			} else {
+				cell.attr('contenteditable', 'false').removeClass('cell-editable');
+			}
+		});
+		$(row).find('.editLayout-btn').html('<i class="fas fa-edit"></i> Edit');
+		$("#okr-layouttable").sortable("enable");
+	}
 
 	$('#MKSOLAddRow').click(addRow);
 	$('#MKSOLAddRowLayout').click(addRowLayout);
 
 	$('#MKSOLUpdateperiod').click(updateData);
 	$('#submit-layout').click(updateDataLayout);
-	
+
 	// Draft Save handle event btn
 	$('#draft-save').click(draftSaveOkr);
 
@@ -698,11 +769,9 @@ function enableCellEditLayout(row) {
 
 	fetchData();
 	console.log("loaded");
-	fetchDataLayout();
 
-
-	function loadOKRs() {
-		fetch('objectives/loaddata')
+	function loadOKRs(periodId) {
+		fetch(`objectives/loaddata?periodId=${periodId}`)
 			.then(response => response.json())
 			.then(data => {
 				if (data.data && data.data.objectives && Array.isArray(data.data.objectives)) {
@@ -778,8 +847,8 @@ function enableCellEditLayout(row) {
 		XLSX.writeFile(wb, "OKR_Dashboard.xlsx");
 	});
 
-	function deleteRowFromDatabase(name, url, onSuccess, onError) {
-		var completeUrl = `${url}/${name}`;
+	function deleteRowFromDatabase(id, url, onSuccess, onError) {
+		var completeUrl = `${url}/${id}`;
 		console.log('Request URL:', completeUrl);
 
 		fetch(completeUrl, {
@@ -807,5 +876,5 @@ function enableCellEditLayout(row) {
 				}
 			});
 	}
-	
+
 });
