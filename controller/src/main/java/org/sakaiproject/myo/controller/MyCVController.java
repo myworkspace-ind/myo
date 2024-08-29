@@ -33,6 +33,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.itextpdf.text.Document;
@@ -73,22 +74,25 @@ public class MyCVController extends BaseController {
 	 */
 	@RequestMapping(value = { "MyCV" }, method = RequestMethod.GET)
 	public ModelAndView displayHome(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) throws Exception {
-		ModelAndView mav = new ModelAndView("my_cv");
+	    ModelAndView mav = new ModelAndView("my_cv");
 
-		initSession(request, httpSession);
+	    initSession(request, httpSession);
 
-		String userEmail = "micrayon2812@gmail.com";
-		OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		ProfilePdfWriter.writeProfileToPdf(user, byteArrayOutputStream);
+	    String url = "http://localhost:8080/myo-web/userprofile/loaddata";
+	    RestTemplate restTemplate = new RestTemplate();
+	    String userDataJson = restTemplate.getForObject(url, String.class);
 
-		byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	    ProfilePdfWriter.writeProfileToPdf(userDataJson, byteArrayOutputStream);
 
-		response.setContentType("application/pdf");
-		response.setContentLength(pdfBytes.length);
-		response.setHeader("Content-Disposition", "inline; filename=\"My_cv.pdf\"");
-		response.getOutputStream().write(pdfBytes);
+	    byte[] pdfBytes = byteArrayOutputStream.toByteArray();
 
-		return mav;
+	    response.setContentType("application/pdf");
+	    response.setContentLength(pdfBytes.length);
+	    response.setHeader("Content-Disposition", "inline; filename=\"My_cv.pdf\"");
+	    response.getOutputStream().write(pdfBytes);
+
+	    return mav;
 	}
+
 }
