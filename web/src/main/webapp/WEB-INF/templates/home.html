@@ -22,9 +22,6 @@
 </head>
 <body>
 	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
-	<div id="content" class="content">
-		<th:block th:include="fragments/frg_home.html"></th:block>
-	</div>
 	<script>
 		function toggleSidebar() {
 			var sidebar = document.getElementById("sidebar");
@@ -42,5 +39,9 @@
 			});
 		});
 	</script>
+	<div id="content" class="content">
+		<th:block th:include="fragments/frg_home.html"></th:block>
+	</div>
+	
 </body>
 </html>

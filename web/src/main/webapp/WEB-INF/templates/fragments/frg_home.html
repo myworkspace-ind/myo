@@ -5,7 +5,16 @@
 			<h4 class="mb-4 font-weight-bold">
 				Homepage
 			</h4>
+			
 			</div>
+				<div th:if="${loggedIn != null and loggedIn}">
+			        <form action="@{/home}"></form>
+				</div>
+		
+		    <!-- Redirect to login page or display a login prompt if not logged in -->
+			    <div th:if="${loggedIn == null or not loggedIn}">
+			        <a th:href="@{/auth}"></a>
+			    </div>
 		</div>
 	
 	</div>

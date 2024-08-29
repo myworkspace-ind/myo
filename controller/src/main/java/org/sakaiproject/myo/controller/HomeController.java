@@ -32,8 +32,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.sakaiproject.myo.backend.OkrBackend;
+import org.sakaiproject.myo.service.PeriodService;
+import org.springframework.stereotype.Indexed;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
+
 
 /**
  * Handles requests for the application home page.
@@ -53,23 +63,23 @@ public class HomeController extends BaseController {
      * @return 
 	 */
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-	public ModelAndView displayHome(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("home");
-		initSession(request, httpSession);
+	public String homePage(Model model, HttpSession session) {
+        // Check if the user is logged in (this assumes a session attribute 'loggedIn' is being set)
+        String authToken = (String) session.getAttribute("authToken");
 
-//		mav.addObject("currentSiteId", getCurrentSiteId());
-//		mav.addObject("userDisplayName", getCurrentUserDisplayName());
+        if (authToken == null || authToken.isEmpty()) {
+            // If the user is not logged in, redirect to the login page
+            return "redirect:/auth";
+        }
+        else {
 
-		List<OkrUser> allUsers = userService.findAll();
-		int len = (allUsers != null) ? allUsers.size(): 0;
-		System.out.println("Number of users: " + len);
-		System.out.println("Hello World!");
-		mav.addObject("users", allUsers);
-		
-		mav.addObject("orgs", orgService.findAll());
+        // If logged in, proceed to the homepage
+        model.addAttribute("loggedIn", authToken);
+        return "home"; // The name of your homepage Thymeleaf template
+        }
+    }
 
-		return mav;
-	}
+	
     
 
 }
