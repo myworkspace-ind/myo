@@ -1,0 +1,171 @@
+<style>
+.btn-gray {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-gray:hover {
+    background-color: #5a6268;
+}
+
+.fixed-bottom-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+.input-custom {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #6c757d;
+}
+
+.input-custom:focus {
+    background-color: transparent;
+    color: #fff;
+    border-color: #5a6268;
+}
+</style>
+
+<div class="container-fluid mt-2" id="userProfileContainer"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetchUserProfileData();
+
+    function fetchUserProfileData() {
+        fetch('userprofile/loaddata') 
+            .then(response => response.json())
+            .then(data => {
+                const userData = data.data;
+
+                if (!userData) {
+                    document.getElementById('userProfileContainer').innerHTML = "<p>User not found!</p>";
+                    return;
+                }
+
+                populateUserProfile(userData);
+            })
+            .catch(error => {
+                console.error('Error fetching user profile:', error);
+                document.getElementById('userProfileContainer').innerHTML = "<p>Error loading user data. Please try again later.</p>";
+            });
+    }
+
+    function populateUserProfile(userData) {
+        let profileHTML = '<div class="row d-flex justify-content-start">';
+
+        profileHTML += `</br><div class="col-3">
+            <img alt="avatar" src="${userData.avatar || 'resources/assets/img/profile/avatar.jpg'}" id="MKSOLavatarprofile" class="img-fluid">
+            <button class="btn btn-secondary d-block btn-sm mt-2" id="MKSOLchangpictureprofile">
+                <i class="bi bi-pencil"></i> Change picture
+            </button>
+        </div>`;
+
+        profileHTML += `<div class="col-9" id="profileContent">`;
+
+        profileHTML += `</br><div class="d-flex align-items-center mb-3" id="userNameSection">`;
+        if (userData.name) {
+            profileHTML += `<h3 class="mr-3" id="userName">${userData.name}</h3>`;
+        }
+        profileHTML += `</div>`;
+
+        const details = [
+            { label: 'Username', value: userData.username, id: 'username' },
+            { label: 'Email', value: userData.email, id: 'email' },
+            { label: 'User Role', value: userData.userRole, id: 'userRole' },
+            { label: 'Telephone', value: userData.telephone, id: 'telephone' },
+            { label: 'Address', value: userData.address, id: 'address' },
+            { label: 'Birthday', value: userData.birthday, id: 'birthday' }
+        ];
+
+        details.forEach(detail => {
+            if (detail.value) {
+                profileHTML += `<p class="fw-bold">${detail.label}: 
+                <span class="fw-normal" id="${detail.id}">${detail.value}</span></p>`;
+            }
+        });
+
+        if (userData.orgs && userData.orgs.length > 0) {
+            profileHTML += `</br><h6>Organizations</h6><hr class="hr text-primary m-0" />`;
+            userData.orgs.forEach(org => {
+                profileHTML += `<p class="fw-bold">Org Name: <span class="fw-normal">${org.name}</span></p>`;
+            });
+        }
+
+        profileHTML += `</div></div>`; 
+
+        document.getElementById('userProfileContainer').innerHTML = profileHTML;
+
+        const editButtonHTML = `<button class="btn btn-gray btn-sm fixed-bottom-button" id="editProfileBtn">
+            <i class="bi bi-pencil"></i> Edit
+        </button>`;
+        
+        document.body.insertAdjacentHTML('beforeend', editButtonHTML);
+
+        document.getElementById('editProfileBtn')?.addEventListener('click', function () {
+            enableEditing(userData);
+        });
+    }
+
+    function enableEditing(userData) {
+        const existingEditButton = document.getElementById('editProfileBtn');
+        if (existingEditButton) {
+            existingEditButton.remove();
+        }
+
+        let editHTML = `</br><div class="d-flex align-items-center mb-3" id="userNameSection">
+            <input type="text" id="editNameInput" class="form-control mb-2 input-custom" value="${userData.name || ''}" />
+            <button class="btn btn-gray btn-sm" id="updateProfileBtn">
+                <i class="bi bi-check2"></i> Update
+            </button>
+        </div>`;
+
+        const details = [
+            { label: 'Username', value: userData.username, id: 'username' },
+            { label: 'Email', value: userData.email, id: 'email' },
+            { label: 'User Role', value: userData.userRole, id: 'userRole' },
+            { label: 'Telephone', value: userData.telephone, id: 'telephone' },
+            { label: 'Address', value: userData.address, id: 'address' },
+            { label: 'Birthday', value: userData.birthday, id: 'birthday' }
+        ];
+
+        details.forEach(detail => {
+            editHTML += `<p class="fw-bold">${detail.label}: 
+            <input type="text" id="edit${detail.id}Input" class="form-control mb-2 input-custom" value="${detail.value || ''}" /></p>`;
+        });
+
+        document.getElementById('profileContent').innerHTML = editHTML;
+
+        document.getElementById('updateProfileBtn').addEventListener('click', function () {
+            const updatedData = {
+                name: document.getElementById('editNameInput').value,
+                email: document.getElementById('editemailInput')?.value,
+                telephone: document.getElementById('edittelephoneInput')?.value,
+                address: document.getElementById('editaddressInput')?.value,
+                birthday: document.getElementById('editbirthdayInput')?.value
+            };
+
+            fetch('userprofile/uploaddata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: updatedData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchUserProfileData();
+                } else {
+                    alert('Error updating profile. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating user profile:', error);
+                alert('Error updating profile. Please try again later.');
+            });
+        });
+    }
+});
+</script>

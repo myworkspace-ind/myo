@@ -327,7 +327,7 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public ResponseEntity<String> postProfile(String jsonData) {
 		try {
-			String serverUrl = okrBaseURL + "/userprofile/create";
+			String serverUrl = okrBaseURL + "/userprofile/update";
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Content-Type", "application/json");
 			headers.set("Authorization", "Bearer " + okrAuthToken);
