@@ -5,23 +5,32 @@
 <style>
 .content {
 	transition: margin-left 0.3s ease;
-	margin-top: 6%;
+	
 }
 
 .sidebar.open ~ .content {
 	margin-left: 200px;
 }
 </style>
+
 <th:block th:include="fragments/head"></th:block>
+<link rel="stylesheet" type="text/css" href="resources/css/my_leftsidenavbar.css">
 <link rel="stylesheet" type="text/css" href="resources/css/my_crud.css">
 
 <link rel="stylesheet" type="text/css" href="resources/css/my_okr.css">
 
+<link rel="stylesheet" type="text/css" href="resources/css/landing_page.css">
 
 
 </head>
 <body>
+   
 	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
+	<div id="content" class="content">
+		<th:block th:include="fragments/frg_landing_page.html"></th:block>
+	</div>
+	
+	
 	<script>
 		function toggleSidebar() {
 			var sidebar = document.getElementById("sidebar");
@@ -39,9 +48,7 @@
 			});
 		});
 	</script>
-	<div id="content" class="content">
-		<th:block th:include="fragments/frg_home.html"></th:block>
-	</div>
+	
 	
 </body>
 </html>

@@ -1,0 +1,186 @@
+  .banner {
+            background-color: #00509E;
+            color: #fff;
+            padding: 100px 0;
+            text-align: center;
+        }
+        .banner h2 {
+            margin-bottom: 20px;
+            font-size: 3rem;
+        }
+        .features {
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        
+        
+        footer {
+            background-color: #003366;
+            color: #fff;
+            padding: 20px 0;
+        }
+        .social-media a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        /* Custom styles for navigation */
+        .navbar-nav .nav-link {
+            color: #fff;
+            transition: all 0.3s ease-in-out;
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: #00509E;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link.active {
+            background-color: #00509E;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        #address .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .features-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Định dạng cho phần hình ảnh trong section features */
+.features-image {
+    flex: 1;
+    text-align: center;
+}
+
+.features-image img {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Định dạng cho phần văn bản trong section features */
+.features-text {
+    flex: 2;
+    padding-left: 20px;
+    text-align: justify;
+    max-width: 600px;
+}
+
+.title {
+    color: red;
+    text-align: left;
+}
+
+.subtitle {
+    color: blue;
+    text-align: left;
+}
+    
+    
+    
+    #address .icon-box {
+        flex: 1 1 calc(33.33% - 20px); /* Tạo ba cột với khoảng cách giữa các cột */
+        margin: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    #address .icon-box i {
+        font-size: 2rem;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+    #address .icon-box h4 {
+        margin: 10px 0;
+        font-size: 1.2rem;
+    }
+    #address .icon-box p {
+        margin: 5px 0;
+        font-size: 1rem;
+    }
+    #solution {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 50px;
+        background-color: #f9f9f9;
+    }
+    #solution .image {
+        flex: 1;
+        text-align: center;
+    }
+    #solution .image img {
+        max-width: 100%;
+        height: auto;
+    }
+    #solution .content {
+        flex: 1;
+        padding-left: 50px;
+    }
+    #solution .content h2 {
+        color: #ed1c24;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    #solution .content h3 {
+        color: #3b3bdb;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+    #solution .content p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+/* Định dạng cho phần footer */
+.footer {
+    background-color: #009688;
+    padding: 40px 0;
+    color: white;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.footer-description {
+    margin-bottom: 20px;
+}
+
+.footer-contact {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-item {
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
+
+.copyright {
+    background-color: #003366;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
