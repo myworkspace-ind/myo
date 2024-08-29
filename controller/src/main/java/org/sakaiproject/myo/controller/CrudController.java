@@ -85,6 +85,20 @@ public class CrudController extends BaseController {
 		// System.out.print(serviceOkrBackend.getOrganization());
 		return serviceOkrBackend.getOrganization();
 	}
+	
+	@GetMapping(value = "/userprofile/loaddata")
+	@ResponseBody
+	public String getProfile() {
+		// System.out.print(serviceOkrBackend.getOrganization());
+		return serviceOkrBackend.getProfile();
+	}
+	
+	@PostMapping(value = "/userprofile/uploaddata")
+	public ResponseEntity<String> uploadProfile(@RequestBody String jsonData) {
+		JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+		String modifiedJsonData = jsonObject.toString();
+		return serviceOkrBackend.postProfile(modifiedJsonData);
+	}
 
 	@GetMapping(value = "/objectives/loaddata")
 	@ResponseBody

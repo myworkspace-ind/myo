@@ -45,11 +45,6 @@ public class OkrBackend implements IOkrBackend {
 	private static String childPeriodId;
 	private static String organizationId;
 
-	public static void main(String[] args) {
-		OkrBackend okrBackend = new OkrBackend();
-		okrBackend.loadData();
-	}
-
 	public String getAuthToken(String username, String password) throws Exception {
 		String serverUrl = okrBaseURL + "/auth";
 		Map<String, String> requestBody = new HashMap<>();
@@ -72,15 +67,6 @@ public class OkrBackend implements IOkrBackend {
 					return okrAuthToken;
 				}
 			}
-//		    } else {
-//		    	System.out.println("Check error");
-//		        Map<String, String> responseBody = response.getBody();
-//		        if (responseBody != null && responseBody.containsKey("message")) {
-//		            String errorMessage = responseBody.get("message");
-//		            System.out.println("Error message: " + errorMessage);
-//		            return "";
-//		        }
-//		    }
 		} catch (HttpClientErrorException e) {
 			// TODO: handle exception
 			String errorMessage = e.getResponseBodyAsString();
@@ -96,38 +82,6 @@ public class OkrBackend implements IOkrBackend {
 			throw new Exception(errorMessage);
 		}
 		return null;
-	}
-
-	public void loadData() {
-		try {
-
-			// Tạo HttpHeaders và thêm token xác thực
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Authorization", "Bearer " + okrAuthToken);
-
-			// Tạo HttpEntity với headers
-			HttpEntity<String> entity = new HttpEntity<>(headers);
-
-			// Định nghĩa URL endpoint API
-			String apiUrl = okrBaseURL + "/period"; // Thay thế bằng endpoint thực tế
-
-			// Gửi yêu cầu GET với headers
-			ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
-
-			// Kiểm tra mã trạng thái
-			// if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-			// System.out.println("Unauthorized: Refreshing token and retrying...");
-			// getAuthToken(); // Lấy token mới
-			headers.set("Authorization", "Bearer " + okrAuthToken); // Cập nhật headers với token mới
-			entity = new HttpEntity<>(headers);
-			response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class); // Thử lại yêu cầu với token
-																							// mới
-
-			System.out.println("Response: " + response.getBody());
-		} catch (Exception e) {
-			System.out.println("An error occurred: " + e.getMessage());
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -289,66 +243,57 @@ public class OkrBackend implements IOkrBackend {
 		}
 	}
 
-	
-//	@Override
-//	public String getObjectives(String periodId, String organizationId) {
-//		try {
-//			System.out.println(okrAuthToken);
-//			if(organizationId == null || organizationId.isEmpty()) {
-//				organizationId = getOrganization();
-//			}
-//			if(periodId == null || periodId.isEmpty()) {
-//				periodId = getCurrentPeriodId();
-//			}
-//			
-////			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
-//			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
-//			HttpHeaders headers = new HttpHeaders();
-//			headers.set("Authorization", "Bearer " + okrAuthToken);
-//			HttpEntity<String> entity = new HttpEntity<>(headers);
-//			System.out.println("Fined1");
-//			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-//			headers.set("Authorization", "Bearer " + okrAuthToken);
-//			entity = new HttpEntity<>(headers);
-//			response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-//			String responseJson = response.getBody(); 
-//			System.out.print(responseJson);
-//			return responseJson;
-//		} catch (Exception e) {
-//			System.out.println("An error occurred: " + e.getMessage());
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-
 	@Override
 	public String getObjectives(String periodId, String organizationId) {
-	    try {
-			if(organizationId == null || organizationId.isEmpty()) {
+		try {
+			if (organizationId == null || organizationId.isEmpty()) {
 				organizationId = getOrganization();
 			}
-			if(periodId == null || periodId.isEmpty()) {
+			if (periodId == null || periodId.isEmpty()) {
 				periodId = getCurrentPeriodId();
 			}
 //			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
 			String serverUrl = okrBaseURL + "/okr/auth/all/" + organizationId + "/" + periodId;
-	    	
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.set("Authorization", "Bearer " + okrAuthToken);
 
-	        HttpEntity<String> entity = new HttpEntity<>(headers);
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
 
-	        ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
 
-	        String responseJson = response.getBody();
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
 
-	        System.out.println("Response JSON: " + responseJson);
-	        return responseJson;
-	    } catch (Exception e) {
-	        System.out.println("An error occurred while fetching objectives: " + e.getMessage());
-	        e.printStackTrace();
-	        return null;
-	    }
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public String getProfile() {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -378,9 +323,28 @@ public class OkrBackend implements IOkrBackend {
 			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
-	
+
+	@Override
+	public ResponseEntity<String> postProfile(String jsonData) {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile/create";
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Content-Type", "application/json");
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
+					String.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@Override
 	public ResponseEntity<String> postPeriod(String jsonData) {
@@ -430,11 +394,11 @@ public class OkrBackend implements IOkrBackend {
 			// Check response status
 			if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NO_CONTENT) {
 				System.out.println("Status: " + response.getStatusCode());
-			    System.out.println("Objective deleted successfully");
-			    return true;
+				System.out.println("Objective deleted successfully");
+				return true;
 			} else {
-			    System.out.println("Failed to delete objective. Status code: " + response.getStatusCode());
-			    return false;
+				System.out.println("Failed to delete objective. Status code: " + response.getStatusCode());
+				return false;
 			}
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
@@ -444,82 +408,84 @@ public class OkrBackend implements IOkrBackend {
 	}
 
 	public String getObjectiveIdByName(String name) {
-	    try {
-	        // Define the URL for the API endpoint to fetch all objectives
-	        String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
-	        
-	        // Set up the HTTP headers with authorization token
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.set("Authorization", "Bearer " + okrAuthToken);
-	        HttpEntity<String> entity = new HttpEntity<>(headers);
-	        
-	        // Make the API call to fetch all objectives
-	        ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
-	        
-	        // Get the JSON response body
-	        String responseJson = response.getBody();
-	        System.out.println("Objectives JSON: " + responseJson);
-	        
-	        // Parse the JSON response
-	        JsonParser jsonParser = new JsonParser();
-	        JsonElement jsonElement = jsonParser.parse(responseJson);
-	        JsonObject responseObject = jsonElement.getAsJsonObject();
-	        
-	        // Extract the 'objectives' array from the nested 'data' object
-	        JsonObject dataObject = responseObject.getAsJsonObject("data");
-	        JsonArray objectivesArray = dataObject.getAsJsonArray("objectives");
+		try {
+			// Define the URL for the API endpoint to fetch all objectives
+			String serverUrl = okrBaseURL + "/okr/auth/all/" + getOrganization() + "/" + getCurrentPeriodId();
 
-	        // Iterate through the array to find the objective with the matching name
-	        for (JsonElement element : objectivesArray) {
-	            JsonObject objective = element.getAsJsonObject();
-	            
-	            // Log the JSON object being processed
-	            System.out.println("Processing Objective: " + objective.toString());
-	            
-	            // Check if the "description" attribute matches the name
-	            if (objective.has("description")) {
-	                String objectiveName = objective.get("description").getAsString(); // Get objective description as String
-	                
-	                // Log the name being compared
-	                System.out.println("Comparing Name: " + objectiveName + " with " + name);
-	                
-	                if (objectiveName.equals(name)) {
-	                    // Return the "objectiveId" if the name matches
-	                    System.out.println("Found Objective with Name: " + name);
-	                    return objective.has("objectiveId") ? objective.get("objectiveId").getAsString() : null;
-	                }
-	            }
-	        }
-	        
-	        System.out.println("No objective found with Name: " + name);
-	        return null;
-	    } catch (Exception e) {
-	        System.out.println("An error occurred while fetching the objective_id by name: " + e.getMessage());
-	        e.printStackTrace();
-	        return null;
-	    }
+			// Set up the HTTP headers with authorization token
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			// Make the API call to fetch all objectives
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			// Get the JSON response body
+			String responseJson = response.getBody();
+			System.out.println("Objectives JSON: " + responseJson);
+
+			// Parse the JSON response
+			JsonParser jsonParser = new JsonParser();
+			JsonElement jsonElement = jsonParser.parse(responseJson);
+			JsonObject responseObject = jsonElement.getAsJsonObject();
+
+			// Extract the 'objectives' array from the nested 'data' object
+			JsonObject dataObject = responseObject.getAsJsonObject("data");
+			JsonArray objectivesArray = dataObject.getAsJsonArray("objectives");
+
+			// Iterate through the array to find the objective with the matching name
+			for (JsonElement element : objectivesArray) {
+				JsonObject objective = element.getAsJsonObject();
+
+				// Log the JSON object being processed
+				System.out.println("Processing Objective: " + objective.toString());
+
+				// Check if the "description" attribute matches the name
+				if (objective.has("description")) {
+					String objectiveName = objective.get("description").getAsString(); // Get objective description as
+																						// String
+
+					// Log the name being compared
+					System.out.println("Comparing Name: " + objectiveName + " with " + name);
+
+					if (objectiveName.equals(name)) {
+						// Return the "objectiveId" if the name matches
+						System.out.println("Found Objective with Name: " + name);
+						return objective.has("objectiveId") ? objective.get("objectiveId").getAsString() : null;
+					}
+				}
+			}
+
+			System.out.println("No objective found with Name: " + name);
+			return null;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching the objective_id by name: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload){
+	public ResponseEntity<String> updateKeyResultGrade(String keyResultId, String payload) {
 		try {
 			String serverUrl = okrBaseURL + "/keyResult/grade/" + keyResultId;
-			
+
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("Authorization", "Bearer " + okrAuthToken);
-			
+
 			HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
-            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity, String.class);
-            
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(response.getBody(), response.getStatusCode());
-            }
-            
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity,
+					String.class);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
-            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -527,14 +493,14 @@ public class OkrBackend implements IOkrBackend {
 	public ResponseEntity<String> updateOkrDraftSave(String updatedOkr) {
 		try {
 			String serverUrl = okrBaseURL + "/personalOkr/advanced/update/";
-			
+
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("Authorization", "Bearer " + okrAuthToken);
-			
 
 			HttpEntity<String> requestEntity = new HttpEntity<>(updatedOkr, headers);
-            ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
+					String.class);
 			System.out.println("Checked");
 			if (response.getStatusCode() == HttpStatus.OK) {
 				// Handle successful response
@@ -549,7 +515,7 @@ public class OkrBackend implements IOkrBackend {
 			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	public String getOkrAuthToken() {
 		return okrAuthToken;
 	}
