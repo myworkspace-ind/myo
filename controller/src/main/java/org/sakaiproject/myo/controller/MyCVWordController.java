@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.itextpdf.text.Document;
@@ -78,28 +79,43 @@ public class MyCVWordController extends BaseController {
 	@Autowired
 	UserRepositoryProfile userRepositoryProfile;
 
-	@GetMapping("/MyCVWord")
-	public void generateWordCV(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			String userEmail = "micrayon2812@gmail.com";
-			OkrUserProfile user = userRepositoryProfile.findByEmail(userEmail);
+	/*
+	 * @GetMapping("/MyCVWord") public void generateWordCV(HttpServletRequest
+	 * request, HttpServletResponse response) { try { String userEmail =
+	 * "micrayon2812@gmail.com"; OkrUserProfile user =
+	 * userRepositoryProfile.findByEmail(userEmail);
+	 * 
+	 * ProfilePdfToWordConverter.writeProfileToWord(user, "MyCV.docx");
+	 * 
+	 * response.setContentType(
+	 * "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+	 * response.setHeader("Content-Disposition", "attachment; filename=MyCV.docx");
+	 * 
+	 * FileInputStream in = new FileInputStream("MyCV.docx"); OutputStream out =
+	 * response.getOutputStream(); byte[] buffer = new byte[4096]; int length; while
+	 * ((length = in.read(buffer)) > 0) { out.write(buffer, 0, length); }
+	 * out.flush(); in.close(); } catch (IOException e) { e.printStackTrace(); } }
+	 */
+	
+	@RequestMapping(value = { "/MyCVWord" }, method = RequestMethod.GET)
+	public void displayHome(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) throws Exception {
 
-			ProfilePdfToWordConverter.writeProfileToWord(user, "MyCV.docx");
 
-			response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-			response.setHeader("Content-Disposition", "attachment; filename=MyCV.docx");
+	    String url = "http://localhost:8080/myo-web/userprofile/loaddata";
+	    RestTemplate restTemplate = new RestTemplate();
+	    String userDataJson = restTemplate.getForObject(url, String.class);
 
-			FileInputStream in = new FileInputStream("MyCV.docx");
-			OutputStream out = response.getOutputStream();
-			byte[] buffer = new byte[4096];
-			int length;
-			while ((length = in.read(buffer)) > 0) {
-				out.write(buffer, 0, length);
-			}
-			out.flush();
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	    ProfilePdfToWordConverter.writeProfileToWord(userDataJson, byteArrayOutputStream);
+
+	    byte[] wordBytes = byteArrayOutputStream.toByteArray();
+
+	    response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+	    response.setContentLength(wordBytes.length);
+	    response.setHeader("Content-Disposition", "inline; filename=\"My_cv.docx\"");
+	    response.getOutputStream().write(wordBytes);
+
 	}
+
+
 }

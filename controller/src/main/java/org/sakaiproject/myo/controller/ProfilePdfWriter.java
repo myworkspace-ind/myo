@@ -3,7 +3,6 @@ package org.sakaiproject.myo.controller;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +26,7 @@ public class ProfilePdfWriter {
         lineSeparator.setLineWidth(1f);
 
         PdfPTable titleTable = new PdfPTable(1);
-        PdfPCell titleNameLabelCell = new PdfPCell(new Phrase("Profile", boldFontLarge));
+        PdfPCell titleNameLabelCell = new PdfPCell(new Phrase("CV", boldFontLarge));
         titleNameLabelCell.setBorder(Rectangle.NO_BORDER);
         titleNameLabelCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         titleNameLabelCell.setPaddingBottom(20f);
@@ -124,14 +123,26 @@ public class ProfilePdfWriter {
                 document.add(objectiveTable);
 
                 if (objective.has("progress")) {
-                    document.add(new Paragraph("Progress: ", boldFontSmall));
-                    document.add(new Paragraph(String.format("%.2f%%", objective.getDouble("progress")), normalFontItalic));
+                    Phrase progressPhrase = new Phrase();
+                    progressPhrase.add(new Chunk("Progress: ", boldFontSmall));
+                    progressPhrase.add(new Chunk(String.format("%.2f%%", objective.getDouble("progress")), normalFontItalic));
+                    if (objective.has("comment")) {
+                        Object commentObject = objective.get("comment");
+                        if (commentObject instanceof String) {
+                            progressPhrase.add(new Chunk(" || " + (String) commentObject, normalFont));
+                        } else if (commentObject == JSONObject.NULL) {
+                            progressPhrase.add(new Chunk(" || [No comment]", normalFont));
+                        } else {
+                            progressPhrase.add(new Chunk(" || [Non-string comment]", normalFont));
+                        }
+                    }
+                    document.add(progressPhrase);
                 }
 
                 if (objective.has("keyResults") && objective.getJSONArray("keyResults").length() > 0) {
                     JSONArray keyResults = objective.getJSONArray("keyResults");
 
-                    PdfPTable keyResultsTable = new PdfPTable(2);
+                    PdfPTable keyResultsTable = new PdfPTable(3);
                     keyResultsTable.setWidthPercentage(100);
                     keyResultsTable.setSpacingBefore(10f);
                     keyResultsTable.setSpacingAfter(10f);
@@ -145,6 +156,11 @@ public class ProfilePdfWriter {
                     keyResultProgressHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                     keyResultProgressHeader.setPadding(8f);
                     keyResultsTable.addCell(keyResultProgressHeader);
+
+                    PdfPCell keyResultCommentHeader = new PdfPCell(new Phrase("Comment", boldFontSmall));
+                    keyResultCommentHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    keyResultCommentHeader.setPadding(8f);
+                    keyResultsTable.addCell(keyResultCommentHeader);
 
                     for (int j = 0; j < keyResults.length(); j++) {
                         JSONObject keyResult = keyResults.getJSONObject(j);
@@ -186,6 +202,12 @@ public class ProfilePdfWriter {
 
                         progressCell.addElement(progressTable);
                         keyResultsTable.addCell(progressCell);
+
+                        String keyResultComment = keyResult.has("comment") ? keyResult.optString("comment", "[No comment]") : "[No comment]";
+                        PdfPCell commentCell = new PdfPCell(new Phrase(keyResultComment, normalFont));
+                        commentCell.setBorder(Rectangle.NO_BORDER);
+                        commentCell.setPadding(5f);
+                        keyResultsTable.addCell(commentCell);
                     }
                     document.add(keyResultsTable);
                 }
