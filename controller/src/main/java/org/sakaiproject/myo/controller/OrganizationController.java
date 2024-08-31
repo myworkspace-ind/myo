@@ -46,9 +46,16 @@ public class OrganizationController extends BaseController {
 	
 	@GetMapping(value = "/organization/loadalldata")
 	@ResponseBody
-	public String getAllUsers() {
+	public String getAllOrganization() {
 		// System.out.print(serviceOkrBackend.getOrganization());
 		return serviceOkrBackend.getAllOrganization();
+	}
+	
+	@GetMapping(value = "/userRole/load")
+	@ResponseBody
+	public String getUserRole() {
+		System.out.print(serviceOkrBackend.getUserRole());
+		return serviceOkrBackend.getUserRole();
 	}
 	
 	@GetMapping(value = "/organization/users/{orgId}")
@@ -58,8 +65,20 @@ public class OrganizationController extends BaseController {
 		return serviceOkrBackend.getUserInOrganization(orgId);
 	}
 	
+	@GetMapping(value = "/userprofile/admin/getListUserProfile")
+	@ResponseBody
+	public String getAllUsers() {
+		// System.out.print(serviceOkrBackend.getOrganization());
+		return serviceOkrBackend.getAllUsers();
+	}
+	
 	@PostMapping("/organization/create")
     public ResponseEntity<String> createOrganization(@RequestBody String jsonData) {
         return serviceOkrBackend.createOrganization(jsonData);
+    }
+	
+	@PostMapping("/organization/addMember")
+    public ResponseEntity<String> addMember(@RequestBody String jsonData) {
+        return serviceOkrBackend.addMember(jsonData);
     }
 }

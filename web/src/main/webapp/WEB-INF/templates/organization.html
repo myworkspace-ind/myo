@@ -69,6 +69,23 @@ tr:nth-child(even) {
 		<button id="createOrgButton">Create Organization</button>
 	</div>
 
+	<!-- Date input for start date -->
+	<label for="startDate">Start Date:</label>
+	<input type="date" id="startDate" />
+
+	<!-- Date input for end date -->
+	<label for="endDate">End Date:</label>
+	<input type="date" id="endDate" />
+
+	<!-- Dropdown for selecting unassigned user -->
+	<label for="userDropdown">Select User:</label>
+	<select id="userDropdown">
+		<!-- Options will be populated dynamically -->
+	</select>
+
+	<!-- Button to add member -->
+	<button id="addMemberButton">Add Member</button>
+
 	<table id="orgTable">
 		<thead>
 			<tr>

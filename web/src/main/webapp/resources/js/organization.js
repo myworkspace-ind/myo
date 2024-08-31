@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
+	let userRole = ''; // Global variable to store the user role
+
+	function fetchUserRole() {
+		fetch('userRole/load') // This endpoint should return the user profile including the role
+			.then(response => response.text())
+			.then(data => {
+				userRole = data; // Assuming the user role is in this path
+				console.log('User Role:', userRole);
+			})
+			.catch(error => console.error('Error fetching user role:', error));
+	}
+
+	// Call fetchUserRole to set the global userRole variable
+	fetchUserRole();
 	// Function to create a table row for organizations
 	function createRow(org) {
 		const row = document.createElement('tr');
@@ -166,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			
+
 			body: JSON.stringify(requestData)
 		})
 			.then(response => response.json())
@@ -192,4 +206,70 @@ document.addEventListener("DOMContentLoaded", () => {
 			fetchUsers(orgId);
 		}
 	});
+
+	function populateUserDropdown() {
+		fetch('userprofile/admin/getListUserProfile')
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				const userDropdown = document.querySelector('#userDropdown');
+				userDropdown.innerHTML = ''; // Clear previous options
+
+				// Iterate through the 'content' array within the 'data' object
+				data.data.content.forEach(user => {
+					// Only consider users who are part of the 'unassigned' organization
+					const isUnassigned = user.orgs.some(org => org.name === 'unassigned');
+
+					if (isUnassigned) {
+						const option = document.createElement('option');
+						option.value = user.userId;
+						option.textContent = `${user.name} (${user.email})`;
+						userDropdown.appendChild(option);
+					}
+				});
+			})
+			.catch(error => console.error('Error fetching users:', error));
+	}
+	populateUserDropdown();
+
+	// Add member to organization
+	function addMember() {
+		const orgId = document.querySelector('#orgSelect').value;
+		const startDate = document.querySelector('#startDate').value;
+		const endDate = document.querySelector('#endDate').value;
+		const userId = document.querySelector('#userDropdown').value;
+
+		if (userRole === 'ADMIN') { // Check if the user is an admin
+			const payload = {
+				startDate,
+				endDate,
+				orgId,
+				userId
+			};
+
+			fetch('organization/addMember', { // Update the URL if necessary
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+
+				body: JSON.stringify(payload)
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data && data.message && data.message === 'Succeed') {
+						alert('Member added successfully!');
+					} else {
+						console.error('Error adding member:', data);
+						alert('Failed to add member. Please try again.');
+					}
+				})
+				.catch(error => console.error('Error:', error));
+		} else {
+			alert('You do not have permission to add members.');
+		}
+	}
+
+
+	document.querySelector('#addMemberButton').addEventListener('click', addMember);
 });
