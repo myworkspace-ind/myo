@@ -632,6 +632,36 @@ public class OkrBackend implements IOkrBackend {
 			return false;
 		}
 	}
+	
+	@Override
+	public boolean deleteOrganization(String Id) {
+		try {
+			System.out.println("ObjID: " + Id);
+			String serverUrl = okrBaseURL + "/organization/" + Id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			// Create the HTTP entity with headers
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			// Send DELETE request
+			ResponseEntity<Void> response = restTemplate.exchange(serverUrl, HttpMethod.DELETE, entity, Void.class);
+
+			// Check response status
+			if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NO_CONTENT) {
+				System.out.println("Status: " + response.getStatusCode());
+				System.out.println("Objective deleted successfully");
+				return true;
+			} else {
+				System.out.println("Failed to delete objective. Status code: " + response.getStatusCode());
+				return false;
+			}
+		} catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public String getObjectiveIdByName(String name) {
 		try {

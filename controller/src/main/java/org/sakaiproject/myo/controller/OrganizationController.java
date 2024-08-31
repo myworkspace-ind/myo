@@ -24,8 +24,10 @@ import javax.servlet.http.HttpSession;
 
 import org.sakaiproject.myo.IOkrBackend;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,5 +82,21 @@ public class OrganizationController extends BaseController {
 	@PostMapping("/organization/addMember")
     public ResponseEntity<String> addMember(@RequestBody String jsonData) {
         return serviceOkrBackend.addMember(jsonData);
+    }
+	
+	@DeleteMapping("/organization/delete/{selectedOrgId}")
+    public ResponseEntity<Void> deleteOrganization(@PathVariable String selectedOrgId) {
+        try {
+            boolean isDeleted = serviceOkrBackend.deleteOrganization(selectedOrgId);
+            if (isDeleted) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("delete failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

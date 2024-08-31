@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			return option;
 		}
 
-		function addOptions(orgs, parentOption, level) {
+		function addOptions(orgs, level) {
 			orgs.forEach(org => {
 				const option = createOption(org, level);
 				dropdown.appendChild(option);
@@ -70,6 +70,78 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 
 		addOptions(data, null, 0);
+	}
+	
+	function populateLeafDropdown(data) {
+	    const leafDropdown = document.querySelector('#leafOrgSelect');
+
+	    function createOption(org) {
+	        const option = document.createElement('option');
+	        option.value = org.orgId;
+	        option.textContent = org.name; // No indentation needed for leaf nodes
+	        return option;
+	    }
+
+	    function addLeafOptions(orgs) {
+	        orgs.forEach(org => {
+	            if (!org.orgs || org.orgs.length === 0) {
+	                // If the organization has no children, it's a leaf node
+	                const option = createOption(org);
+	                leafDropdown.appendChild(option);
+	            } else if (org.orgs && org.orgs.length > 0) {
+	                // Recursively check child organizations
+	                addLeafOptions(org.orgs);
+	            }
+	        });
+	    }
+
+	    addLeafOptions(data);
+	}
+	
+	document.getElementById('deleteOrgButton').addEventListener('click', function() {
+	    const selectedOrgId = document.getElementById('leafOrgSelect').value;
+
+	    if (!selectedOrgId) {
+	        alert('Please select an organization to delete.');
+	        return;
+	    }
+
+	    const confirmation = confirm('Are you sure you want to delete this organization? This action cannot be undone.');
+
+	    if (confirmation) {
+	        fetch(`organization/delete/${selectedOrgId}`, {
+	            method: 'DELETE',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                // Include other necessary headers like Authorization if required
+	            }
+	        })
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error('Failed to delete organization.');
+	            }
+	            return response.text().then(text => text ? JSON.parse(text) : {});
+	        })
+	        .then(data => {
+	            alert('Organization deleted successfully.');
+	            // Refresh or update the dropdown to reflect the deletion
+	            removeDeletedOrgFromDropdown(selectedOrgId);
+				window.location.reload();
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert('Error deleting organization: ' + error.message);
+	        });
+	    }
+	});
+
+	function removeDeletedOrgFromDropdown(orgId) {
+	    const dropdown = document.getElementById('leafOrgSelect');
+	    const optionToRemove = dropdown.querySelector(`option[value="${orgId}"]`);
+
+	    if (optionToRemove) {
+	        optionToRemove.remove();
+	    }
 	}
 
 
@@ -180,6 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				const data = JSON.parse(text); // Parse the text as JSON
 				if (data && data.data) {
 					populateDropdown(data.data);
+					populateLeafDropdown(data.data);
 					populateTable(data.data);
 				} else {
 					console.error("Unexpected data format:", data);
@@ -215,6 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			.then(data => {
 				if (data && data['message:'] === "Succeed") {
 					alert("Organization created successfully!");
+					window.location.reload();
 					// Optionally, refresh the dropdown or table to show the new organization
 					// You can re-fetch and repopulate the dropdown here
 				} else {
@@ -287,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				.then(data => {
 					if (data && data.message && data.message === 'Succeed') {
 						alert('Member added successfully!');
+						window.location.reload();
 					} else {
 						console.error('Error adding member:', data);
 						alert('Failed to add member. Please try again.');
