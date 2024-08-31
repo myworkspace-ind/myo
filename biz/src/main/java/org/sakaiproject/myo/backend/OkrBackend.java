@@ -452,7 +452,7 @@ public class OkrBackend implements IOkrBackend {
 	@Override
 	public String getAllUsers() {
 		try {
-			String serverUrl = okrBaseURL + "/userprofile/admin/getListUserProfile";
+			String serverUrl = okrBaseURL + "/userprofile/admin/getListUserProfile?pageNumber=0&pageSize=20";
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);

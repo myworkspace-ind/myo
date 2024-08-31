@@ -116,20 +116,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Recursively process child organizations
 			if (org.orgs && org.orgs.length > 0) {
-				const childTable = document.createElement('table');
-				childTable.classList.add('child-table');
-				const childTableBody = document.createElement('tbody');
-				childTable.appendChild(childTableBody);
+			    // Create a new child table
+			    const childTable = document.createElement('table');
+			    childTable.classList.add('child-table');
+			    
+			    // Create and append the header row
+			    const childTableHead = document.createElement('thead');
+			    const headerRow = document.createElement('tr');
 
-				// Add the child table to the current row
-				const childTableCell = document.createElement('td');
-				childTableCell.colSpan = 4; // Adjust based on your table column count
-				childTableCell.appendChild(childTable);
-				row.appendChild(childTableCell);
+			    const nameHeader = document.createElement('th');
+			    nameHeader.textContent = 'Name';
+			    headerRow.appendChild(nameHeader);
 
-				// Process child organizations
-				processHierarchy(org.orgs, childTableBody);
+			    const orgIdHeader = document.createElement('th');
+			    orgIdHeader.textContent = 'Organization ID';
+			    headerRow.appendChild(orgIdHeader);
+
+			    const descriptionHeader = document.createElement('th');
+			    descriptionHeader.textContent = 'Description';
+			    headerRow.appendChild(descriptionHeader);
+
+			    const usersHeader = document.createElement('th');
+			    usersHeader.textContent = 'Users';
+			    headerRow.appendChild(usersHeader);
+
+			    // Append the header row to the table head
+			    childTableHead.appendChild(headerRow);
+			    childTable.appendChild(childTableHead);
+
+			    // Create the table body
+			    const childTableBody = document.createElement('tbody');
+			    childTable.appendChild(childTableBody);
+
+			    // Add the child table to the current row
+			    const childTableCell = document.createElement('td');
+			    childTableCell.colSpan = 4; // Adjust based on your table column count
+			    childTableCell.appendChild(childTable);
+			    row.appendChild(childTableCell);
+
+			    // Process child organizations recursively
+			    processHierarchy(org.orgs, childTableBody);
 			}
+
 		});
 	}
 

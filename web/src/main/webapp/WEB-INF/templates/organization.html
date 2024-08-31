@@ -35,11 +35,16 @@ tr:nth-child(even) {
 	border: 1px solid #dddddd;
 	padding: 5px;
 }
+
+#userDropdown {
+	max-height: 50px;
+	overflow-y: auto;
+}
 </style>
 <script src="resources/js/organization.js"></script>
 </head>
 <body>
-	<h1>Organization Table</h1>
+	<h1>Organization Management</h1>
 
 	<label for="orgSelect">Select Organization:</label>
 	<select id="orgSelect">
@@ -60,7 +65,7 @@ tr:nth-child(even) {
 		</tbody>
 	</table>
 	<div>
-		<h3>Create New Organization</h3>
+		<h4>Create New Organization</h4>
 		<label for="orgName">Name:</label> <input type="text" id="orgName"
 			placeholder="Enter organization name"> <label
 			for="orgDescription">Description:</label> <input type="text"
@@ -68,24 +73,15 @@ tr:nth-child(even) {
 
 		<button id="createOrgButton">Create Organization</button>
 	</div>
-
-	<!-- Date input for start date -->
-	<label for="startDate">Start Date:</label>
-	<input type="date" id="startDate" />
-
-	<!-- Date input for end date -->
-	<label for="endDate">End Date:</label>
-	<input type="date" id="endDate" />
-
-	<!-- Dropdown for selecting unassigned user -->
-	<label for="userDropdown">Select User:</label>
-	<select id="userDropdown">
-		<!-- Options will be populated dynamically -->
-	</select>
-
-	<!-- Button to add member -->
-	<button id="addMemberButton">Add Member</button>
-
+	<div>
+		<h4>Add New Member</h4>
+		<label for="startDate">Start Date:</label> <input type="date"
+			id="startDate" /> <label for="endDate">End Date:</label> <input
+			type="date" id="endDate" /> <label for="userDropdown">Select
+			User:</label> <select id="userDropdown">
+		</select>
+		<button id="addMemberButton">Add Member</button>
+	</div>
 	<table id="orgTable">
 		<thead>
 			<tr>
