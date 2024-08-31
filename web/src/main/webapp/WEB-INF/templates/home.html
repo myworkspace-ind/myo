@@ -22,23 +22,6 @@
 </head>
 <body>
 	<th:block th:include="fragments/my_leftsidenavbar.html"></th:block>
-	<script>
-		function toggleSidebar() {
-			var sidebar = document.getElementById("sidebar");
-			var content = document.getElementById("content");
-			sidebar.classList.toggle("open");
-			content.classList.toggle("shifted", sidebar.classList
-					.contains("open"));
-		}
-
-		var toggles = document.querySelectorAll('.toggle-submenu');
-		toggles.forEach(function(toggle) {
-			toggle.addEventListener('click', function() {
-				var parent = this.parentElement;
-				parent.classList.toggle('open');
-			});
-		});
-	</script>
 	<div id="content" class="content">
 		<th:block th:include="fragments/frg_home.html"></th:block>
 	</div>

@@ -46,7 +46,7 @@ public class CreateokrController extends BaseController {
 
 	@GetMapping(value = "Createokr")
 	public ModelAndView displayLandingPage(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("createokr_new");
+		ModelAndView mav = new ModelAndView("createokr");
 
 		return mav;
 	}

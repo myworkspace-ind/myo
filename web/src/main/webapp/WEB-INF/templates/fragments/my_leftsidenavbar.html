@@ -58,4 +58,23 @@
 	<div class="bottom-link">
 		<a href="auth"><i class="bi bi-grid-3x3-gap"></i> Login</a>
 	</div>
+	
 </div>
+<script>
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			var content = document.getElementById("content");
+			sidebar.classList.toggle("open");
+			content.classList.toggle("shifted", sidebar.classList
+					.contains("open"));
+		}
+
+		var toggles = document.querySelectorAll('.toggle-submenu');
+		toggles.forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				var parent = this.parentElement;
+				parent.classList.toggle('open');
+			});
+		});
+	</script>
+
