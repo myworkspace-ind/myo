@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organization Table</title>
+<style>
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #dddddd;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+.child-table {
+	margin-top: 10px;
+	border: 1px solid #dddddd;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.child-table th, .child-table td {
+	border: 1px solid #dddddd;
+	padding: 5px;
+}
+</style>
+<script src="resources/js/organization.js"></script>
+</head>
+<body>
+	<h1>Organization Table</h1>
+
+	<label for="orgSelect">Select Organization:</label>
+	<select id="orgSelect">
+		<option value="">--Select an organization--</option>
+		<!-- Options will be populated by JavaScript -->
+	</select>
+
+	<h2>Users in Selected Organization:</h2>
+	<table id="userTable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+			</tr>
+		</thead>
+		<tbody id="userTableBody">
+			<!-- Users will be listed here -->
+		</tbody>
+	</table>
+	<div>
+		<h3>Create New Organization</h3>
+		<label for="orgName">Name:</label> <input type="text" id="orgName"
+			placeholder="Enter organization name"> <label
+			for="orgDescription">Description:</label> <input type="text"
+			id="orgDescription" placeholder="Enter organization description">
+
+		<button id="createOrgButton">Create Organization</button>
+	</div>
+
+	<table id="orgTable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Organization ID</th>
+				<th>Description</th>
+				<th>Users</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- Table rows will be inserted here by JavaScript -->
+		</tbody>
+	</table>
+</body>
+</html>

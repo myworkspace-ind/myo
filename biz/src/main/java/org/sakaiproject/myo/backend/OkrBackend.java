@@ -242,6 +242,52 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
+	
+	@Override
+	public String getAllOrganization() {
+		try {
+			String serverUrl = okrBaseURL + "/organization";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public String getUserInOrganization(String id) {
+		try {
+			String serverUrl = okrBaseURL + "/organization/users/" + id;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	@Override
 	public String getObjectives(String periodId, String organizationId) {
@@ -310,6 +356,31 @@ public class OkrBackend implements IOkrBackend {
 			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
 					String.class);
 			System.out.println("post3");
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Handle successful response
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				// Handle non-200 response status
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			// Handle exception
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@Override
+	public ResponseEntity<String> createOrganization(String jsonData) {
+		try {
+			String serverUrl = okrBaseURL + "/organization/create";
+			HttpHeaders headers = new HttpHeaders();
+			System.out.println("post1");
+			headers.set("Content-Type", "application/json");
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
+					String.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				// Handle successful response
 				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
