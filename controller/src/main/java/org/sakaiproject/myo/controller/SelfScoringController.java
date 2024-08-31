@@ -46,7 +46,7 @@ public class SelfScoringController extends BaseController {
 	 */
 	@GetMapping(value = "selfscoring")
 	public ModelAndView displayCrudOkr(HttpServletRequest request, HttpSession httpSession) {
-		ModelAndView mav = new ModelAndView("selfscoring_new");
+		ModelAndView mav = new ModelAndView("selfscoring");
 		return mav;
 	}
 
