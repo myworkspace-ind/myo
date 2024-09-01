@@ -44,6 +44,49 @@ public class OkrBackend implements IOkrBackend {
 	private static String parentPeriodId;
 	private static String childPeriodId;
 	private static String organizationId;
+	private static String userRole;
+
+//	public OkrBackend() {
+//		// Initialize userRole when the object is created
+//		//OkrBackend.okrAuthToken = getAuthToken(childPeriodId, authEndpoint)
+//		OkrBackend.userRole = getUserRole();
+//
+//		// Optionally, you can print or log the user role to verify
+//		System.out.println("User Role: " + userRole);
+//
+//		// Perform actions based on userRole
+//		initializeFunctionsBasedOnRole();
+//	}
+//
+//	private void initializeFunctionsBasedOnRole() {
+//		// Example of initializing functions based on the user role
+//		switch (userRole) {
+//		case "ADMIN":
+//			// Initialize functions available to ADMIN
+//			setupAdminFunctions();
+//			break;
+//		case "USER":
+//			// Initialize functions available to USER
+//			setupUserFunctions();
+//			break;
+//		default:
+//			// Default case for undefined roles
+//			setupDefaultFunctions();
+//			break;
+//		}
+//	}
+//
+//	private void setupAdminFunctions() {
+//		// Code to initialize admin-specific functions
+//	}
+//
+//	private void setupUserFunctions() {
+//		// Code to initialize user-specific functions
+//	}
+//
+//	private void setupDefaultFunctions() {
+//		// Code to initialize default functions
+//	}
 
 	public String getAuthToken(String username, String password) throws Exception {
 		String serverUrl = okrBaseURL + "/auth";
@@ -63,7 +106,9 @@ public class OkrBackend implements IOkrBackend {
 				Map<String, String> responseBody = response.getBody();
 				if (responseBody != null && responseBody.containsKey("token")) {
 					okrAuthToken = responseBody.get("token");
+					userRole = getUserRole();
 					System.out.println("okrAuthToken: " + okrAuthToken);
+					System.out.println("User Role: " + userRole);
 					return okrAuthToken;
 				}
 			}
@@ -244,6 +289,52 @@ public class OkrBackend implements IOkrBackend {
 	}
 
 	@Override
+	public String getAllOrganization() {
+		try {
+			String serverUrl = okrBaseURL + "/organization";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public String getUserInOrganization(String id) {
+		try {
+			String serverUrl = okrBaseURL + "/organization/users/" + id;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
 	public String getObjectives(String periodId, String organizationId) {
 		try {
 			if (organizationId == null || organizationId.isEmpty()) {
@@ -274,9 +365,94 @@ public class OkrBackend implements IOkrBackend {
 	}
 
 	@Override
+	public String getUserRole() {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+			String responseJson = response.getBody();
+
+			JsonParser jsonParser = new JsonParser();
+			JsonElement jsonElement = jsonParser.parse(responseJson);
+			JsonObject responseObject = jsonElement.getAsJsonObject();
+
+			if (responseObject.has("data")) {
+				JsonElement dataElement = responseObject.get("data");
+
+				if (dataElement.isJsonObject()) {
+					// Handle case where "data" is an object
+					JsonObject dataObject = dataElement.getAsJsonObject();
+
+					if (dataObject.has("userRole")) {
+						userRole = dataObject.get("userRole").getAsString();
+//						System.out.println("Organization ID: " + organizationId);
+					} else {
+						System.out.println("Error: 'userRole' not found in 'data' object.");
+					}
+				} else if (dataElement.isJsonArray()) {
+					// Handle case where "data" is an array (assuming first element)
+					JsonArray dataArray = dataElement.getAsJsonArray();
+
+					if (dataArray.size() > 0) {
+						JsonObject firstOrganization = dataArray.get(0).getAsJsonObject();
+
+						if (firstOrganization.has("userRole")) {
+							userRole = firstOrganization.get("userRole").getAsString();
+							System.out.println("User role: " + userRole);
+						} else {
+							System.out.println("Error: 'userRole' not found in the first element of 'data' array.");
+						}
+					} else {
+						System.out.println("Error: 'data' array is empty.");
+					}
+				} else {
+					System.out.println("Error: Unexpected type for 'data'.");
+				}
+			} else {
+				System.out.println("Error: 'data' field is missing.");
+			}
+
+//			System.out.println(responseJson);
+//			System.out.println("OrgID: " + organizationId);
+			return userRole;
+		} catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
 	public String getProfile() {
 		try {
 			String serverUrl = okrBaseURL + "/userprofile";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public String getAllUsers() {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile/admin/getListUserProfile?pageNumber=0&pageSize=20";
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
@@ -310,6 +486,31 @@ public class OkrBackend implements IOkrBackend {
 			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
 					String.class);
 			System.out.println("post3");
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Handle successful response
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				// Handle non-200 response status
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			// Handle exception
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<String> createOrganization(String jsonData) {
+		try {
+			String serverUrl = okrBaseURL + "/organization/create";
+			HttpHeaders headers = new HttpHeaders();
+			System.out.println("post1");
+			headers.set("Content-Type", "application/json");
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+			HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
+					String.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				// Handle successful response
 				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
@@ -373,6 +574,31 @@ public class OkrBackend implements IOkrBackend {
 			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@Override
+	public ResponseEntity<String> addMember(String jsonData) {
+		try {
+			String serverUrl = okrBaseURL + "/organization/addMember";
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Content-Type", "application/json");
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, requestEntity,
+					String.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Handle successful response
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				// Handle non-200 response status
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			// Handle exception
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@Override
 	public boolean deleteObjectives(String Id) {
@@ -382,6 +608,36 @@ public class OkrBackend implements IOkrBackend {
 			System.out.println("ObjID: " + Id);
 			String serverUrl = okrBaseURL + "/keyResult/" + Id;
 			System.out.println("okok1");
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			// Create the HTTP entity with headers
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			// Send DELETE request
+			ResponseEntity<Void> response = restTemplate.exchange(serverUrl, HttpMethod.DELETE, entity, Void.class);
+
+			// Check response status
+			if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NO_CONTENT) {
+				System.out.println("Status: " + response.getStatusCode());
+				System.out.println("Objective deleted successfully");
+				return true;
+			} else {
+				System.out.println("Failed to delete objective. Status code: " + response.getStatusCode());
+				return false;
+			}
+		} catch (Exception e) {
+			System.out.println("An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean deleteOrganization(String Id) {
+		try {
+			System.out.println("ObjID: " + Id);
+			String serverUrl = okrBaseURL + "/organization/" + Id;
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + okrAuthToken);
 

@@ -1,0 +1,28 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    z-index: 1000; 
+    background-color: #fff; 
+    display: flex;
+    align-items: center;
+    padding: 10px; 
+}
+
+.navbar-brand {
+    position: relative;
+    top: 10px; 
+    left: 10px; 
+    z-index: 1100; 
+}
+
+.toggle-btn {
+    margin-left: auto;
+}
+.navbar-auth {
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    z-index: 1100; 
+}

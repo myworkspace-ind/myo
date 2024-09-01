@@ -45,9 +45,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Handles requests for the application home page.
  */
