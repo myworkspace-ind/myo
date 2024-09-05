@@ -52,10 +52,31 @@
 
 		<li class="nav-item"><a class="nav-link" href="MyProfile"><i
 				class="bi bi-person"></i> Profile</a></li>
+		<li class="nav-item"><a class="nav-link" href="organization"><i
+				class="bi bi-people"></i> Organization</a></li>
 		<li class="nav-item"><a class="nav-link" href="landing-page"><i
 				class="bi bi-window"></i> Landing Page</a></li>		
 	</ul>
 	<div class="bottom-link">
 		<a href="auth"><i class="bi bi-grid-3x3-gap"></i> Login</a>
 	</div>
+	
 </div>
+<script>
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			var content = document.getElementById("content");
+			sidebar.classList.toggle("open");
+			content.classList.toggle("shifted", sidebar.classList
+					.contains("open"));
+		}
+
+		var toggles = document.querySelectorAll('.toggle-submenu');
+		toggles.forEach(function(toggle) {
+			toggle.addEventListener('click', function() {
+				var parent = this.parentElement;
+				parent.classList.toggle('open');
+			});
+		});
+	</script>
+

@@ -1,0 +1,129 @@
+
+<style>
+.key-result-container {
+	margin-bottom: 15px;
+}
+
+.key-result-container .form-group input {
+	margin-left: 20px;
+}
+
+.objective .form-group input {
+	margin-left: 0;
+}
+
+.btn-add-key-result, .btn-remove-key-result, .btn-add-objective,
+	.btn-remove-objective, .btn-save {
+	margin: 5px;
+}
+
+.btn-add-key-result {
+	background-color: white;
+	color: #6c757d;
+	border: 1px solid #6c757d;
+}
+
+.btn-remove-key-result {
+	background-color: #343a40;
+	color: white;
+}
+
+.btn-add-objective {
+	background-color: #6c757d;
+	color: white;
+}
+
+.btn-remove-objective {
+	background-color: #000;
+	color: white;
+}
+
+.btn-save {
+	background-color: #343a40;
+	color: white;
+}
+
+.btn-container {
+	text-align: right;
+}
+
+.header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.header-container h1 {
+	margin: 0;
+}
+
+.header-container .btn-add-objective {
+	margin: 0;
+}
+
+.form-control {
+	color: white;
+	background-color: #1f2225;
+}
+</style>
+<div class="container mt-5">
+	<div
+		class="header-container d-flex justify-content-between align-items-center mb-4">
+		<h1>Create OKR</h1>
+		<button type="button" class="btn btn-success btn-sm" id="addObjective">Add
+			Objectives</button>
+	</div>
+	<form id="okrForm">
+		<div class="mb-3">
+			<label for="period" class="form-label">Period</label> <select
+				class="form-select" id="period" name="period" required>
+				<option value="">Select Period</option>
+				<option value="Q1 2024">Q1 2024</option>
+				<option value="Q2 2024">Q2 2024</option>
+				<option value="Q3 2024">Q3 2024</option>
+				<option value="Q4 2024">Q4 2024</option>
+			</select>
+		</div>
+
+		<div id="objectivesContainer">
+			<!-- Objectives will be dynamically added here -->
+		</div>
+
+		<div class="d-flex justify-content-end mt-3">
+			<button type="submit" class="btn btn-dark">Save OKRs</button>
+		</div>
+	</form>
+
+	<!-- Template for Objective -->
+	<div id="objectiveTemplate" style="display: none;">
+		<div class="objective mt-3">
+			<input type="text" class="form-control mb-2 objective-description"
+				placeholder="Enter Objective Description" required> <input
+				type="number" class="form-control mb-2 objective-weight"
+				placeholder="Enter Objective Weight" required>
+			<div class="key-results-container">
+				<!-- Key Results will be dynamically added here -->
+			</div>
+			<button type="button" class="btn btn-primary btn-add-key-result">Add
+				Key Result</button>
+			<button type="button" class="btn btn-danger btn-remove-objective">Remove
+				Objective</button>
+		</div>
+	</div>
+
+	<!-- Template for Key Result -->
+	<div id="keyResultTemplate" style="display: none;">
+		<div class="key-result mt-3">
+			<input type="text" class="form-control mb-2 key-result-description"
+				placeholder="Enter Key Result Description" required> <input
+				type="date" class="form-control mb-2 key-result-due-date" required>
+			<button type="button" class="btn btn-danger btn-remove-key-result">Remove
+				Key Result</button>
+		</div>
+	</div>
+</div>
+
+<!-- Custom JavaScript -->
+<script src="/library/js/headscripts.js"></script>
+<script src="resources/js/createokr.js"></script>
