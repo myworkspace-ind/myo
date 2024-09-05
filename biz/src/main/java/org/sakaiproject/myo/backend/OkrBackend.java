@@ -624,6 +624,32 @@ public class OkrBackend implements IOkrBackend {
 			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@Override
+	public ResponseEntity<String> updateProfile(String jsonData) {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile/update";
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Content-Type", "application/json");
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> requestEntity = new HttpEntity<>(jsonData, headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.PUT, requestEntity,
+					String.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Handle successful response
+				return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+			} else {
+				// Handle non-200 response status
+				return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 
 	@Override
 	public boolean deleteObjectives(String Id) {

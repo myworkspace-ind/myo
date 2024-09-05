@@ -1,5 +1,63 @@
 
 $(document).ready(function() {
+	function fetchPeriods() {
+		fetch('period/loaddata')
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text(); // Read response as text
+			})
+			.then(text => {
+				try {
+					const jsonData = JSON.parse(text); // Parse text as JSON
+					console.log('Fetched JSON data:', jsonData);
+					if (jsonData.data && Array.isArray(jsonData.data)) {
+						const dropdown = document.getElementById('periodDropdown_upload');
+
+						dropdown.innerHTML = '';
+
+						const placeholderOption = document.createElement('option');
+						placeholderOption.value = '';
+						placeholderOption.textContent = 'Select a Period';
+						placeholderOption.disabled = true;
+						placeholderOption.hidden = true;
+						dropdown.appendChild(placeholderOption);
+
+						jsonData.data.forEach(period => {
+							// Create and append top-level period option
+							const option = document.createElement('option');
+							option.value = period.periodId;
+							option.textContent = period.name;
+							dropdown.appendChild(option);
+
+							// Create and append child period options
+							period.childs.forEach(child => {
+								const childOption = document.createElement('option');
+								childOption.value = child.periodId;
+								childOption.textContent = `-- ${child.name}`;
+								dropdown.appendChild(childOption);
+							});
+						});
+
+						if (jsonData.data.length > 0) {
+							let selectedPeriodId = jsonData.data[0].periodId;
+							dropdown.value = selectedPeriodId;
+						}
+					} else {
+						console.error('Unexpected data structure in the JSON data');
+					}
+				} catch (error) {
+					console.error('Error parsing JSON:', error);
+				}
+			})
+			.catch(error => {
+				console.error('Error fetching period data:', error);
+			});
+	}
+
+	fetchPeriods();
+
 	document.getElementById('preview-button').addEventListener('click', function() {
 		const fileInput = document.getElementById('file-input');
 		const file = fileInput.files[0];
@@ -77,6 +135,8 @@ $(document).ready(function() {
 	});
 
 	function processExcelData(data) {
+		var periodId = $('#periodDropdown_upload').val();
+
 		const headers = data[0]; // Assuming the first row contains headers
 		const rows = data.slice(1);
 
@@ -128,9 +188,12 @@ $(document).ready(function() {
 			return objective; // Return the created objective
 		});
 
-		const requestData = { objectives: objectives };
+		var requestData = {
+			periodId: periodId, // Set the periodId at the root level
+			objectives: objectives // Add the objectives array
+		};
 
-		if (requestData.objectives.length === 0) {
+		if (objectives.length === 0) {
 			console.warn('No data to update');
 			return;
 		}
