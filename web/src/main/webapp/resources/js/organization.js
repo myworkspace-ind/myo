@@ -124,38 +124,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	document.getElementById('deleteOrgButton').addEventListener('click', function() {
 		const selectedOrgId = document.getElementById('leafOrgSelect').value;
+		if (userRole === 'ADMIN') {
 
-		if (!selectedOrgId) {
-			alert('Please select an organization to delete.');
-			return;
-		}
+			if (!selectedOrgId) {
+				alert('Please select an organization to delete.');
+				return;
+			}
 
-		const confirmation = confirm('Are you sure you want to delete this organization? This action cannot be undone.');
+			const confirmation = confirm('Are you sure you want to delete this organization? This action cannot be undone.');
 
-		if (confirmation) {
-			fetch(`organization/delete/${selectedOrgId}`, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-					// Include other necessary headers like Authorization if required
-				}
-			})
-				.then(response => {
-					if (!response.ok) {
-						throw new Error('Failed to delete organization.');
+			if (confirmation) {
+				fetch(`organization/delete/${selectedOrgId}`, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+						// Include other necessary headers like Authorization if required
 					}
-					return response.text().then(text => text ? JSON.parse(text) : {});
 				})
-				.then(data => {
-					alert('Organization deleted successfully.');
-					// Refresh or update the dropdown to reflect the deletion
-					removeDeletedOrgFromDropdown(selectedOrgId);
-					window.location.reload();
-				})
-				.catch(error => {
-					console.error('Error:', error);
-					alert('Error deleting organization: ' + error.message);
-				});
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Failed to delete organization.');
+						}
+						return response.text().then(text => text ? JSON.parse(text) : {});
+					})
+					.then(data => {
+						alert('Organization deleted successfully.');
+						// Refresh or update the dropdown to reflect the deletion
+						removeDeletedOrgFromDropdown(selectedOrgId);
+						window.location.reload();
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert('Error deleting organization: ' + error.message);
+					});
+			}
+		} else {
+			alert('You do not have permission to delete organization.');
 		}
 	});
 
@@ -209,41 +213,41 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function fetchUsers(orgId) {
-	    fetch(`organization/users/${orgId}`)
-	        .then(response => response.json())
-	        .then(data => {
-	            const userTableBody = document.querySelector('#userTableBody');
-	            userTableBody.innerHTML = ''; // Clear previous users
+		fetch(`organization/users/${orgId}`)
+			.then(response => response.json())
+			.then(data => {
+				const userTableBody = document.querySelector('#userTableBody');
+				userTableBody.innerHTML = ''; // Clear previous users
 
-	            if (data && data.data && data.data.length > 0) {
-	                data.data.forEach(user => {
-	                    const row = document.createElement('tr');
+				if (data && data.data && data.data.length > 0) {
+					data.data.forEach(user => {
+						const row = document.createElement('tr');
 
-	                    const nameCell = document.createElement('td');
-	                    nameCell.textContent = user.name;
-	                    row.appendChild(nameCell);
+						const nameCell = document.createElement('td');
+						nameCell.textContent = user.name;
+						row.appendChild(nameCell);
 
-	                    const emailCell = document.createElement('td');
-	                    emailCell.textContent = user.email;
-	                    row.appendChild(emailCell);
+						const emailCell = document.createElement('td');
+						emailCell.textContent = user.email;
+						row.appendChild(emailCell);
 
-	                    // Add event listener to display user details on click
-	                    row.addEventListener('click', () => {
-	                        displayUserProfile(user);
-	                    });
+						// Add event listener to display user details on click
+						row.addEventListener('click', () => {
+							displayUserProfile(user);
+						});
 
-	                    userTableBody.appendChild(row);
-	                });
-	            } else {
-	                const row = document.createElement('tr');
-	                const cell = document.createElement('td');
-	                cell.colSpan = 2;
-	                cell.textContent = 'No users found';
-	                row.appendChild(cell);
-	                userTableBody.appendChild(row);
-	            }
-	        })
-	        .catch(error => console.error('Error fetching users:', error));
+						userTableBody.appendChild(row);
+					});
+				} else {
+					const row = document.createElement('tr');
+					const cell = document.createElement('td');
+					cell.colSpan = 2;
+					cell.textContent = 'No users found';
+					row.appendChild(cell);
+					userTableBody.appendChild(row);
+				}
+			})
+			.catch(error => console.error('Error fetching users:', error));
 	}
 
 
@@ -343,39 +347,43 @@ document.addEventListener("DOMContentLoaded", () => {
 		.catch(error => console.error('Error fetching organization data:', error));
 
 	function createOrganization() {
-		const name = document.querySelector('#orgName').value;
-		const description = document.querySelector('#orgDescription').value;
-		const parentId = document.querySelector('#orgSelect').value;
-		const setAsRoot = !parentId; // If there's no parentId, setAsRoot is true
+		if (userRole === 'ADMIN') {
+			const name = document.querySelector('#orgName').value;
+			const description = document.querySelector('#orgDescription').value;
+			const parentId = document.querySelector('#orgSelect').value;
+			const setAsRoot = !parentId; // If there's no parentId, setAsRoot is true
 
-		const requestData = {
-			name: name,
-			description: description,
-			parentId: parentId,
-			setAsRoot: setAsRoot
-		};
-		console.log(requestData);
-		fetch('organization/create', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
+			const requestData = {
+				name: name,
+				description: description,
+				parentId: parentId,
+				setAsRoot: setAsRoot
+			};
+			console.log(requestData);
+			fetch('organization/create', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
 
-			body: JSON.stringify(requestData)
-		})
-			.then(response => response.json())
-			.then(data => {
-				if (data && data['message:'] === "Succeed") {
-					alert("Organization created successfully!");
-					window.location.reload();
-					// Optionally, refresh the dropdown or table to show the new organization
-					// You can re-fetch and repopulate the dropdown here
-				} else {
-					console.error("Error creating organization:", data);
-					alert("Failed to create organization. Please try again.");
-				}
+				body: JSON.stringify(requestData)
 			})
-			.catch(error => console.error('Error creating organization:', error));
+				.then(response => response.json())
+				.then(data => {
+					if (data && data['message:'] === "Succeed") {
+						alert("Organization created successfully!");
+						window.location.reload();
+						// Optionally, refresh the dropdown or table to show the new organization
+						// You can re-fetch and repopulate the dropdown here
+					} else {
+						console.error("Error creating organization:", data);
+						alert("Failed to create organization. Please try again.");
+					}
+				})
+				.catch(error => console.error('Error creating organization:', error));
+		} else {
+			alert('You do not have permission to create organization.');
+		}
 	}
 
 	// Event listener for create organization button
@@ -457,50 +465,54 @@ document.addEventListener("DOMContentLoaded", () => {
 		const name = document.getElementById('orgNameUpdate').value;
 		const description = document.getElementById('orgDescriptionUpdate').value;
 		const parentId = document.getElementById('orgSelectParent').value;
+		if (userRole === 'ADMIN') {
+			if (!orgId) {
+				alert('Please select an organization to update.');
+				return;
+			}
 
-		if (!orgId) {
-			alert('Please select an organization to update.');
-			return;
+			const setAsRoot = !parentId; // Set to true if parentId is empty
+
+			const updateData = {
+				name: name,
+				description: description,
+				parentId: parentId || null, // Use null if parentId is empty
+				setAsRoot: !parentId
+			};
+
+			console.log("Update data: " + updateData);
+
+			fetch(`organization/update/${orgId}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					// Include other necessary headers like Authorization if required
+				},
+				body: JSON.stringify(updateData)
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Failed to update organization.');
+					}
+					if (response.status === 204) {
+						alert('Organization updated successfully.');
+						return null;
+					}
+
+					return response.json();
+				})
+				.then(data => {
+					alert('Organization updated successfully.');
+					// Optionally refresh or update the dropdown or UI
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Error updating organization: ' + error.message);
+				});
+		} else {
+			alert('You do not have permission to update organization.');
 		}
 
-		const setAsRoot = !parentId; // Set to true if parentId is empty
-
-		const updateData = {
-			name: name,
-			description: description,
-			parentId: parentId || null, // Use null if parentId is empty
-			setAsRoot: !parentId
-		};
-
-		console.log("Update data: " + updateData);
-
-		fetch(`organization/update/${orgId}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				// Include other necessary headers like Authorization if required
-			},
-			body: JSON.stringify(updateData)
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Failed to update organization.');
-				}
-				if (response.status === 204) {
-					alert('Organization updated successfully.');
-					return null;
-				}
-
-				return response.json();
-			})
-			.then(data => {
-				alert('Organization updated successfully.');
-				// Optionally refresh or update the dropdown or UI
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				alert('Error updating organization: ' + error.message);
-			});
 	});
 
 	document.querySelector('#addMemberButton').addEventListener('click', addMember);
