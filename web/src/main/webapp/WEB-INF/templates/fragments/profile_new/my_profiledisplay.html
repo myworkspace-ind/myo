@@ -1,29 +1,29 @@
 <style>
 .btn-gray {
-    background-color: #6c757d;
-    color: #fff;
+	background-color: #6c757d;
+	color: #fff;
 }
 
 .btn-gray:hover {
-    background-color: #5a6268;
+	background-color: #5a6268;
 }
 
 .fixed-bottom-button {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
 }
 
 .input-custom {
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #6c757d;
+	background-color: transparent;
+	color: #fff;
+	border: 1px solid #6c757d;
 }
 
 .input-custom:focus {
-    background-color: transparent;
-    color: #fff;
-    border-color: #5a6268;
+	background-color: transparent;
+	color: #fff;
+	border-color: #5a6268;
 }
 </style>
 
@@ -146,21 +146,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 birthday: document.getElementById('editbirthdayInput')?.value
             };
 
-            fetch('userprofile/uploaddata', {
-                method: 'POST',
+            fetch('updateProfile', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data: updatedData })
+                body: JSON.stringify(updatedData )
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    fetchUserProfileData();
-                } else {
-                    alert('Error updating profile. Please try again.');
-                }
-            })
+ 	.then(response => {
+				if (!response.ok) {
+					throw new Error('Failed to update organization.');
+				}
+				if (response.status === 204) {
+					alert('Organization updated successfully.');
+					return null;
+				}
+
+				return response.json();
+			})
             .catch(error => {
                 console.error('Error updating user profile:', error);
                 alert('Error updating profile. Please try again later.');
