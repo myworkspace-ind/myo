@@ -68,6 +68,13 @@ public class OrganizationController extends BaseController {
 		return serviceOkrBackend.getUserInOrganization(orgId);
 	}
 
+	@GetMapping(value = "/userprofile/{userId}")
+	@ResponseBody
+	public String getSelectedUser(@PathVariable String userId) {
+		// System.out.print(serviceOkrBackend.getOrganization());
+		return serviceOkrBackend.getSelectedUser(userId);
+	}
+	
 	@GetMapping(value = "/userprofile/admin/getListUserProfile")
 	@ResponseBody
 	public String getAllUsers() {

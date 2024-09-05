@@ -333,6 +333,29 @@ public class OkrBackend implements IOkrBackend {
 			return null;
 		}
 	}
+	
+	@Override
+	public String getSelectedUser(String id) {
+		try {
+			String serverUrl = okrBaseURL + "/userprofile/list/" + id;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + okrAuthToken);
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.GET, entity, String.class);
+
+			String responseJson = response.getBody();
+
+			System.out.println("Response JSON: " + responseJson);
+			return responseJson;
+		} catch (Exception e) {
+			System.out.println("An error occurred while fetching objectives: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	@Override
 	public String getObjectives(String periodId, String organizationId) {

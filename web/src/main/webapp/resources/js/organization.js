@@ -71,29 +71,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		addOptions(data, null, 0);
 	}
-	
+
 	function populateParentDropdown(data) {
-			const dropdown = document.querySelector('#orgSelectParent');
+		const dropdown = document.querySelector('#orgSelectParent');
 
-			function createOption(org, level) {
-				const option = document.createElement('option');
-				option.value = org.orgId;
-				option.textContent = ' '.repeat(level * 4) + org.name; // Indentation based on hierarchy level
-				return option;
-			}
-
-			function addOptions(orgs, level) {
-				orgs.forEach(org => {
-					const option = createOption(org, level);
-					dropdown.appendChild(option);
-					if (org.orgs && org.orgs.length > 0) {
-						addOptions(org.orgs, option, level + 1); // Recursive call for child organizations
-					}
-				});
-			}
-
-			addOptions(data, null, 0);
+		function createOption(org, level) {
+			const option = document.createElement('option');
+			option.value = org.orgId;
+			option.textContent = ' '.repeat(level * 4) + org.name; // Indentation based on hierarchy level
+			return option;
 		}
+
+		function addOptions(orgs, level) {
+			orgs.forEach(org => {
+				const option = createOption(org, level);
+				dropdown.appendChild(option);
+				if (org.orgs && org.orgs.length > 0) {
+					addOptions(org.orgs, option, level + 1); // Recursive call for child organizations
+				}
+			});
+		}
+
+		addOptions(data, null, 0);
+	}
 
 
 	function populateLeafDropdown(data) {
@@ -181,6 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
 					data.data.forEach(user => {
 						const row = document.createElement('tr');
 
+						// Add click event listener to the row
+						row.addEventListener('click', () => {
+							window.location.href = `organization.html?id=${user.userId}`; // Redirect to user profile page
+						});
+
 						const nameCell = document.createElement('td');
 						nameCell.textContent = user.name;
 						row.appendChild(nameCell);
@@ -201,6 +206,55 @@ document.addEventListener("DOMContentLoaded", () => {
 				}
 			})
 			.catch(error => console.error('Error fetching users:', error));
+	}
+
+	function fetchUsers(orgId) {
+	    fetch(`organization/users/${orgId}`)
+	        .then(response => response.json())
+	        .then(data => {
+	            const userTableBody = document.querySelector('#userTableBody');
+	            userTableBody.innerHTML = ''; // Clear previous users
+
+	            if (data && data.data && data.data.length > 0) {
+	                data.data.forEach(user => {
+	                    const row = document.createElement('tr');
+
+	                    const nameCell = document.createElement('td');
+	                    nameCell.textContent = user.name;
+	                    row.appendChild(nameCell);
+
+	                    const emailCell = document.createElement('td');
+	                    emailCell.textContent = user.email;
+	                    row.appendChild(emailCell);
+
+	                    // Add event listener to display user details on click
+	                    row.addEventListener('click', () => {
+	                        displayUserProfile(user);
+	                    });
+
+	                    userTableBody.appendChild(row);
+	                });
+	            } else {
+	                const row = document.createElement('tr');
+	                const cell = document.createElement('td');
+	                cell.colSpan = 2;
+	                cell.textContent = 'No users found';
+	                row.appendChild(cell);
+	                userTableBody.appendChild(row);
+	            }
+	        })
+	        .catch(error => console.error('Error fetching users:', error));
+	}
+
+
+
+	function displayUserProfile(user) {
+		document.getElementById('userName').textContent = user.name;
+		document.getElementById('userEmail').textContent = user.email;
+		document.getElementById('userAddress').textContent = user.address;
+
+		// Show the profile section
+		$('#userProfileModal').modal('show');
 	}
 
 

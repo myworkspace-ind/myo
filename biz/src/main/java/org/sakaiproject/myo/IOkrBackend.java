@@ -10,6 +10,7 @@ public interface IOkrBackend {
 	String getOrganization();
 	String getAllOrganization();
 	String getUserInOrganization(String id);
+	String getSelectedUser(String id);
 	String getProfile();	
 	String getAllUsers();
 	String getObjectives(String periodId, String organizationId);
