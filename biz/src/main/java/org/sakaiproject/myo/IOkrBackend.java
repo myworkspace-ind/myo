@@ -20,6 +20,8 @@ public interface IOkrBackend {
 	public ResponseEntity<String> postPeriod(String jsonData);
 	public ResponseEntity<String> addMember(String jsonData);
 	public ResponseEntity<String> updateOrganization(String orgId, String jsonData);
+	public ResponseEntity<String> updateProfile(String jsonData);
+
 	public boolean deleteObjectives(String Id);
 	public boolean deleteOrganization(String Id);
 	
