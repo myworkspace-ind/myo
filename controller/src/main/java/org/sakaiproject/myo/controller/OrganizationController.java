@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,64 +40,70 @@ import org.springframework.web.servlet.ModelAndView;
 public class OrganizationController extends BaseController {
 	@Autowired
 	IOkrBackend serviceOkrBackend;
-	
+
 	@GetMapping(value = "/organization")
 	public ModelAndView displayPeriod(HttpServletRequest request, HttpSession httpSession) {
 		ModelAndView mav = new ModelAndView("organization");
 		return mav;
 	}
-	
+
 	@GetMapping(value = "/organization/loadalldata")
 	@ResponseBody
 	public String getAllOrganization() {
 		// System.out.print(serviceOkrBackend.getOrganization());
 		return serviceOkrBackend.getAllOrganization();
 	}
-	
+
 	@GetMapping(value = "/userRole/load")
 	@ResponseBody
 	public String getUserRole() {
 		System.out.print(serviceOkrBackend.getUserRole());
 		return serviceOkrBackend.getUserRole();
 	}
-	
+
 	@GetMapping(value = "/organization/users/{orgId}")
 	@ResponseBody
 	public String getUserInOrganization(@PathVariable String orgId) {
 		// System.out.print(serviceOkrBackend.getOrganization());
 		return serviceOkrBackend.getUserInOrganization(orgId);
 	}
-	
+
 	@GetMapping(value = "/userprofile/admin/getListUserProfile")
 	@ResponseBody
 	public String getAllUsers() {
 		// System.out.print(serviceOkrBackend.getOrganization());
 		return serviceOkrBackend.getAllUsers();
 	}
-	
+
 	@PostMapping("/organization/create")
-    public ResponseEntity<String> createOrganization(@RequestBody String jsonData) {
-        return serviceOkrBackend.createOrganization(jsonData);
-    }
-	
+	public ResponseEntity<String> createOrganization(@RequestBody String jsonData) {
+		return serviceOkrBackend.createOrganization(jsonData);
+	}
+
 	@PostMapping("/organization/addMember")
-    public ResponseEntity<String> addMember(@RequestBody String jsonData) {
-        return serviceOkrBackend.addMember(jsonData);
-    }
-	
+	public ResponseEntity<String> addMember(@RequestBody String jsonData) {
+		return serviceOkrBackend.addMember(jsonData);
+	}
+
 	@DeleteMapping("/organization/delete/{selectedOrgId}")
-    public ResponseEntity<Void> deleteOrganization(@PathVariable String selectedOrgId) {
-        try {
-            boolean isDeleted = serviceOkrBackend.deleteOrganization(selectedOrgId);
-            if (isDeleted) {
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("delete failed");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	public ResponseEntity<Void> deleteOrganization(@PathVariable String selectedOrgId) {
+		try {
+			boolean isDeleted = serviceOkrBackend.deleteOrganization(selectedOrgId);
+			if (isDeleted) {
+				return ResponseEntity.ok().build();
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("delete failed");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@PutMapping("/organization/update/{orgId}")
+	public ResponseEntity<String> updateOrganization(@PathVariable String orgId, @RequestBody String jsonData) {
+		return serviceOkrBackend.updateOrganization(orgId, jsonData);
+	}
+
 }

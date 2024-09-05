@@ -72,76 +72,100 @@ document.addEventListener("DOMContentLoaded", () => {
 		addOptions(data, null, 0);
 	}
 	
+	function populateParentDropdown(data) {
+			const dropdown = document.querySelector('#orgSelectParent');
+
+			function createOption(org, level) {
+				const option = document.createElement('option');
+				option.value = org.orgId;
+				option.textContent = ' '.repeat(level * 4) + org.name; // Indentation based on hierarchy level
+				return option;
+			}
+
+			function addOptions(orgs, level) {
+				orgs.forEach(org => {
+					const option = createOption(org, level);
+					dropdown.appendChild(option);
+					if (org.orgs && org.orgs.length > 0) {
+						addOptions(org.orgs, option, level + 1); // Recursive call for child organizations
+					}
+				});
+			}
+
+			addOptions(data, null, 0);
+		}
+
+
 	function populateLeafDropdown(data) {
-	    const leafDropdown = document.querySelector('#leafOrgSelect');
+		const leafDropdown = document.querySelector('#leafOrgSelect');
 
-	    function createOption(org) {
-	        const option = document.createElement('option');
-	        option.value = org.orgId;
-	        option.textContent = org.name; // No indentation needed for leaf nodes
-	        return option;
-	    }
+		function createOption(org) {
+			const option = document.createElement('option');
+			option.value = org.orgId;
+			option.textContent = org.name; // No indentation needed for leaf nodes
+			return option;
+		}
 
-	    function addLeafOptions(orgs) {
-	        orgs.forEach(org => {
-	            if (!org.orgs || org.orgs.length === 0) {
-	                // If the organization has no children, it's a leaf node
-	                const option = createOption(org);
-	                leafDropdown.appendChild(option);
-	            } else if (org.orgs && org.orgs.length > 0) {
-	                // Recursively check child organizations
-	                addLeafOptions(org.orgs);
-	            }
-	        });
-	    }
+		function addLeafOptions(orgs) {
+			orgs.forEach(org => {
+				if (!org.orgs || org.orgs.length === 0) {
+					// If the organization has no children, it's a leaf node
+					const option = createOption(org);
+					leafDropdown.appendChild(option);
+				} else if (org.orgs && org.orgs.length > 0) {
+					// Recursively check child organizations
+					addLeafOptions(org.orgs);
+				}
+			});
+		}
 
-	    addLeafOptions(data);
+		addLeafOptions(data);
 	}
-	
+
 	document.getElementById('deleteOrgButton').addEventListener('click', function() {
-	    const selectedOrgId = document.getElementById('leafOrgSelect').value;
+		const selectedOrgId = document.getElementById('leafOrgSelect').value;
 
-	    if (!selectedOrgId) {
-	        alert('Please select an organization to delete.');
-	        return;
-	    }
+		if (!selectedOrgId) {
+			alert('Please select an organization to delete.');
+			return;
+		}
 
-	    const confirmation = confirm('Are you sure you want to delete this organization? This action cannot be undone.');
+		const confirmation = confirm('Are you sure you want to delete this organization? This action cannot be undone.');
 
-	    if (confirmation) {
-	        fetch(`organization/delete/${selectedOrgId}`, {
-	            method: 'DELETE',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                // Include other necessary headers like Authorization if required
-	            }
-	        })
-	        .then(response => {
-	            if (!response.ok) {
-	                throw new Error('Failed to delete organization.');
-	            }
-	            return response.text().then(text => text ? JSON.parse(text) : {});
-	        })
-	        .then(data => {
-	            alert('Organization deleted successfully.');
-	            // Refresh or update the dropdown to reflect the deletion
-	            removeDeletedOrgFromDropdown(selectedOrgId);
-				window.location.reload();
-	        })
-	        .catch(error => {
-	            console.error('Error:', error);
-	            alert('Error deleting organization: ' + error.message);
-	        });
-	    }
+		if (confirmation) {
+			fetch(`organization/delete/${selectedOrgId}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					// Include other necessary headers like Authorization if required
+				}
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Failed to delete organization.');
+					}
+					return response.text().then(text => text ? JSON.parse(text) : {});
+				})
+				.then(data => {
+					alert('Organization deleted successfully.');
+					// Refresh or update the dropdown to reflect the deletion
+					removeDeletedOrgFromDropdown(selectedOrgId);
+					window.location.reload();
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Error deleting organization: ' + error.message);
+				});
+		}
 	});
 
 	function removeDeletedOrgFromDropdown(orgId) {
-	    const dropdown = document.getElementById('leafOrgSelect');
-	    const optionToRemove = dropdown.querySelector(`option[value="${orgId}"]`);
+		const dropdown = document.getElementById('leafOrgSelect');
+		const optionToRemove = dropdown.querySelector(`option[value="${orgId}"]`);
 
-	    if (optionToRemove) {
-	        optionToRemove.remove();
-	    }
+		if (optionToRemove) {
+			optionToRemove.remove();
+		}
 	}
 
 
@@ -188,46 +212,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Recursively process child organizations
 			if (org.orgs && org.orgs.length > 0) {
-			    // Create a new child table
-			    const childTable = document.createElement('table');
-			    childTable.classList.add('child-table');
-			    
-			    // Create and append the header row
-			    const childTableHead = document.createElement('thead');
-			    const headerRow = document.createElement('tr');
+				// Create a new child table
+				const childTable = document.createElement('table');
+				childTable.classList.add('child-table');
 
-			    const nameHeader = document.createElement('th');
-			    nameHeader.textContent = 'Name';
-			    headerRow.appendChild(nameHeader);
+				// Create and append the header row
+				const childTableHead = document.createElement('thead');
+				const headerRow = document.createElement('tr');
 
-			    const orgIdHeader = document.createElement('th');
-			    orgIdHeader.textContent = 'Organization ID';
-			    headerRow.appendChild(orgIdHeader);
+				const nameHeader = document.createElement('th');
+				nameHeader.textContent = 'Name';
+				headerRow.appendChild(nameHeader);
 
-			    const descriptionHeader = document.createElement('th');
-			    descriptionHeader.textContent = 'Description';
-			    headerRow.appendChild(descriptionHeader);
+				const orgIdHeader = document.createElement('th');
+				orgIdHeader.textContent = 'Organization ID';
+				headerRow.appendChild(orgIdHeader);
 
-			    const usersHeader = document.createElement('th');
-			    usersHeader.textContent = 'Users';
-			    headerRow.appendChild(usersHeader);
+				const descriptionHeader = document.createElement('th');
+				descriptionHeader.textContent = 'Description';
+				headerRow.appendChild(descriptionHeader);
 
-			    // Append the header row to the table head
-			    childTableHead.appendChild(headerRow);
-			    childTable.appendChild(childTableHead);
+				const usersHeader = document.createElement('th');
+				usersHeader.textContent = 'Users';
+				headerRow.appendChild(usersHeader);
 
-			    // Create the table body
-			    const childTableBody = document.createElement('tbody');
-			    childTable.appendChild(childTableBody);
+				// Append the header row to the table head
+				childTableHead.appendChild(headerRow);
+				childTable.appendChild(childTableHead);
 
-			    // Add the child table to the current row
-			    const childTableCell = document.createElement('td');
-			    childTableCell.colSpan = 4; // Adjust based on your table column count
-			    childTableCell.appendChild(childTable);
-			    row.appendChild(childTableCell);
+				// Create the table body
+				const childTableBody = document.createElement('tbody');
+				childTable.appendChild(childTableBody);
 
-			    // Process child organizations recursively
-			    processHierarchy(org.orgs, childTableBody);
+				// Add the child table to the current row
+				const childTableCell = document.createElement('td');
+				childTableCell.colSpan = 4; // Adjust based on your table column count
+				childTableCell.appendChild(childTable);
+				row.appendChild(childTableCell);
+
+				// Process child organizations recursively
+				processHierarchy(org.orgs, childTableBody);
 			}
 
 		});
@@ -252,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				const data = JSON.parse(text); // Parse the text as JSON
 				if (data && data.data) {
 					populateDropdown(data.data);
+					populateParentDropdown(data.data);
 					populateLeafDropdown(data.data);
 					populateTable(data.data);
 				} else {
@@ -373,6 +398,56 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	document.getElementById('updateOrgButton').addEventListener('click', function() {
+		const orgId = document.getElementById('orgSelect').value;
+		const name = document.getElementById('orgNameUpdate').value;
+		const description = document.getElementById('orgDescriptionUpdate').value;
+		const parentId = document.getElementById('orgSelectParent').value;
+
+		if (!orgId) {
+			alert('Please select an organization to update.');
+			return;
+		}
+
+		const setAsRoot = !parentId; // Set to true if parentId is empty
+
+		const updateData = {
+			name: name,
+			description: description,
+			parentId: parentId || null, // Use null if parentId is empty
+			setAsRoot: !parentId
+		};
+
+		console.log("Update data: " + updateData);
+
+		fetch(`organization/update/${orgId}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				// Include other necessary headers like Authorization if required
+			},
+			body: JSON.stringify(updateData)
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Failed to update organization.');
+				}
+				if (response.status === 204) {
+					alert('Organization updated successfully.');
+					return null;
+				}
+
+				return response.json();
+			})
+			.then(data => {
+				alert('Organization updated successfully.');
+				// Optionally refresh or update the dropdown or UI
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert('Error updating organization: ' + error.message);
+			});
+	});
 
 	document.querySelector('#addMemberButton').addEventListener('click', addMember);
 });

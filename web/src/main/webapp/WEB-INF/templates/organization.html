@@ -88,6 +88,21 @@ tr:nth-child(even) {
 			id="leafOrgSelect"></select>
 		<button id="deleteOrgButton">Delete Organization</button>
 	</div>
+	<div>
+		<h4>Update Organization</h4>
+		<label for="orgNameUpdate">Name:</label> <input type="text" id="orgNameUpdate"
+			required> <label for="orgDescriptionUpdate">Description:</label> <input
+			type="text" id="orgDescriptionUpdate" required> <label
+			for="orgSelectParent">Parent Organization:</label> <select
+			id="orgSelectParent">
+			<option value="">None (Set as Root)</option>
+			<!-- Populate with parent organization options -->
+		</select>
+
+		<button type="button" id="updateOrgButton">Update
+			Organization</button>
+	</div>
+
 	<table id="orgTable">
 		<thead>
 			<tr>
