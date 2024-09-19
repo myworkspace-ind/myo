@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>myo</artifactId>
 		<groupId>org.sakaiproject.myo</groupId>
-		<version>23.0</version>
+		<version>23.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<!-- 	<groupId>org.sakaiproject.myo</groupId> -->

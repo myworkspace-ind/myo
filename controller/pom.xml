@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>myo</artifactId>
 		<groupId>org.sakaiproject.myo</groupId>
-		<version>23.0</version>
+		<version>23.2</version>
 	</parent>
 	<!-- 	<groupId>org.sakaiproject.myo</groupId> -->
 	<artifactId>myo-controller</artifactId>
@@ -87,12 +87,12 @@
 			<!--            <version>${spring.data.jpa.version}</version>-->
 		</dependency>
 		<!-- Gson -->
-		<!--         <dependency> -->
-		<!--             <groupId>com.google.code.gson</groupId> -->
-		<!--             <artifactId>gson</artifactId> -->
-		<!--             <version>2.2.2</version> -->
-		<!--             <scope>compile</scope> -->
-		<!--         </dependency> -->
+         <dependency> 
+             <groupId>com.google.code.gson</groupId> 
+             <artifactId>gson</artifactId> 
+             <version>2.2.2</version> 
+             <scope>compile</scope> 
+         </dependency> 
 
 		<!-- Servlet -->
 		<dependency>
